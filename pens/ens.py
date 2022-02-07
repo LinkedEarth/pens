@@ -1,8 +1,11 @@
+from multiprocessing.sharedctypes import Value
 from matplotlib import gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 import copy
+from sklearn.metrics import mean_squared_error as mse
+from tqdm import tqdm
 from . import utils
 
 class EnsembleTS:
@@ -24,6 +27,32 @@ class EnsembleTS:
 
     def copy(self):
         return copy.deepcopy(self)
+
+    def slice(self, timespan):
+        ''' Slicing the timeseries with a timespan (tuple or list)
+        Parameters
+        ----------
+        timespan : tuple or list
+            The list of time points for slicing, whose length must be even.
+            When there are n time points, the output Series includes n/2 segments.
+            For example, if timespan = [a, b], then the sliced output includes one segment [a, b];
+            if timespan = [a, b, c, d], then the sliced output includes segment [a, b] and segment [c, d].
+        Returns
+        -------
+        new : EnsembleTS
+            The sliced EnsembleSeries object.
+        '''
+        n_elements = len(timespan)
+        if n_elements % 2 == 1:
+            raise ValueError('The number of elements in timespan must be even!')
+
+        n_segments = int(n_elements / 2)
+        mask = [False for i in range(np.size(self.time))]
+        for i in range(n_segments):
+            mask |= (self.time >= timespan[i*2]) & (self.time <= timespan[i*2+1])
+
+        new = EnsembleTS(time=self.time[mask], value=self.value[mask])
+        return new
     
     def load_nc(self, path, time_name='time', var=None):
         ''' Load data from a .nc file with xarray
@@ -62,6 +91,36 @@ class EnsembleTS:
         new = EnsembleTS(time=self.time, value=path)
         return new
 
+    def sample_nearest(self, target, metric='MSE'):
+        path = np.ndarray((self.nt, 1))
+        target_idx = []
+        for it in range(self.nt):
+            im = np.argmin(np.abs(self.value[it]-target[it]))
+            target_idx.append(im)
+            path[it] = self.value[it, im]
+
+        new = EnsembleTS(time=self.time, value=path)
+        dist_func = {
+            'MSE': mse,
+        }
+        new.distance = dist_func[metric](new.value[:, 0], target)
+
+        new.target = target
+        new.target_idx = target_idx
+        return new
+        
+
+    def compare(self, ens, metric='MSE'):
+        ''' Compare with another EnsembleTS
+
+        Note that we assume the size of the time axis is consistent.
+        '''
+        dist = np.zeros(ens.nEns)
+        for i in tqdm(range(ens.nEns)):
+            target = ens.value[:, i]
+            dist[i] = self.sample_nearest(target, metric=metric).distance
+
+        return dist
 
     def plot(self, figsize=[12, 4],
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
