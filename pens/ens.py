@@ -79,6 +79,8 @@ class EnsembleTS:
         return new
 
     def sample_random(self, seed=None, n=1):
+        ''' Get `n` realizations of random sample paths
+        '''
         if seed is not None:
             np.random.seed(seed)
 
@@ -92,6 +94,14 @@ class EnsembleTS:
         return new
 
     def sample_nearest(self, target, metric='MSE'):
+        ''' Get the nearest sample path against the target series
+        
+        Note that `metric` is used only for the final distance calculation.
+        '''
+        dist_func = {
+            'MSE': mse,
+        }
+
         path = np.ndarray((self.nt, 1))
         target_idx = []
         for it in range(self.nt):
@@ -100,13 +110,10 @@ class EnsembleTS:
             path[it] = self.value[it, im]
 
         new = EnsembleTS(time=self.time, value=path)
-        dist_func = {
-            'MSE': mse,
-        }
         new.distance = dist_func[metric](new.value[:, 0], target)
-
         new.target = target
         new.target_idx = target_idx
+
         return new
         
 
@@ -114,6 +121,7 @@ class EnsembleTS:
         ''' Compare with another EnsembleTS
 
         Note that we assume the size of the time axis is consistent.
+        If not, please call EnsembleTS.slice() ahead.
         '''
         dist = np.zeros(ens.nEns)
         for i in tqdm(range(ens.nEns)):
@@ -125,7 +133,7 @@ class EnsembleTS:
     def plot(self, figsize=[12, 4],
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
         plot_kwargs=None, legend_kwargs=None, title_kwargs=None, ax=None):
-        ''' Plot the raw values
+        ''' Plot the raw values (multiple series)
         '''
 
         plot_kwargs = {} if plot_kwargs is None else plot_kwargs
