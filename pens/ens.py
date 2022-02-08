@@ -78,7 +78,7 @@ class EnsembleTS:
         new = EnsembleTS(time=time, value=value)
         return new
 
-    def sample_path(self, seed=None, n=1):
+    def sample_random(self, seed=None, n=1):
         if seed is not None:
             np.random.seed(seed)
 
