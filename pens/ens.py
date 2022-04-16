@@ -1,5 +1,6 @@
 from multiprocessing.sharedctypes import Value
 from matplotlib import gridspec
+from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -156,7 +157,7 @@ class EnsembleTS:
             ax.set_xlim(xlim)
 
         if ylim is not None:
-            ax.set_xlim(ylim)
+            ax.set_ylim(ylim)
 
         if title is not None:
             _title_kwargs = {'fontweight': 'bold'}
@@ -167,6 +168,86 @@ class EnsembleTS:
             return fig, ax
         else:
             return ax
+
+    def plot_hist2d(self, figsize=[12, 4], cmap='plasma', color_scale='linear', bins=None, num_fine=None,
+        xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, 
+        title_kwargs=None, ax=None, **pcolormesh_kwargs,):
+        ''' Plot the timeseries 2-D histogram
+
+        Parameters
+        ----------
+        cmap : str
+            The colormap for the histogram.
+
+        color_scale : str
+            The scale of the colorbar; should be either 'linear' or 'log'.
+
+        bins : list/tuple of 2 floats
+            The number of bins for each axis: nx, ny = bins.
+
+        Referneces
+        ----------
+        - https://matplotlib.org/3.5.0/gallery/statistics/time_series_histogram.html
+
+        '''
+        pcolormesh_kwargs = {} if pcolormesh_kwargs is None else pcolormesh_kwargs
+
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+
+        if num_fine is None:
+            num_fine = np.min([self.nt*8, 1000])
+
+        num_series = self.nEns
+        x = self.time
+        Y = self.value.T
+        x_fine = np.linspace(x.min(), x.max(), num_fine)
+        y_fine = np.empty((num_series, num_fine), dtype=float)
+        for i in range(num_series):
+            y_fine[i, :] = np.interp(x_fine, x, Y[i, :])
+        y_fine = y_fine.flatten()
+        x_fine = np.tile(x_fine, [num_series, 1]).flatten()
+
+        if bins is None:
+            bins = [num_fine//2, num_series//10]
+
+        h, xedges, yedges = np.histogram2d(x_fine, y_fine, bins=bins)
+
+        pcm_kwargs = {}
+        if 'vmax' in pcolormesh_kwargs:
+            vmax = pcolormesh_kwargs['vmax']
+            pcolormesh_kwargs.pop('vmax')
+        else:
+            vmax = np.max(h) // 2
+
+        if color_scale == 'log':
+            pcm_kwargs['norm'] = LogNorm(vmax=vmax)
+        elif color_scale == 'linear':
+            pcm_kwargs['vmax'] = vmax
+        else:
+            raise ValueError('Wrong `color_scale`; should be either "log" or "linear".')
+
+        pcm_kwargs.update(pcolormesh_kwargs)
+
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+
+        if xlim is not None:
+            ax.set_xlim(xlim)
+
+        if ylim is not None:
+            ax.set_ylim(ylim)
+
+        cmap = copy.copy(plt.cm.__dict__[cmap])
+        cmap.set_bad(cmap(0))
+        pcm = ax.pcolormesh(xedges, yedges, h.T, cmap=cmap, rasterized=True, **pcm_kwargs)
+
+        fig.colorbar(pcm, ax=ax, label="# points", pad=0)
+
+        if title is not None:
+            ax.set_title(title, **title_kwargs)
+        
+        return fig, ax
             
 
     def plot_qs(self, figsize=[12, 4], qs=[0.025, 0.25, 0.5, 0.75, 0.975], color='indianred',
