@@ -656,28 +656,18 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">autoreload</span> 2
 <span class="c1"># import the pens package (https://github.com/fzhu2e/pens)</span>
 <span class="kn">import</span> <span class="nn">pens</span>
-<span class="kn">import</span> <span class="nn">os</span>
 </pre></div>
 </div>
 </div>
 <section id="Load-LMR-2.1-data-from-a-local-.nc-file">
 <h2>Load LMR 2.1 data from a local .nc file<a class="headerlink" href="#Load-LMR-2.1-data-from-a-local-.nc-file" title="Permalink to this headline">#</a></h2>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load LMR global-mean data</span>
-<span class="c1"># dname = &#39;/Users/julieneg/Documents/Science/Research/LastMillenniumReanalysis/data/LMRv2.1/&#39;</span>
-<span class="n">dname</span> <span class="o">=</span> <span class="s1">&#39;./data&#39;</span>
-<span class="n">ens</span> <span class="o">=</span> <span class="n">pens</span><span class="o">.</span><span class="n">EnsembleTS</span><span class="p">()</span><span class="o">.</span><span class="n">load_nc</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dname</span><span class="p">,</span> <span class="s1">&#39;gmt_MCruns_ensemble_full_LMRv2.1.nc&#39;</span><span class="p">),</span> <span class="n">var</span><span class="o">=</span><span class="s1">&#39;gmt&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ens</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">ens</span> <span class="o">=</span> <span class="n">pens</span><span class="o">.</span><span class="n">EnsembleTS</span><span class="p">()</span><span class="o">.</span><span class="n">load_nc</span><span class="p">(</span><span class="s1">&#39;./data/gmt_MCruns_ensemble_full_LMRv2.1.nc&#39;</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s1">&#39;gmt&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ens</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ens</span><span class="o">.</span><span class="n">nt</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ens</span><span class="o">.</span><span class="n">nEns</span><span class="p">)</span>
 </pre></div>
@@ -708,7 +698,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_spectra_6_0.png" src="../_images/notebooks_spectra_6_0.png" />
+<img alt="../_images/notebooks_spectra_5_0.png" src="../_images/notebooks_spectra_5_0.png" />
 </div>
 </div>
 </section>
@@ -726,7 +716,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_spectra_8_0.png" src="../_images/notebooks_spectra_8_0.png" />
+<img alt="../_images/notebooks_spectra_7_0.png" src="../_images/notebooks_spectra_7_0.png" />
 </div>
 </div>
 </section>
@@ -756,14 +746,14 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_spectra_10_1.png" src="../_images/notebooks_spectra_10_1.png" />
+<img alt="../_images/notebooks_spectra_9_1.png" src="../_images/notebooks_spectra_9_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_spectra_10_2.png" src="../_images/notebooks_spectra_10_2.png" />
+<img alt="../_images/notebooks_spectra_9_2.png" src="../_images/notebooks_spectra_9_2.png" />
 </div>
 </div>
 <p>Obviouskly, sampling from this ensemble will change the assessment of the timing of certain events (e.g. extreme cooling) in a given series, though the distribution is invariant. How does this affect the estimation of spectral features?</p>
@@ -775,15 +765,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import pyleoclim as pyleo</span>
-
-<span class="c1"># series_list = []</span>
-<span class="c1"># for i in range(ps.nEns):</span>
-<span class="c1">#     ts = pyleo.Series(time=ps.time,value=ps.value[:,i])</span>
-<span class="c1">#     series_list.append(ts)</span>
-
-<span class="c1"># es = pyleo.EnsembleSeries(series_list)</span>
-<span class="n">ps</span> <span class="o">=</span> <span class="n">ens</span><span class="o">.</span><span class="n">sample_random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2333</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ps</span> <span class="o">=</span> <span class="n">ens</span><span class="o">.</span><span class="n">sample_random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2333</span><span class="p">)</span>
 <span class="n">es</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">to_pyleo</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -805,31 +787,11 @@ Performing spectral analysis on individual series: 100%|████████
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">median</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-1
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">es_spec</span><span class="o">.</span><span class="n">plot_envelope</span><span class="p">()</span>
 <span class="c1"># extract and analyze the ensemble median</span>
-<span class="c1"># esm = pyleo.Series(time=ps.time,value=ps.median,value_name=&#39;GMST&#39;,label=&#39;LMR2.1 ensemble median&#39;)</span>
 <span class="n">esm</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">get_median</span><span class="p">()</span>
 <span class="n">esm</span> <span class="o">=</span> <span class="n">esm</span><span class="o">.</span><span class="n">to_pyleo</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;LMR2.1 ensemble median&#39;</span><span class="p">)</span>
 <span class="n">esm_spec</span> <span class="o">=</span> <span class="n">esm</span><span class="o">.</span><span class="n">spectral</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span><span class="s1">&#39;mtm&#39;</span><span class="p">)</span>
@@ -851,7 +813,7 @@ Performing spectral analysis on individual series: 100%|████████
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_spectra_15_1.png" src="../_images/notebooks_spectra_15_1.png" />
+<img alt="../_images/notebooks_spectra_13_1.png" src="../_images/notebooks_spectra_13_1.png" />
 </div>
 </div>
 <section id="Estimate-and-plot-scaling-exponents">
@@ -883,7 +845,7 @@ Performing spectral analysis on individual series: 100%|████████
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_spectra_17_1.png" src="../_images/notebooks_spectra_17_1.png" />
+<img alt="../_images/notebooks_spectra_15_1.png" src="../_images/notebooks_spectra_15_1.png" />
 </div>
 </div>
 <p>Evidently, sampling from the ensemble has a great impact on the estimated spectral slope. It is expected that online DA would greatly mitigate this effect.</p>
