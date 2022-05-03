@@ -18,6 +18,9 @@ class EnsembleTS:
 
     '''
     def __init__(self, time=None, value=None):
+        if np.ndim(value) == 1:
+            value = value[:, np.newaxis]
+
         self.time = time
         self.value = value
 
@@ -28,6 +31,10 @@ class EnsembleTS:
 
     def copy(self):
         return copy.deepcopy(self)
+
+    def get_median(self):
+        med = EnsembleTS(time=self.time, value=self.median)
+        return med
 
     def slice(self, timespan):
         ''' Slicing the timeseries with a timespan (tuple or list)
@@ -78,6 +85,31 @@ class EnsembleTS:
 
         new = EnsembleTS(time=time, value=value)
         return new
+
+    def to_pyleo(self, **kwargs):
+        ''' Convert to a `pyleoclim.EnsembleSeries` or `pyleoclim.Series` object
+
+        Parameters
+        ----------
+        kwargs : keyword arguments
+            keyword arguments for a `pyleoclim.Series` object
+
+        '''
+        try:
+            import pyleoclim as pyleo
+        except:
+            raise ImportError('Need to install Pyleoclim: pip install "pens[pyleo]"')
+
+        series_list = []
+        for i in range(self.nEns):
+            ts = pyleo.Series(time=self.time, value=self.value[..., i], **kwargs)
+            series_list.append(ts)
+
+        if len(series_list) == 1:
+            es = ts
+        else:
+            es = pyleo.EnsembleSeries(series_list)    
+        return es
 
     def sample_random(self, seed=None, n=1):
         ''' Get `n` realizations of random sample paths
@@ -169,7 +201,7 @@ class EnsembleTS:
         else:
             return ax
 
-    def plot_hist2d(self, figsize=[12, 4], cmap='plasma', color_scale='linear', bins=None, num_fine=None,
+    def line_density(self, figsize=[12, 4], cmap='plasma', color_scale='linear', bins=None, num_fine=None,
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, 
         title_kwargs=None, ax=None, **pcolormesh_kwargs,):
         ''' Plot the timeseries 2-D histogram
@@ -212,13 +244,15 @@ class EnsembleTS:
             bins = [num_fine//2, num_series//10]
 
         h, xedges, yedges = np.histogram2d(x_fine, y_fine, bins=bins)
+        h = h / h.max()  # normalize
 
         pcm_kwargs = {}
-        if 'vmax' in pcolormesh_kwargs:
-            vmax = pcolormesh_kwargs['vmax']
-            pcolormesh_kwargs.pop('vmax')
-        else:
-            vmax = np.max(h) // 2
+        # if 'vmax' in pcolormesh_kwargs:
+        #     vmax = pcolormesh_kwargs['vmax']
+        #     pcolormesh_kwargs.pop('vmax')
+        # else:
+        #     vmax = np.max(h) // 2
+        vmax = 1
 
         if color_scale == 'log':
             pcm_kwargs['norm'] = LogNorm(vmax=vmax)
@@ -242,7 +276,7 @@ class EnsembleTS:
         cmap.set_bad(cmap(0))
         pcm = ax.pcolormesh(xedges, yedges, h.T, cmap=cmap, rasterized=True, **pcm_kwargs)
 
-        fig.colorbar(pcm, ax=ax, label="# points", pad=0)
+        fig.colorbar(pcm, ax=ax, label='Density', pad=0)
 
         if title is not None:
             ax.set_title(title, **title_kwargs)
