@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 import copy
-from sklearn.metrics import mean_squared_error as mse
+import sklearn
 from tqdm import tqdm
 from . import utils
 
@@ -132,7 +132,8 @@ class EnsembleTS:
         Note that `metric` is used only for the final distance calculation.
         '''
         dist_func = {
-            'MSE': mse,
+            'MSE': sklearn.metrics.mean_squared_error,
+            'KLD': utils.kl_div,
         }
 
         path = np.ndarray((self.nt, 1))
@@ -150,8 +151,8 @@ class EnsembleTS:
         return new
         
 
-    def compare(self, ens, metric='MSE'):
-        ''' Compare with another EnsembleTS
+    def compare_nearest(self, ens, metric='MSE'):
+        ''' Compare with the nearest path from another EnsembleTS
 
         Note that we assume the size of the time axis is consistent.
         If not, please call EnsembleTS.slice() ahead.
@@ -160,6 +161,23 @@ class EnsembleTS:
         for i in tqdm(range(ens.nEns)):
             target = ens.value[:, i]
             dist[i] = self.sample_nearest(target, metric=metric).distance
+
+        return dist
+
+    def compare(self, ens, metric='MSE'):
+        ''' Compare with another EnsembleTS
+
+        Note that we assume the size of the time axis is consistent.
+        If not, please call EnsembleTS.slice() ahead.
+        '''
+        dist_func = {
+            'MSE': sklearn.metrics.mean_squared_error,
+            'KLD': utils.kl_div,
+        }
+        max_nens = np.min([self.nEns, ens.nEns])
+        dist = np.zeros(ens.nt)
+        for i in tqdm(range(ens.nt)):
+            dist[i] = dist_func[metric](self.value[i, :max_nens], ens.value[i, :max_nens])
 
         return dist
 

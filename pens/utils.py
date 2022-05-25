@@ -2,6 +2,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import cftime
 from termcolor import cprint
+from scipy.special import rel_entr
 
 def p_header(text):
     return cprint(text, 'cyan', attrs=['bold'])
@@ -94,3 +95,17 @@ def year_float2dates(year_float):
 
 
     return dates
+
+def kl_div(p, q):
+    # to avoid negative values
+    p = np.exp(p)
+    q = np.exp(q)
+
+    # convert to probability distributions
+    p /= np.sum(p)
+    q /= np.sum(q)
+
+    # calculate the KL divergence
+    vec = rel_entr(p, q)
+    res = np.sum(vec)
+    return res
