@@ -147,14 +147,13 @@ def means_and_trends_ensemble(var,segment_length,step,years):
     # Initialize vars
     means      = np.empty((n_segments,n_ens))
     trends     = np.empty((n_segments,n_ens))
-    biases     = np.empty((n_segments,n_ens))
     tm         = np.empty((n_segments))
-    idxs       = np.empty((n_segments,2),dtype=int)
+    idxs       = np.empty((n_segments,2), dtype=int)
 
     fc = 1/segment_length #smoothing length
 
     # Compute the means and trends for every location
-    for m in tqdm(range(n_ens), desc='Processing member:'):
+    for m in tqdm(range(n_ens), desc='Processing member'):
         y = var[:,m]
         yl = pyleo.utils.filter.butterworth(y,fc)
 
@@ -165,12 +164,13 @@ def means_and_trends_ensemble(var,segment_length,step,years):
             means[k,m] = np.mean(y[start_idx:end_idx])
 
             # compute trends with robust fit
-            x = years[start_idx:end_idx];  x  = sm.add_constant(x)
-            biases[k,m] , trends[k,m] = sm.OLS(yl[start_idx:end_idx],x).fit().params
+            x = years[start_idx:end_idx]
+            x = sm.add_constant(x)
+            _, trends[k,m] = sm.OLS(yl[start_idx:end_idx],x).fit().params
 
             # indices
             if m == 0:
                 idxs[k,:] = start_idx,end_idx-1
                 tm[k]     = np.median(years[start_idx:end_idx])
 
-    return means, trends, tm, idxs, biases
+    return means, trends, tm, idxs

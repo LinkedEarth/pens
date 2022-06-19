@@ -7,6 +7,7 @@ import xarray as xr
 import copy
 import sklearn
 from tqdm import tqdm
+from scipy.stats import gaussian_kde 
 from . import utils
 
 class EnsembleTS:
@@ -36,15 +37,26 @@ class EnsembleTS:
         med = EnsembleTS(time=self.time, value=self.median)
         return med
 
-    def get_trend(self, segment_length=10, step=10):
+    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200)):
         new = self.copy()
-        means, trends, tm, idxs, biases = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
+        means, trends, tm, idxs = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
+        dmeans  = means[-1:] - means[:-1] # difference of means
+        dtrends = segment_length*(trends[-1:] - trends[:-1]) # difference of trends
+
+        dm_kde = gaussian_kde(dmeans.flatten(),bw_method=0.2)
+        dm_prob = dm_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
+        dt_kde = gaussian_kde(dtrends.flatten(),bw_method=0.2)
+        dt_prob = dt_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
         res_dict = {
             'means': means,
             'trends': trends,
             'tm': tm,
             'idxs': idxs,
-            'biases': biases,
+            'dm_prob': dm_prob,
+            'dt_prob': dt_prob,
+            'dm_kde': dm_kde,
+            'dt_kde': dt_kde,
+            'xm': xm,
         }
         new.trend_dict = res_dict
         return new
@@ -379,10 +391,68 @@ class EnsembleTS:
             segment_years = self.time[all_idxs]
             dot = ax.scatter(tm[-1],means[-1].mean(),100,color='black',zorder=99,alpha=0.5)
             mean_line = ax.axhline(means[-1].mean(),color='black',linewidth=2,ls='-.',alpha=0.5)
-            slope_segment_values = all_idxs*trends[-1].mean() + biases[-1].mean()
+            slope_segment_values = all_idxs*trends[-1].mean()
+            slope_segment_values -= slope_segment_values.mean()
+            slope_segment_values += means[-1].mean()
             trend_line = ax.plot(segment_years,slope_segment_values,color='black',linewidth=2)
             ax.axvspan(segment_years[0],segment_years[-1],alpha=0.2,color='silver')
 
+
+        if title is not None:
+            _title_kwargs = {'fontweight': 'bold'}
+            _title_kwargs.update(title_kwargs)
+            ax.set_title(title, **_title_kwargs)
+
+        if 'fig' in locals():
+            return fig, ax
+        else:
+            return ax
+
+
+    def plot_trend_mean_kde(self, figsize=[5, 5], ax=None, title=None, hide_ylabel=False,
+                            title_kwargs=None, lgd_kwargs=None, tag='mean', color=None):
+        title_kwargs = {} if title_kwargs is None else title_kwargs
+        lgd_kwargs = {} if lgd_kwargs is None else lgd_kwargs
+        ax.margins(0)
+
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+
+        xm = self.trend_dict['xm']
+        xp = xm[xm>0]
+        dm_kde = self.trend_dict['dm_kde']
+        dm_prob = self.trend_dict['dm_prob']
+        dt_kde = self.trend_dict['dt_kde']
+        dt_prob = self.trend_dict['dt_prob']
+
+        if tag == 'mean':
+            kde = dm_kde
+            prob = dm_prob
+        elif tag == 'trend':
+            kde = dt_kde
+            prob = dt_prob
+
+        nblocks, _ = np.shape(self.trend_dict['means'])
+        Lb = self.nt // nblocks
+        label = f'{Lb}y, ' + r'$P(\Delta \langle \bar{T} \rangle > 0)=$' + f'{prob:3.2f}'
+        if color is not None:
+            ax.fill_between(xp, kde(xp),alpha=0.3, color=color)
+            ax.plot(xm, kde(xm), linewidth=2, label=label, color=color)
+        else:
+            ax.fill_between(xp, kde(xp),alpha=0.3)
+            ax.plot(xm, kde(xm), linewidth=2, label=label)
+
+        _lgd_kwargs = {'loc': 'upper right', 'fontsize': 12, 'bbox_to_anchor': (1.2, 1)}
+        _lgd_kwargs.update(lgd_kwargs)
+        ax.legend(**_lgd_kwargs)
+
+        if tag == 'mean':
+            ax.set_xlabel(r'$\Delta \langle \bar{T} \rangle ~({}^{\circ} C)$')
+        elif tag == 'trend':
+            ax.set_xlabel(r'$\Delta \langle \dot{T} \rangle ~({}^{\circ} C/\mathrm{interval})$')
+
+        if not hide_ylabel:
+            ax.set_ylabel('Probability Density')
 
         if title is not None:
             _title_kwargs = {'fontweight': 'bold'}
