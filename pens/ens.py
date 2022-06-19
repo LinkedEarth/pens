@@ -79,9 +79,17 @@ class EnsembleTS:
 
         '''
         ds = xr.open_dataset(path)
-        time = np.array([t.year for t in ds[time_name].values])
+        if time_name == 'year':
+            time = ds[time_name].values
+        else:
+            time = np.array([t.year for t in ds[time_name].values])
+
+        arr = ds[var].values
+        if ds[var].dims.index(time_name) != 0:
+            arr = np.moveaxis(arr, ds[var].dims.index(time_name), 0)
+
         nt = len(time)
-        value = np.reshape(ds[var].values, (nt, -1))
+        value = np.reshape(arr, (nt, -1))
 
         new = EnsembleTS(time=time, value=value)
         return new
