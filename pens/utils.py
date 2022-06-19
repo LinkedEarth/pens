@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 import cftime
 from termcolor import cprint
 from scipy.special import rel_entr
+import statsmodels.api as sm
+from tqdm import tqdm
 
 def p_header(text):
     return cprint(text, 'cyan', attrs=['bold'])
@@ -109,3 +111,66 @@ def kl_div(p, q):
     vec = rel_entr(p, q)
     res = np.sum(vec)
     return res
+
+def means_and_trends_ensemble(var,segment_length,step,years):
+    ''' Calculates the means and trends on an ensemble array
+        Uses statsmodels' OLS method
+
+     Inputs:
+        var:                2d numpy array [time, ens member]
+        segment_length:     # elements in block (integer)
+        step:               step size (integer)
+        years:              1d numpy array
+
+     Outputs:
+        means:      Means of every segment.
+        trends:     trends over every segment.
+        idxs:       The first and last index of every segment, for record-keeping.
+        tm:         median time point of each block
+
+    Author: Julien Emile-Geay, based on code by Michael P. Erb.
+    Date: March 8, 2018
+    '''
+    try:
+        import pyleoclim as pyleo
+    except:
+        raise ImportError('Need to install Pyleoclim: `pip install pyleoclim`')
+
+    if var.ndim < 2:
+       print("Beef up your ensemble, yo. Ain't got nothing in it")
+
+    n_years, n_ens = var.shape
+
+    n_segments = int(((n_years-segment_length)/step)+1)
+    skip_idx = np.remainder(n_years-segment_length,step)  # If the segments don't cover the entire time-span, skip years at the beginning.
+
+    # Initialize vars
+    means      = np.empty((n_segments,n_ens))
+    trends     = np.empty((n_segments,n_ens))
+    biases     = np.empty((n_segments,n_ens))
+    tm         = np.empty((n_segments))
+    idxs       = np.empty((n_segments,2),dtype=int)
+
+    fc = 1/segment_length #smoothing length
+
+    # Compute the means and trends for every location
+    for m in tqdm(range(n_ens), desc='Processing member:'):
+        y = var[:,m]
+        yl = pyleo.utils.filter.butterworth(y,fc)
+
+        for k in range(n_segments):
+            start_idx = skip_idx+(k*step)
+            end_idx   = start_idx+segment_length-1
+            # compute block averages
+            means[k,m] = np.mean(y[start_idx:end_idx])
+
+            # compute trends with robust fit
+            x = years[start_idx:end_idx];  x  = sm.add_constant(x)
+            biases[k,m] , trends[k,m] = sm.OLS(yl[start_idx:end_idx],x).fit().params
+
+            # indices
+            if m == 0:
+                idxs[k,:] = start_idx,end_idx-1
+                tm[k]     = np.median(years[start_idx:end_idx])
+
+    return means, trends, tm, idxs, biases

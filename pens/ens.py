@@ -36,6 +36,19 @@ class EnsembleTS:
         med = EnsembleTS(time=self.time, value=self.median)
         return med
 
+    def get_trend(self, segment_length=10, step=10):
+        new = self.copy()
+        means, trends, tm, idxs, biases = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
+        res_dict = {
+            'means': means,
+            'trends': trends,
+            'tm': tm,
+            'idxs': idxs,
+            'biases': biases,
+        }
+        new.trend_dict = res_dict
+        return new
+
     def slice(self, timespan):
         ''' Slicing the timeseries with a timespan (tuple or list)
         Parameters
@@ -106,7 +119,7 @@ class EnsembleTS:
         try:
             import pyleoclim as pyleo
         except:
-            raise ImportError('Need to install Pyleoclim: pip install "pens[pyleo]"')
+            raise ImportError('Need to install Pyleoclim: `pip install pyleoclim`')
 
         series_list = []
         for i in range(self.nEns):
@@ -312,7 +325,7 @@ class EnsembleTS:
 
     def plot_qs(self, figsize=[12, 4], qs=[0.025, 0.25, 0.5, 0.75, 0.975], color='indianred',
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
-        plot_kwargs=None, legend_kwargs=None, title_kwargs=None, ax=None):
+        plot_kwargs=None, legend_kwargs=None, title_kwargs=None, ax=None, plot_trend=True):
         ''' Plot the quantiles
         '''
 
@@ -355,6 +368,20 @@ class EnsembleTS:
         _legend_kwargs = {'ncol': 3, 'loc': 'upper left'}
         _legend_kwargs.update(legend_kwargs)
         ax.legend(**_legend_kwargs)
+
+        if hasattr(self, 'trend_dict') and plot_trend:
+            means = self.trend_dict['means']
+            trends = self.trend_dict['trends']
+            biases = self.trend_dict['biases']
+            tm = self.trend_dict['tm']
+            idxs = self.trend_dict['idxs']
+            all_idxs = np.arange(idxs[-1,0],idxs[-1,1]+1)
+            segment_years = self.time[all_idxs]
+            dot = ax.scatter(tm[-1],means[-1].mean(),100,color='black',zorder=99,alpha=0.5)
+            mean_line = ax.axhline(means[-1].mean(),color='black',linewidth=2,ls='-.',alpha=0.5)
+            slope_segment_values = all_idxs*trends[-1].mean() + biases[-1].mean()
+            trend_line = ax.plot(segment_years,slope_segment_values,color='black',linewidth=2)
+            ax.axvspan(segment_years[0],segment_years[-1],alpha=0.2,color='silver')
 
 
         if title is not None:
