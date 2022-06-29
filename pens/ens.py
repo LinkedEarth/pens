@@ -30,6 +30,18 @@ class EnsembleTS:
             self.nEns = np.shape(self.value)[-1]
             self.median = np.median(self.value, axis=-1)
 
+    def __getitem__(self, key):
+        new = self.copy()
+        new.value = new.value[key]
+        if type(key) is tuple:
+            new.time = new.time[key[0]]
+        else:
+            new.time = new.time[key]
+        new.nt = np.shape(new.value)[0]
+        new.nEns = np.shape(new.value)[-1]
+        new.median = np.median(new.value, axis=-1)
+        return new
+
     def copy(self):
         return copy.deepcopy(self)
 
@@ -384,7 +396,6 @@ class EnsembleTS:
         if hasattr(self, 'trend_dict') and plot_trend:
             means = self.trend_dict['means']
             trends = self.trend_dict['trends']
-            biases = self.trend_dict['biases']
             tm = self.trend_dict['tm']
             idxs = self.trend_dict['idxs']
             all_idxs = np.arange(idxs[-1,0],idxs[-1,1]+1)
@@ -410,7 +421,7 @@ class EnsembleTS:
 
 
     def plot_trend_mean_kde(self, figsize=[5, 5], ax=None, title=None, hide_ylabel=False,
-                            title_kwargs=None, lgd_kwargs=None, tag='mean', color=None):
+                            title_kwargs=None, lgd_kwargs=None, tag='mean', label=None, color=None):
         title_kwargs = {} if title_kwargs is None else title_kwargs
         lgd_kwargs = {} if lgd_kwargs is None else lgd_kwargs
         ax.margins(0)
@@ -434,7 +445,15 @@ class EnsembleTS:
 
         nblocks, _ = np.shape(self.trend_dict['means'])
         Lb = self.nt // nblocks
-        label = f'{Lb}y, ' + r'$P(\Delta \langle \bar{T} \rangle > 0)=$' + f'{prob:3.2f}'
+        if tag == 'mean':
+            if label is None:
+                label = f'{Lb}y, ' + r'$P(\Delta \langle \bar{T} \rangle > 0)=$' + f'{prob:3.2f}'
+            xlabel = r'$\Delta \langle \bar{T} \rangle ~({}^{\circ} C)$'
+        elif tag == 'trend':
+            if label is None:
+                label = f'{Lb}y, ' + r'$P(\Delta \langle \dot{T} \rangle > 0)=$' + f'{prob:3.2f}'
+            xlabel = r'$\Delta \langle \dot{T} \rangle ~({}^{\circ} C/\mathrm{interval})$'
+
         if color is not None:
             ax.fill_between(xp, kde(xp),alpha=0.3, color=color)
             ax.plot(xm, kde(xm), linewidth=2, label=label, color=color)
@@ -445,11 +464,7 @@ class EnsembleTS:
         _lgd_kwargs = {'loc': 'upper right', 'fontsize': 12, 'bbox_to_anchor': (1.2, 1)}
         _lgd_kwargs.update(lgd_kwargs)
         ax.legend(**_lgd_kwargs)
-
-        if tag == 'mean':
-            ax.set_xlabel(r'$\Delta \langle \bar{T} \rangle ~({}^{\circ} C)$')
-        elif tag == 'trend':
-            ax.set_xlabel(r'$\Delta \langle \dot{T} \rangle ~({}^{\circ} C/\mathrm{interval})$')
+        ax.set_xlabel(xlabel)
 
         if not hide_ylabel:
             ax.set_ylabel('Probability Density')
