@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 import copy
-import sklearn
+import sklearn.metrics
 from tqdm import tqdm
 from scipy.stats import gaussian_kde 
 from . import utils
@@ -228,11 +228,10 @@ class EnsembleTS:
 
     def plot(self, figsize=[12, 4],
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
-        plot_kwargs=None, legend_kwargs=None, title_kwargs=None, ax=None):
+        legend_kwargs=None, title_kwargs=None, ax=None, **plot_kwargs):
         ''' Plot the raw values (multiple series)
         '''
 
-        plot_kwargs = {} if plot_kwargs is None else plot_kwargs
         legend_kwargs = {} if legend_kwargs is None else legend_kwargs
         title_kwargs = {} if title_kwargs is None else title_kwargs
 
@@ -351,6 +350,23 @@ class EnsembleTS:
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
         plot_kwargs=None, legend_kwargs=None, title_kwargs=None, ax=None, plot_trend=True):
         ''' Plot the quantiles
+
+        Args:
+            figsize (list, optional): The size of the figure. Defaults to [12, 4].
+            qs (list, optional): The list to denote the quantiles plotted. Defaults to [0.025, 0.25, 0.5, 0.75, 0.975].
+            color (str, optional): The basic color for the quantile envelopes. Defaults to 'indianred'.
+            xlabel (str, optional): The label for the x-axis. Defaults to 'Year (CE)'.
+            ylabel (str, optional): The label for the y-axis. Defaults to None.
+            title (str, optional): The title of the figure. Defaults to None.
+            ylim (tuple or list, optional): The limit of the y-axis. Defaults to None.
+            xlim (tuple or list, optional): The limit of the x-axis. Defaults to None.
+            alphas (list, optional): The alphas for the quantile envelopes. Defaults to [0.5, 0.1].
+            plot_kwargs (dict, optional): The keyward arguments for the `ax.plot()` function. Defaults to None.
+            legend_kwargs (dict, optional): The keyward arguments for the `ax.legend()` function. Defaults to None.
+            title_kwargs (dict, optional): The keyward arguments for the `ax.title()` function. Defaults to None.
+            ax (matplotlib.axes, optional): The `matplotlib.axes` object. If set the image will be plotted in the existing `ax`. Defaults to None.
+            plot_trend (bool, optional): If True, will plot the trend analysis result if existed. Defaults to True.
+
         '''
 
         plot_kwargs = {} if plot_kwargs is None else plot_kwargs
@@ -378,7 +394,9 @@ class EnsembleTS:
 
         ax.plot(self.time, ts_qs[idx_mid], label=label_mid, color=color, **_plot_kwargs)
         for i, alpha in zip(range(idx_mid), alphas[::-1]):
-            ax.fill_between(self.time, ts_qs[-(i+1)], ts_qs[i], color=color, alpha=alpha, label=f'{qs[i]*100}% to {qs[-(i+1)]*100}%')
+            ax.fill_between(
+                self.time, ts_qs[-(i+1)], ts_qs[i], color=color, alpha=alpha,
+                label=f'{qs[i]*100}% to {qs[-(i+1)]*100}%')
 
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
@@ -389,7 +407,7 @@ class EnsembleTS:
         if ylim is not None:
             ax.set_xlim(ylim)
 
-        _legend_kwargs = {'ncol': 3, 'loc': 'upper left'}
+        _legend_kwargs = {'ncol': len(qs)//2+1, 'loc': 'upper left'}
         _legend_kwargs.update(legend_kwargs)
         ax.legend(**_legend_kwargs)
 
