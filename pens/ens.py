@@ -263,7 +263,7 @@ class EnsembleTS:
         else:
             return ax
 
-    def line_density(self, figsize=[12, 4], cmap='plasma', color_scale='linear', bins=None, num_fine=None,
+    def line_density(self, figsize=[12, 4], cmap='Greys', color_scale='linear', bins=None, num_fine=None,
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, 
         title_kwargs=None, ax=None, **pcolormesh_kwargs,):
         ''' Plot the timeseries 2-D histogram
