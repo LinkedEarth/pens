@@ -18,12 +18,13 @@ class EnsembleTS:
     and nEns is the number of ensemble members.
 
     '''
-    def __init__(self, time=None, value=None):
+    def __init__(self, time=None, value=None, label=None):
         if np.ndim(value) == 1:
             value = value[:, np.newaxis]
 
         self.time = time
         self.value = value
+        self.label = label
 
         if self.value is not None:
             self.nt = np.shape(self.value)[0]
@@ -338,7 +339,7 @@ class EnsembleTS:
         cmap.set_bad(cmap(0))
         pcm = ax.pcolormesh(xedges, yedges, h.T, cmap=cmap, rasterized=True, **pcm_kwargs)
 
-        fig.colorbar(pcm, ax=ax, label='Density', pad=0)
+        fig.colorbar(pcm, ax=ax, label=self.label +' density', pad=0)
 
         if title is not None:
             ax.set_title(title, **title_kwargs)
@@ -426,11 +427,14 @@ class EnsembleTS:
             trend_line = ax.plot(segment_years,slope_segment_values,color='black',linewidth=2)
             ax.axvspan(segment_years[0],segment_years[-1],alpha=0.2,color='silver')
 
-
-        if title is not None:
-            _title_kwargs = {'fontweight': 'bold'}
-            _title_kwargs.update(title_kwargs)
+        
+        _title_kwargs = {'fontweight': 'bold'}
+        _title_kwargs.update(title_kwargs)
+        
+        if title is not None:       
             ax.set_title(title, **_title_kwargs)
+        elif title is None and self.label is not None:
+            ax.set_title(self.label, **_title_kwargs)
 
         if 'fig' in locals():
             return fig, ax
