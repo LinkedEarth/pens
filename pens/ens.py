@@ -27,9 +27,26 @@ class EnsembleTS:
         self.label = label
 
         if self.value is not None:
-            self.nt = np.shape(self.value)[0]
-            self.nEns = np.shape(self.value)[-1]
-            self.median = np.median(self.value, axis=-1)
+            self.refresh()
+
+    def refresh(self):
+        self.nt = np.shape(self.value)[0]
+        self.nEns = np.shape(self.value)[1]
+        self.median = np.nanmedian(self.value, axis=1)
+        self.mean = np.nanmean(self.value, axis=1)
+        self.std = np.nanstd(self.value, axis=1)
+
+    def get_mean(self):
+        mean = EnsembleTS(time=self.time, value=self.mean)
+        return mean
+
+    def get_median(self):
+        med = EnsembleTS(time=self.time, value=self.median)
+        return med
+
+    def get_std(self):
+        std = EnsembleTS(time=self.time, value=self.std)
+        return std
 
     def __getitem__(self, key):
         ''' Get a slice of the ensembles.
@@ -40,9 +57,8 @@ class EnsembleTS:
             new.time = new.time[key[0]]
         else:
             new.time = new.time[key]
-        new.nt = np.shape(new.value)[0]
-        new.nEns = np.shape(new.value)[-1]
-        new.median = np.median(new.value, axis=-1)
+
+        new.refresh()
         return new
 
     def __add__(self, series):
@@ -60,11 +76,11 @@ class EnsembleTS:
         if isinstance(series, EnsembleTS):
             series = series.median
 
-        if len(np.shape(series)) > 0:
+        if np.ndim(series) > 0:
             series = np.array(series)[:, np.newaxis]
 
         new.value += series
-
+        new.refresh()
         return new
 
     def __sub__(self, series):
@@ -81,11 +97,11 @@ class EnsembleTS:
         if isinstance(series, EnsembleTS):
             series = series.median
 
-        if len(np.shape(series)) > 0:
+        if np.ndim(series) > 0:
             series = np.array(series)[:, np.newaxis]
 
         new.value -= series
-
+        new.refresh()
         return new
 
     def __mul__(self, series):
@@ -102,12 +118,13 @@ class EnsembleTS:
         if isinstance(series, EnsembleTS):
             series = series.median
 
-        if len(np.shape(series)) > 0:
+        if np.ndim(series) > 0:
             for i in range(self.nt):
                 new.value[i] *= series[i]
         else:
             new.value *= series
 
+        new.refresh()
         return new
 
     def __truediv__(self, series):
@@ -124,20 +141,17 @@ class EnsembleTS:
         if isinstance(series, EnsembleTS):
             series = series.median
 
-        if len(np.shape(series)) > 0:
+        if np.ndim(series) > 0:
             for i in range(self.nt):
                 new.value[i] /= series[i]
         else:
             new.value /= series
 
+        new.refresh()
         return new
 
     def copy(self):
         return copy.deepcopy(self)
-
-    def get_median(self):
-        med = EnsembleTS(time=self.time, value=self.median)
-        return med
 
     def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200)):
         new = self.copy()
