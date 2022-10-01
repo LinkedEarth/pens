@@ -32,6 +32,8 @@ class EnsembleTS:
             self.median = np.median(self.value, axis=-1)
 
     def __getitem__(self, key):
+        ''' Get a slice of the ensembles.
+        '''
         new = self.copy()
         new.value = new.value[key]
         if type(key) is tuple:
@@ -41,6 +43,93 @@ class EnsembleTS:
         new.nt = np.shape(new.value)[0]
         new.nEns = np.shape(new.value)[-1]
         new.median = np.median(new.value, axis=-1)
+        return new
+
+    def __add__(self, series):
+        ''' Add a series to the ensembles.
+
+        Parameters
+        ----------
+        series : int, float, array, EnsembleTS
+            A series to be added to the value field of each ensemble member.
+            Can be a constant int/float value, an array, or another EnsembleTS object with only one member.
+            If it's an EnsembleTS that has multiple members, the median will be used as the series.
+
+        '''
+        new = self.copy()
+        if isinstance(series, EnsembleTS):
+            series = series.median
+
+        if len(np.shape(series)) > 0:
+            series = np.array(series)[:, np.newaxis]
+
+        new.value += series
+
+        return new
+
+    def __sub__(self, series):
+        ''' Substract a series from the ensembles.
+
+        Parameters
+        ----------
+        series : int, float, array, EnsembleTS
+            A series to be substracted from the value field of each ensemble member.
+            Can be a constant int/float value, an array, or another EnsembleTS object with only one member.
+            If it's an EnsembleTS that has multiple members, the median will be used as the series.
+        '''
+        new = self.copy()
+        if isinstance(series, EnsembleTS):
+            series = series.median
+
+        if len(np.shape(series)) > 0:
+            series = np.array(series)[:, np.newaxis]
+
+        new.value -= series
+
+        return new
+
+    def __mul__(self, series):
+        ''' Element-wise multiplication. The multiplier should have the same length as self.nt.
+
+        Parameters
+        ----------
+        series : int, float, array, EnsembleTS
+            A series to be element-wise multiplied by for the value field of each ensemble member.
+            Can be a constant int/float value, an array, or another EnsembleTS object with only one member.
+            If it's an EnsembleTS that has multiple members, the median will be used as the series.
+        '''
+        new = self.copy()
+        if isinstance(series, EnsembleTS):
+            series = series.median
+
+        if len(np.shape(series)) > 0:
+            for i in range(self.nt):
+                new.value[i] *= series[i]
+        else:
+            new.value *= series
+
+        return new
+
+    def __truediv__(self, series):
+        ''' Element-wise division. The divider should have the same length as self.nt.
+
+        Parameters
+        ----------
+        series : int, float, array, EnsembleTS
+            A series to be element-wise divided by for the value field of each ensemble member.
+            Can be a constant int/float value, an array, or another EnsembleTS object with only one member.
+            If it's an EnsembleTS that has multiple members, the median will be used as the series.
+        '''
+        new = self.copy()
+        if isinstance(series, EnsembleTS):
+            series = series.median
+
+        if len(np.shape(series)) > 0:
+            for i in range(self.nt):
+                new.value[i] /= series[i]
+        else:
+            new.value /= series
+
         return new
 
     def copy(self):
@@ -76,6 +165,7 @@ class EnsembleTS:
 
     def slice(self, timespan):
         ''' Slicing the timeseries with a timespan (tuple or list)
+
         Parameters
         ----------
         timespan : tuple or list
@@ -83,6 +173,7 @@ class EnsembleTS:
             When there are n time points, the output Series includes n/2 segments.
             For example, if timespan = [a, b], then the sliced output includes one segment [a, b];
             if timespan = [a, b, c, d], then the sliced output includes segment [a, b] and segment [c, d].
+
         Returns
         -------
         new : EnsembleTS
