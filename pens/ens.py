@@ -49,7 +49,7 @@ class EnsembleTS:
         return std
 
     def __getitem__(self, key):
-        ''' Get a slice of the ensembles.
+        ''' Get a slice of the ensemble.
         '''
         new = self.copy()
         new.value = new.value[key]
@@ -62,7 +62,7 @@ class EnsembleTS:
         return new
 
     def __add__(self, series):
-        ''' Add a series to the ensembles.
+        ''' Add a series to the ensemble.
 
         Parameters
         ----------
@@ -84,7 +84,7 @@ class EnsembleTS:
         return new
 
     def __sub__(self, series):
-        ''' Substract a series from the ensembles.
+        ''' Substract a series from the ensemble.
 
         Parameters
         ----------
@@ -387,7 +387,7 @@ class EnsembleTS:
 
         Referneces
         ----------
-        - https://matplotlib.org/3.5.0/gallery/statistics/time_series_histogram.html
+        - https://matplotlib.org/3.6.0/gallery/statistics/time_series_histogram.html
 
         '''
         pcolormesh_kwargs = {} if pcolormesh_kwargs is None else pcolormesh_kwargs
