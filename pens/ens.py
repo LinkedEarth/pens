@@ -18,16 +18,55 @@ class EnsembleTS:
     and nEns is the number of ensemble members.
 
     '''
-    def __init__(self, time=None, value=None, label=None):
+    def __init__(self, time=None, value=None, label=None,  time_name=None, 
+                 time_unit=None, value_name=None, value_unit=None):
         if np.ndim(value) == 1:
             value = value[:, np.newaxis]
 
         self.time = time
         self.value = value
         self.label = label
+        self.time_name = time_name
+        self.time_unit = time_unit
+        self.value_name = value_name
+        self.value_unit = value_unit
 
         if self.value is not None:
             self.refresh()
+            
+    def make_labels(self):
+        '''
+        Initialization of plot labels based on object metadata
+
+        Returns
+        -------
+        time_header : str
+            Label for the time axis
+        value_header : str
+            Label for the value axis
+
+        '''
+        if self.time_name is not None:
+            time_name_str = self.time_name
+        else:
+            time_name_str = 'time'
+
+        if self.value_name is not None:
+            value_name_str = self.value_name
+        else:
+            value_name_str = 'value'
+
+        if self.value_unit is not None:
+            value_header = f'{value_name_str} [{self.value_unit}]'
+        else:
+            value_header = f'{value_name_str}'
+
+        if self.time_unit is not None:
+            time_header = f'{time_name_str} [{self.time_unit}]'
+        else:
+            time_header = f'{time_name_str}'
+
+        return time_header, value_header 
 
     def refresh(self):
         self.nt = np.shape(self.value)[0]
@@ -37,7 +76,10 @@ class EnsembleTS:
         self.std = np.nanstd(self.value, axis=1)
 
     def get_mean(self):
-        mean = EnsembleTS(time=self.time, value=self.mean)
+        #mean = self.copy() # copy object to get metadata
+        #mean.value = np.transpose(np.ones_like([self.time,])*self.mean)
+        #mean.value = self.mean[:, np.newaxis]
+        mean = EnsembleTS(time=self.time, value=self.median)
         return mean
 
     def get_median(self):
@@ -259,7 +301,13 @@ class EnsembleTS:
         if len(series_list) == 1:
             es = ts
         else:
-            es = pyleo.EnsembleSeries(series_list)    
+            es = pyleo.EnsembleSeries(series_list)   
+        
+        # transfer unit metadata
+        es.value_name = self.value_name 
+        es.value_unit = self.value_unit
+        es.time_name = self.time_name
+        es.value_name = self.value_name
         return es
 
     def sample_random(self, seed=None, n=1):
@@ -431,8 +479,17 @@ class EnsembleTS:
 
         pcm_kwargs.update(pcolormesh_kwargs)
 
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
+        time_label, value_label = self.make_labels()
+        
+        if xlabel is not None:
+            ax.set_xlabel(xlabel)
+        else:
+            ax.set_xlabel(time_label)
+            
+        if ylabel is not None:
+            ax.set_ylabel(ylabel)
+        else:
+            ax.set_ylabel(value_label) 
 
         if xlim is not None:
             ax.set_xlim(xlim)
@@ -453,7 +510,7 @@ class EnsembleTS:
             
 
     def plot_qs(self, figsize=[12, 4], qs=[0.025, 0.25, 0.5, 0.75, 0.975], color='indianred',
-        xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
+        xlabel=None, ylabel=None, title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
         plot_kwargs=None, legend_kwargs=None, title_kwargs=None, ax=None, plot_trend=True):
         ''' Plot the quantiles
 
@@ -504,9 +561,18 @@ class EnsembleTS:
                 self.time, ts_qs[-(i+1)], ts_qs[i], color=color, alpha=alpha,
                 label=f'{qs[i]*100}% to {qs[-(i+1)]*100}%')
 
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
-
+        time_label, value_label = self.make_labels()
+        
+        if xlabel is not None:
+            ax.set_xlabel(xlabel)
+        else:
+            ax.set_xlabel(time_label)
+            
+        if ylabel is not None:
+            ax.set_ylabel(ylabel)
+        else:
+            ax.set_ylabel(value_label) 
+            
         if xlim is not None:
             ax.set_xlim(xlim)
 
