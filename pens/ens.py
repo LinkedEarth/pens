@@ -76,19 +76,19 @@ class EnsembleTS:
         self.std = np.nanstd(self.value, axis=1)
 
     def get_mean(self):
-        #mean = self.copy() # copy object to get metadata
-        #mean.value = np.transpose(np.ones_like([self.time,])*self.mean)
-        #mean.value = self.mean[:, np.newaxis]
-        mean = EnsembleTS(time=self.time, value=self.median)
-        return mean
+        res = self.copy() # copy object to get metadata
+        res.value = self.mean[:, np.newaxis]
+        return res
 
     def get_median(self):
-        med = EnsembleTS(time=self.time, value=self.median)
-        return med
+        res = self.copy() # copy object to get metadata
+        res.value = self.median[:, np.newaxis]
+        return res
 
     def get_std(self):
-        std = EnsembleTS(time=self.time, value=self.std)
-        return std
+        res = self.copy() # copy object to get metadata
+        res.value = self.std[:, np.newaxis]
+        return res
 
     def __getitem__(self, key):
         ''' Get a slice of the ensemble.
