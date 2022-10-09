@@ -78,16 +78,19 @@ class EnsembleTS:
     def get_mean(self):
         res = self.copy() # copy object to get metadata
         res.value = self.mean[:, np.newaxis]
+        res.refresh()
         return res
 
     def get_median(self):
         res = self.copy() # copy object to get metadata
         res.value = self.median[:, np.newaxis]
+        res.refresh()
         return res
 
     def get_std(self):
         res = self.copy() # copy object to get metadata
         res.value = self.std[:, np.newaxis]
+        res.refresh()
         return res
 
     def __getitem__(self, key):
