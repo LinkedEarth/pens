@@ -3,6 +3,7 @@ from matplotlib import gridspec
 from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import xarray as xr
 import copy
 import sklearn.metrics
@@ -281,6 +282,58 @@ class EnsembleTS:
 
         new = EnsembleTS(time=time, value=value)
         return new
+
+    def from_df(self, df, time_column=None, value_columns=None):
+        ''' Load data from a pandas.DataFrame
+
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            The pandas.DataFrame object.
+
+        time_column : str
+            The label of the column for the time axis.
+
+        value_columns : list of str
+            The list of the labels for the value axis of the ensemble members.
+
+        '''
+        if time_column is None:
+            raise ValueError('`time_column` must be specified!')
+
+        if value_columns is None:
+            value_columns = list(set(df.columns) - {time_column})
+            
+        arr = df[value_columns].values
+        time = df[time_column].values
+        nt = len(time)
+        value = np.reshape(arr, (nt, -1))
+
+        ens = EnsembleTS(time=time, value=value)
+        return ens
+
+    def to_df(self, time_column=None, value_column='ens'):
+        ''' Convert an EnsembleTS to a pandas.DataFrame
+
+        Parameters
+        ----------
+        time_column : str
+            The label of the column for the time axis.
+
+        value_column : str
+            The base column label for the ensemble members.
+            By default, the columns for the members will be labeled as "ens.0", "ens.1", "ens.2", etc.
+
+        '''
+        time_column = 'time' if time_column is None else time_column
+        data_dict = {}
+        data_dict[time_column] = self.time
+        nt, nEns = np.shape(self.value)
+        for i in range(nEns):
+            data_dict[f'{value_column}.{i}'] = self.value[:, i]
+
+        df = pd.DataFrame(data_dict)
+        return df
 
     def to_pyleo(self, **kwargs):
         ''' Convert to a `pyleoclim.EnsembleSeries` or `pyleoclim.Series` object
