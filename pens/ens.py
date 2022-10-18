@@ -9,6 +9,11 @@ import sklearn.metrics
 from tqdm import tqdm
 from scipy.stats import gaussian_kde 
 from . import utils
+import statsmodels as sm
+import scipy.linalg as linalg
+from scipy.stats import multivariate_normal
+from tqdm import tqdm
+
 
 class EnsembleTS:
     ''' Ensemble Timeseries
@@ -674,3 +679,81 @@ class EnsembleTS:
             return fig, ax
         else:
             return ax
+        
+        
+    def likelihood(self, ts, phi, max_lag = 5, mute_pbar=False):
+        '''
+        Computes likelihood of observing a trajectory ts conditional on the ensemble.
+        Assumes that deterministic trends and time-dependent scaling have been removed already.
+        
+        Parameters
+        ----------
+        
+        ts : Pyleoclim Series object
+            Timeseries to be evaluated against ensemble EnsTS
+            
+        phi : AR model parameters. phi.shape[1] sets up the model order. 
+            If None, phi is estimated using statsmodels.tsa.ar_model 
+            
+        max_lag : int
+            Maximum number of lags to take into account in AR model
+
+        Returns
+        -------
+        f :  likelihood 
+
+        '''
+        y = ts.value
+        mu = self.get_mean().value[:,0]
+        sig = self.get_std().value[:,0]
+        
+        self = (self - mu)/sig
+        y = (y - mu)/sig
+
+        if len(y) != self.nt:
+            raise ValueError("The series and ensemble must have the same time dimension")
+             
+        if phi is not None:
+            mod_sel = sm.tsa.ar_model.ar_select_order(mu, maxlag=max_lag)
+            ar_order = len(mod_sel.ar_lags)     
+        else:
+            ar_order = phi.shape[1]
+            self_pyleo = self.to_pyleo()
+            # estimate autocorrelation parameters
+            for i, s in enumerate(self_pyleo.series_list):
+                ts_mod = sm.tsa.ar_model.AutoReg(s.value, ar_order) # set up the model
+                ts_res = ts_mod.fit(cov_type='HAC', cov_kwds={'maxlags': ar_order})  # Heteroskedasticity-autocorrelation robust covariance estimation.
+                phi[i,:] = ts_res.params[1:] # export estimated parameters
+            
+        f     = np.empty((self.nEns)) # array to store likelihood of y
+        fmu   = np.empty_like(f) # array to store likelihoods of the mean (for reference)
+              
+        for j in tqdm(range(self.nEns), total=self.nEns, disable=mute_pbar): # loop over ensemble members
+            rho = np.empty((self.nt))
+            x = self.value[:,j]      
+            acf = sm.tsa.stattools.acf(x,nlags=ar_order)
+            rho[:ar_order+1] = acf
+            for k in range(ar_order+1,self.nt):
+                rho[k] = phi[j,0]*rho[k-1]+phi[j,1]*rho[k-2]+phi[j,2]*rho[k-3]  # apply the recurrence relation R
+            
+            #rho[0] = np.var(x) # overprint first lag with the variance
+
+            # construct the covariance matrix
+            Sigma = linalg.toeplitz(rho)
+            
+            # compute the density
+            f[j] = multivariate_normal.pdf(y,cov=Sigma, allow_singular=True)
+            fmu[j] = multivariate_normal.pdf(mu,cov=Sigma,allow_singular=True)
+                     
+        # average them all together
+        f_bar = f.mean()
+        fmu_bar = fmu.mean()
+        
+        return f_bar, fmu_bar
+            
+
+
+            
+            
+            
+        
