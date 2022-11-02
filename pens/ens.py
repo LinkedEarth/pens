@@ -13,7 +13,8 @@ from . import utils
 import statsmodels as sm
 import scipy.linalg as linalg
 from scipy.stats import multivariate_normal
-from tqdm import tqdm
+from pyleoclim.utils.tsutils import standardize
+from statsmodels.tsa.arima_process import arma_generate_sample
 
 
 class EnsembleTS:
@@ -98,6 +99,30 @@ class EnsembleTS:
         res.value = self.std[:, np.newaxis]
         res.refresh()
         return res
+    
+    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200)):
+        new = self.copy()
+        means, trends, tm, idxs = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
+        dmeans  = means[-1:] - means[:-1] # difference of means
+        dtrends = segment_length*(trends[-1:] - trends[:-1]) # difference of trends
+
+        dm_kde = gaussian_kde(dmeans.flatten(),bw_method=0.2)
+        dm_prob = dm_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
+        dt_kde = gaussian_kde(dtrends.flatten(),bw_method=0.2)
+        dt_prob = dt_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
+        res_dict = {
+            'means': means,
+            'trends': trends,
+            'tm': tm,
+            'idxs': idxs,
+            'dm_prob': dm_prob,
+            'dt_prob': dt_prob,
+            'dm_kde': dm_kde,
+            'dt_kde': dt_kde,
+            'xm': xm,
+        }
+        new.trend_dict = res_dict
+        return new
 
     def __getitem__(self, key):
         ''' Get a slice of the ensemble.
@@ -204,30 +229,7 @@ class EnsembleTS:
     def copy(self):
         return copy.deepcopy(self)
 
-    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200)):
-        new = self.copy()
-        means, trends, tm, idxs = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
-        dmeans  = means[-1:] - means[:-1] # difference of means
-        dtrends = segment_length*(trends[-1:] - trends[:-1]) # difference of trends
-
-        dm_kde = gaussian_kde(dmeans.flatten(),bw_method=0.2)
-        dm_prob = dm_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
-        dt_kde = gaussian_kde(dtrends.flatten(),bw_method=0.2)
-        dt_prob = dt_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
-        res_dict = {
-            'means': means,
-            'trends': trends,
-            'tm': tm,
-            'idxs': idxs,
-            'dm_prob': dm_prob,
-            'dt_prob': dt_prob,
-            'dm_kde': dm_kde,
-            'dt_kde': dt_kde,
-            'xm': xm,
-        }
-        new.trend_dict = res_dict
-        return new
-
+    
     def slice(self, timespan):
         ''' Slicing the timeseries with a timespan (tuple or list)
 
@@ -371,19 +373,91 @@ class EnsembleTS:
         es.value_name = self.value_name
         return es
 
-    def sample_random(self, seed=None, n=1):
-        ''' Get `n` realizations of random sample paths
+    def random_paths(self, model='fGn', param = None, p = 1, trend = None, seed=None):
+        ''' 
+        Generate `p` random walks through the ensemble according to a given
+        parametric model. 
+            
+        Parameters
+        ----------
+        
+        model : str
+            Stochastic model for the temporal behavior. Accepted choices are:
+            - 'unif': resample uniformly from the posterior distribution
+            - 'ar': autoregressive model, see  https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar
+            - 'fGn': fractional Gaussian noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise 
+            - 'power-law': aka Colored Noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise
+            
+        param : variable type [default is None]
+            parameter of the model. 
+            - 'unif': no parameter 
+            - 'ar': param is the result from fitting Statsmodels Autoreg.fit()
+            - 'fGn': param is the Hurst exponent, H (float)
+            - 'power-law': param is the spectral exponent beta (float)
+            
+        Under allowable values, 'fGn' and 'power-law' should return equivalent results as long as H = (beta+1)/2 and H in [0, 1)
+            
+        p : int
+            number of series to export
+              
+        seed : int
+            seed for the random generator (provided for reproducibility)
+
+        Returns
+        -------
+        new :  EnsembleTS object containing the p series 
+            
         '''
         if seed is not None:
             np.random.seed(seed)
-
-        idx = np.random.randint(low=0, high=self.nEns, size=(self.nt, n))
-        path = np.ndarray((self.nt, n))
-        for ie in range(n):
-            for it in range(self.nt):
-                path[it, ie] = self.value[it, idx[it, ie]]
-
-        new = EnsembleTS(time=self.time, value=path)
+            
+        N = self.nt                            
+        scale = self.get_std()
+        
+        if trend is None:
+            trend = self.get_mean()
+            
+        paths = np.ndarray((N, p))
+        
+        if model == 'unif':
+            idx = np.random.randint(low=0, high=self.nEns, size=(self.nt, p))      
+            for ie in range(p):
+                for it in range(self.nt):
+                    paths[it, ie] = self.value[it, idx[it, ie]]
+                    
+        elif model == 'power-law':
+            from stochastic.processes.noise import ColoredNoise
+            for j in tqdm(range(p)):
+                CN = ColoredNoise(beta=param,t=N)
+                z, _, _ = standardize(CN.sample(N-1))
+                paths[:,j] = z
+                 
+        elif model == 'fGn':
+            from stochastic.processes.noise import FractionalGaussianNoise
+            for j in tqdm(range(p)):
+                fgn = FractionalGaussianNoise(hurst=param, t=N)
+                z, _, _ = standardize(fgn.sample(N, algorithm='daviesharte')) 
+                paths[:,j] = z
+            
+        elif model == 'ar':
+            arparams = np.r_[1, -param]
+            maparams = np.r_[1, np.zeros_like(param)]
+           
+            for j in tqdm(range(p)):
+                y = arma_generate_sample(arparams, maparams, N)
+                z, _, _ = standardize(y)
+                paths[:,j] = z
+          
+        new = self.copy()                 
+        new.value = paths
+        new.nEns = p 
+        new.label = self.label + '(' + model + ' resampling)'
+        
+        if model != 'unif':
+            scale = self.get_std()
+            trend = self.get_mean()
+            new = new*scale + trend # add the trend back in
+        
         return new
 
     def sample_nearest(self, target, metric='MSE'):
@@ -441,44 +515,81 @@ class EnsembleTS:
 
         return dist
 
-    def plot(self, figsize=[12, 4],
-        xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
-        legend_kwargs=None, title_kwargs=None, ax=None, **plot_kwargs):
-        ''' Plot the raw values (multiple series)
+          
+    def likelihood(self, target, phi, max_lag = 5, mute_pbar=False):
         '''
+        Computes likelihood of observing a target trajectory conditional on the ensemble's distribution.
+        Assumes that deterministic trends and time-dependent scaling have been removed already.
+        
+        Parameters
+        ----------
+        
+        target : Pyleoclim Series object
+            Timeseries to be evaluated against ensemble EnsTS
+            
+        phi : AR model parameters. phi.shape[1] sets up the model order. 
+            If None, phi is estimated using statsmodels.tsa.ar_model 
+            
+        max_lag : int
+            Maximum number of lags to take into account in AR model
 
-        legend_kwargs = {} if legend_kwargs is None else legend_kwargs
-        title_kwargs = {} if title_kwargs is None else title_kwargs
+        Returns
+        -------
+        f :  likelihood 
 
-        if ax is None:
-            fig, ax = plt.subplots(figsize=figsize)
+        '''
+        y = target.value
+        mu = self.get_mean().value[:,0]
+        sig = self.get_std().value[:,0]
+        
+        self = (self - mu)/sig
+        y = (y - mu)/sig
 
-        ax.margins(0)
-        # plot timeseries
-        _plot_kwargs = {'linewidth': 1}
-        _plot_kwargs.update(plot_kwargs)
-
-        ax.plot(self.time, self.value, **_plot_kwargs)
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
-
-        if xlim is not None:
-            ax.set_xlim(xlim)
-
-        if ylim is not None:
-            ax.set_ylim(ylim)
-
-        if title is not None:
-            _title_kwargs = {'fontweight': 'bold'}
-            _title_kwargs.update(title_kwargs)
-            ax.set_title(title, **_title_kwargs)
-
-        if 'fig' in locals():
-            return fig, ax
+        if len(y) != self.nt:
+            raise ValueError("The series and ensemble must have the same time dimension")
+             
+        if phi is not None:
+            mod_sel = sm.tsa.ar_model.ar_select_order(mu, maxlag=max_lag)
+            ar_order = len(mod_sel.ar_lags)     
         else:
-            return ax
+            ar_order = phi.shape[1]
+            self_pyleo = self.to_pyleo()
+            # estimate autocorrelation parameters
+            for i, s in enumerate(self_pyleo.series_list):
+                ts_mod = sm.tsa.ar_model.AutoReg(s.value, ar_order) # set up the model
+                ts_res = ts_mod.fit(cov_type='HAC', cov_kwds={'maxlags': ar_order})  # Heteroskedasticity-autocorrelation robust covariance estimation.
+                phi[i,:] = ts_res.params[1:] # export estimated parameters
+            
+        f     = np.empty((self.nEns)) # array to store likelihood of y
+        fmu   = np.empty_like(f) # array to store likelihoods of the mean (for reference)
+              
+        for j in tqdm(range(self.nEns), total=self.nEns, disable=mute_pbar): # loop over ensemble members
+            rho = np.empty((self.nt))
+            x = self.value[:,j]      
+            acf = sm.tsa.stattools.acf(x,nlags=ar_order)
+            rho[:ar_order+1] = acf
+            for k in range(ar_order+1,self.nt):
+                rho[k] = phi[j,0]*rho[k-1]+phi[j,1]*rho[k-2]+phi[j,2]*rho[k-3]  # apply the recurrence relation R
+            
+            #rho[0] = np.var(x) # overprint first lag with the variance
 
-    def line_density(self, figsize=[12, 4], cmap='Greys', color_scale='linear', bins=None, num_fine=None,
+            # construct the covariance matrix
+            Sigma = linalg.toeplitz(rho)
+          
+            # regularize the covariance matrix    
+          
+            f[j] = multivariate_normal.pdf(y,cov=Sigma, allow_singular=True)
+            fmu[j] = multivariate_normal.pdf(mu,cov=Sigma,allow_singular=True)
+                     
+        # average them all together
+        f_bar = f.mean()
+        fmu_bar = fmu.mean()
+        
+        return f_bar, fmu_bar
+            
+
+   
+    def line_density(self, figsize=[10, 4], cmap='Greys', color_scale='linear', bins=None, num_fine=None,
         xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, 
         title_kwargs=None, ax=None, **pcolormesh_kwargs,):
         ''' Plot the timeseries 2-D histogram
@@ -568,10 +679,195 @@ class EnsembleTS:
             ax.set_title(title, **title_kwargs)
         
         return fig, ax
-            
-
-    def plot_qs(self, figsize=[12, 4], qs=[0.025, 0.25, 0.5, 0.75, 0.975], color='indianred',
+    
+    def plot(self, figsize=[12, 4],
         xlabel=None, ylabel=None, title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
+        legend_kwargs=None, title_kwargs=None, ax=None, **plot_kwargs):
+        ''' Plot the raw values (multiple series)
+        '''
+
+        legend_kwargs = {} if legend_kwargs is None else legend_kwargs
+        title_kwargs = {} if title_kwargs is None else title_kwargs
+
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+
+        ax.margins(0)
+        # plot timeseries
+        _plot_kwargs = {'linewidth': 1}
+        _plot_kwargs.update(plot_kwargs)
+
+        ax.plot(self.time, self.value, **_plot_kwargs)
+        
+        time_label, value_label = self.make_labels()
+        
+        if xlabel is not None:
+            ax.set_xlabel(xlabel)
+        else:
+            ax.set_xlabel(time_label)
+            
+        if ylabel is not None:
+            ax.set_ylabel(ylabel)
+        else:
+            ax.set_ylabel(value_label) 
+
+        if xlim is not None:
+            ax.set_xlim(xlim)
+
+        if ylim is not None:
+            ax.set_ylim(ylim)
+
+        if title is not None:
+            _title_kwargs = {'fontweight': 'bold'}
+            _title_kwargs.update(title_kwargs)
+            ax.set_title(title, **_title_kwargs)
+
+        if 'fig' in locals():
+            return fig, ax
+        else:
+            return ax
+        
+    def plot_traces(self, num_traces = None, figsize=[10, 4], title=None, 
+             xlim=None, ylim=None, linestyle='-', ax=None, plot_legend=True, 
+             xlabel=None, ylabel=None,  color='grey', lw=0.5, alpha=0.1, lgd_kwargs=None):
+        '''Plot EnsembleTS as a subset of traces.
+
+        Parameters
+        ----------
+
+        figsize : list, optional
+
+            The figure size. The default is [10, 4].
+
+        xlabel : str, optional
+
+            x-axis label. The default is None.
+
+        ylabel : str, optional
+
+            y-axis label. The default is None.
+
+        title : str, optional
+
+            Plot title. The default is None.
+
+        xlim : list, optional
+
+            x-axis limits. The default is None.
+
+        ylim : list, optional
+
+            y-axis limits. The default is None.
+
+        color : str, optional
+
+            Color of the traces. The default is sns.xkcd_rgb['pale red'].
+
+        alpha : float, optional
+
+            Transparency of the lines representing the multiple members. The default is 0.3.
+
+        linestyle : {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
+
+            Set the linestyle of the line
+
+        lw : float, optional
+
+            Width of the lines representing the multiple members. The default is 0.5.
+
+        num_traces : int, optional
+
+            Number of traces to plot. The default is None, which will plot all traces. 
+
+        savefig_settings : dict, optional
+
+            the dictionary of arguments for plt.savefig(); some notes below:
+            - "path" must be specified; it can be any existed or non-existed path,
+                with or without a suffix; if the suffix is not given in "path", it will follow "format"
+            - "format" can be one of {"pdf", "eps", "png", "ps"} The default is None.
+
+        ax : matplotlib.ax, optional
+
+            Matplotlib axis on which to return the plot. The default is None.
+
+        plot_legend : bool; {True,False}, optional
+
+            Whether to plot the legend. The default is True.
+
+        lgd_kwargs : dict, optional
+
+            Parameters for the legend. The default is None.
+
+        seed : int, optional
+
+            Set the seed for the random number generator. Useful for reproducibility. The default is None.
+
+        Returns
+        -------
+
+        fig : matplotlib.figure
+        
+            the figure object from matplotlib
+            See [matplotlib.pyplot.figure](https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.figure.html) for details.
+
+        ax : matplotlib.axis
+        
+            the axis object from matplotlib
+            See [matplotlib.axes](https://matplotlib.org/api/axes_api.html) for details.
+
+            '''
+        lgd_kwargs = {} if lgd_kwargs is None else lgd_kwargs.copy()
+        
+        time_label, value_label = self.make_labels()
+        
+        nts_max = 200
+        
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+        
+        if num_traces is not None:
+            if num_traces > nts_max:
+                ValueError('num_traces is too large; reduced to '+str(nts_max))
+            num_traces = np.min([num_traces,nts_max]) # cap it
+            trace_idx = np.random.choice(self.nEns, num_traces, replace=False)
+        else:
+            num_traces = self.nEns
+            trace_idx = range(num_traces)
+            
+        for idx in trace_idx:
+            ax.plot(self.time, self.value[:,idx], zorder=99, linewidth=lw,
+                    color=color, alpha=alpha, linestyle='-')
+        ax.plot(np.nan, np.nan, color=color, alpha=alpha, linestyle='-',
+                label=f'sample paths (n={num_traces})')
+
+        # if xlabel is not None:
+        #     ax.set_xlabel(xlabel)
+        # else:
+        #     ax.set_xlabel(time_label)
+            
+        # if ylabel is not None:
+        #     ax.set_ylabel(ylabel)
+        # else:
+        #     ax.set_ylabel(value_label) 
+            
+        if title is not None:
+            ax.set_title(title)
+            
+        if xlim is not None:
+            ax.set_xlim(xlim)
+
+        if ylim is not None:
+            ax.set_xlim(ylim)
+
+        if plot_legend:
+            lgd_args = {'frameon': False}
+            lgd_args.update(lgd_kwargs)
+            ax.legend(**lgd_args)
+
+        
+
+    def plot_qs(self, figsize=[10, 4], qs=[0.025, 0.25, 0.5, 0.75, 0.975], color='indianred',
+        xlabel=None, ylabel=None, title=None, ylim=None, xlim=None, alphas=[0.3, 0.1],
         plot_kwargs=None, legend_kwargs=None, title_kwargs=None, ax=None, plot_trend=True):
         ''' Plot the quantiles
 
@@ -585,9 +881,9 @@ class EnsembleTS:
             ylim (tuple or list, optional): The limit of the y-axis. Defaults to None.
             xlim (tuple or list, optional): The limit of the x-axis. Defaults to None.
             alphas (list, optional): The alphas for the quantile envelopes. Defaults to [0.5, 0.1].
-            plot_kwargs (dict, optional): The keyward arguments for the `ax.plot()` function. Defaults to None.
-            legend_kwargs (dict, optional): The keyward arguments for the `ax.legend()` function. Defaults to None.
-            title_kwargs (dict, optional): The keyward arguments for the `ax.title()` function. Defaults to None.
+            plot_kwargs (dict, optional): The keyword arguments for the `ax.plot()` function. Defaults to None.
+            legend_kwargs (dict, optional): The keyword arguments for the `ax.legend()` function. Defaults to None.
+            title_kwargs (dict, optional): The keyword arguments for the `ax.title()` function. Defaults to None.
             ax (matplotlib.axes, optional): The `matplotlib.axes` object. If set the image will be plotted in the existing `ax`. Defaults to None.
             plot_trend (bool, optional): If True, will plot the trend analysis result if existed. Defaults to True.
 
@@ -733,78 +1029,7 @@ class EnsembleTS:
         else:
             return ax
         
-        
-    def likelihood(self, ts, phi, max_lag = 5, mute_pbar=False):
-        '''
-        Computes likelihood of observing a trajectory ts conditional on the ensemble.
-        Assumes that deterministic trends and time-dependent scaling have been removed already.
-        
-        Parameters
-        ----------
-        
-        ts : Pyleoclim Series object
-            Timeseries to be evaluated against ensemble EnsTS
-            
-        phi : AR model parameters. phi.shape[1] sets up the model order. 
-            If None, phi is estimated using statsmodels.tsa.ar_model 
-            
-        max_lag : int
-            Maximum number of lags to take into account in AR model
-
-        Returns
-        -------
-        f :  likelihood 
-
-        '''
-        y = ts.value
-        mu = self.get_mean().value[:,0]
-        sig = self.get_std().value[:,0]
-        
-        self = (self - mu)/sig
-        y = (y - mu)/sig
-
-        if len(y) != self.nt:
-            raise ValueError("The series and ensemble must have the same time dimension")
-             
-        if phi is not None:
-            mod_sel = sm.tsa.ar_model.ar_select_order(mu, maxlag=max_lag)
-            ar_order = len(mod_sel.ar_lags)     
-        else:
-            ar_order = phi.shape[1]
-            self_pyleo = self.to_pyleo()
-            # estimate autocorrelation parameters
-            for i, s in enumerate(self_pyleo.series_list):
-                ts_mod = sm.tsa.ar_model.AutoReg(s.value, ar_order) # set up the model
-                ts_res = ts_mod.fit(cov_type='HAC', cov_kwds={'maxlags': ar_order})  # Heteroskedasticity-autocorrelation robust covariance estimation.
-                phi[i,:] = ts_res.params[1:] # export estimated parameters
-            
-        f     = np.empty((self.nEns)) # array to store likelihood of y
-        fmu   = np.empty_like(f) # array to store likelihoods of the mean (for reference)
-              
-        for j in tqdm(range(self.nEns), total=self.nEns, disable=mute_pbar): # loop over ensemble members
-            rho = np.empty((self.nt))
-            x = self.value[:,j]      
-            acf = sm.tsa.stattools.acf(x,nlags=ar_order)
-            rho[:ar_order+1] = acf
-            for k in range(ar_order+1,self.nt):
-                rho[k] = phi[j,0]*rho[k-1]+phi[j,1]*rho[k-2]+phi[j,2]*rho[k-3]  # apply the recurrence relation R
-            
-            #rho[0] = np.var(x) # overprint first lag with the variance
-
-            # construct the covariance matrix
-            Sigma = linalg.toeplitz(rho)
-            
-            # compute the density
-            f[j] = multivariate_normal.pdf(y,cov=Sigma, allow_singular=True)
-            fmu[j] = multivariate_normal.pdf(mu,cov=Sigma,allow_singular=True)
-                     
-        # average them all together
-        f_bar = f.mean()
-        fmu_bar = fmu.mean()
-        
-        return f_bar, fmu_bar
-            
-
+  
 
             
             

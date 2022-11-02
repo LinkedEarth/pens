@@ -28,6 +28,7 @@ setup(
         'tqdm',
         'xarray',
         'dask',
+        'stochastic',
     ],
     extras_require={
         'pyleo': ['pyleoclim'],
