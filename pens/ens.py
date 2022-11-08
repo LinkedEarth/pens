@@ -516,10 +516,13 @@ class EnsembleTS:
         return dist
 
           
-    def likelihood(self, target, phi, max_lag = 5, mute_pbar=False):
+    def likelihood(self, target, acf):
         '''
-        Computes likelihood of observing a target trajectory conditional on the ensemble's distribution.
-        Assumes that deterministic trends and time-dependent scaling have been removed already.
+        Computes likelihood of observing a target trajectory conditional on 
+        the ensemble's distribution (self).
+        Removes deterministic trends and time-dependent scaling ; make sure the
+        specified autocorrelation function (acf) corresponds to a model fit 
+        under such assumptions.
         
         Parameters
         ----------
@@ -527,70 +530,74 @@ class EnsembleTS:
         target : Pyleoclim Series object
             Timeseries to be evaluated against ensemble EnsTS
             
-        phi : AR model parameters. phi.shape[1] sets up the model order. 
-            If None, phi is estimated using statsmodels.tsa.ar_model 
-            
-        max_lag : int
-            Maximum number of lags to take into account in AR model
+        acf : autocorrelation function associated with the model
+        
 
         Returns
         -------
-        f :  likelihood 
+        LL, LR : log-likelihood difference and likelihood ratio between the target and the ensemble mean
 
         '''
         y = target.value
         mu = self.get_mean().value[:,0]
         sig = self.get_std().value[:,0]
         
-        self = (self - mu)/sig
+        #self = (self - mu)/sig
         y = (y - mu)/sig
 
         if len(y) != self.nt:
             raise ValueError("The series and ensemble must have the same time dimension")
              
-        if phi is not None:
-            mod_sel = sm.tsa.ar_model.ar_select_order(mu, maxlag=max_lag)
-            ar_order = len(mod_sel.ar_lags)     
-        else:
-            ar_order = phi.shape[1]
-            self_pyleo = self.to_pyleo()
-            # estimate autocorrelation parameters
-            for i, s in enumerate(self_pyleo.series_list):
-                ts_mod = sm.tsa.ar_model.AutoReg(s.value, ar_order) # set up the model
-                ts_res = ts_mod.fit(cov_type='HAC', cov_kwds={'maxlags': ar_order})  # Heteroskedasticity-autocorrelation robust covariance estimation.
-                phi[i,:] = ts_res.params[1:] # export estimated parameters
+        # if phi is not None:
+        #     mod_sel = sm.tsa.ar_model.ar_select_order(mu, maxlag=max_lag)
+        #     ar_order = len(mod_sel.ar_lags)     
+        # else:
+        #     ar_order = phi.shape[1]
+        #     self_pyleo = self.to_pyleo()
+        #     # estimate autocorrelation parameters
+        #     for i, s in enumerate(self_pyleo.series_list):
+        #         ts_mod = sm.tsa.ar_model.AutoReg(s.value, ar_order) # set up the model
+        #         ts_res = ts_mod.fit(cov_type='HAC', cov_kwds={'maxlags': ar_order})  # Heteroskedasticity-autocorrelation robust covariance estimation.
+        #         phi[i,:] = ts_res.params[1:] # export estimated parameters
             
-        f     = np.empty((self.nEns)) # array to store likelihood of y
-        fmu   = np.empty_like(f) # array to store likelihoods of the mean (for reference)
+        # f     = np.empty((self.nEns)) # array to store likelihood of y
+        # fmu   = np.empty_like(f) # array to store likelihoods of the mean (for reference)
               
-        for j in tqdm(range(self.nEns), total=self.nEns, disable=mute_pbar): # loop over ensemble members
-            rho = np.empty((self.nt))
-            x = self.value[:,j]      
-            acf = sm.tsa.stattools.acf(x,nlags=ar_order)
-            rho[:ar_order+1] = acf
-            for k in range(ar_order+1,self.nt):
-                rho[k] = phi[j,0]*rho[k-1]+phi[j,1]*rho[k-2]+phi[j,2]*rho[k-3]  # apply the recurrence relation R
+        # for j in tqdm(range(self.nEns), total=self.nEns, disable=mute_pbar): # loop over ensemble members
+        #     rho = np.empty((self.nt))
+        #     x = self.value[:,j]      
+        #     acf = sm.tsa.stattools.acf(x,nlags=ar_order)
+        #     rho[:ar_order+1] = acf
+        #     for k in range(ar_order+1,self.nt):
+        #         rho[k] = phi[j,0]*rho[k-1]+phi[j,1]*rho[k-2]+phi[j,2]*rho[k-3]  # apply the recurrence relation R
             
-            #rho[0] = np.var(x) # overprint first lag with the variance
+        #     #rho[0] = np.var(x) # overprint first lag with the variance
 
-            # construct the covariance matrix
-            Sigma = linalg.toeplitz(rho)
-          
-            # regularize the covariance matrix    
-          
-            f[j] = multivariate_normal.pdf(y,cov=Sigma, allow_singular=True)
-            fmu[j] = multivariate_normal.pdf(mu,cov=Sigma,allow_singular=True)
-                     
-        # average them all together
-        f_bar = f.mean()
-        fmu_bar = fmu.mean()
+        # construct the covariance matrix
+        Sigma = linalg.toeplitz(acf)
         
-        return f_bar, fmu_bar
+        # compute its pseudoinverse
+        #Sigma_i = linalg.pinv(Sigma)
+        #dy = scipy.spatial.distance.mahalanobis(y,mu,Sigma_i)
+        
+        # compute the log PDFs (vectors are so large that the numbers are impossibly close to 0 otherwise)
+        
+        log_y = multivariate_normal.logpdf(y, mean=0, cov=Sigma, allow_singular=True)
+        log_mu = multivariate_normal.logpdf(0, mean=0, cov=Sigma, allow_singular=True)
+              
+        
+        loglik = log_y-log_mu
+        lik_ratio = np.exp(loglik) 
+        # average them all together
+        #f_bar = f.mean()
+        #fmu_bar = fmu.mean()
+        
+        return loglik, lik_ratio
             
 
    
     def line_density(self, figsize=[10, 4], cmap='Greys', color_scale='linear', bins=None, num_fine=None,
-        xlabel='Year (CE)', ylabel='Value', title=None, ylim=None, xlim=None, 
+        xlabel= None, ylabel=None, title=None, ylim=None, xlim=None, 
         title_kwargs=None, ax=None, **pcolormesh_kwargs,):
         ''' Plot the timeseries 2-D histogram
 
@@ -673,12 +680,16 @@ class EnsembleTS:
         cmap.set_bad(cmap(0))
         pcm = ax.pcolormesh(xedges, yedges, h.T, cmap=cmap, rasterized=True, **pcm_kwargs)
 
-        fig.colorbar(pcm, ax=ax, label=self.label +' density', pad=0)
+        # assign colorbar to axis (instead of fig) : https://matplotlib.org/stable/gallery/subplots_axes_and_figures/colorbar_placement.html
+        plt.colorbar(pcm, ax=ax, label=self.label +' density', pad=0)
 
         if title is not None:
             ax.set_title(title, **title_kwargs)
         
-        return fig, ax
+        if 'fig' in locals():
+            return fig, ax
+        else:
+            return ax
     
     def plot(self, figsize=[12, 4],
         xlabel=None, ylabel=None, title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
@@ -727,7 +738,7 @@ class EnsembleTS:
         else:
             return ax
         
-    def plot_traces(self, num_traces = None, figsize=[10, 4], title=None, 
+    def plot_traces(self, num_traces = 10, figsize=[10, 4], title=None, 
              xlim=None, ylim=None, linestyle='-', ax=None, plot_legend=True, 
              xlabel=None, ylabel=None,  color='grey', lw=0.5, alpha=0.1, lgd_kwargs=None):
         '''Plot EnsembleTS as a subset of traces.
