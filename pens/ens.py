@@ -689,7 +689,7 @@ class EnsembleTS:
             width='3%',
             height='100%',
             loc="lower left",
-            bbox_to_anchor=(1.05, 0., 1, 1),
+            bbox_to_anchor=(1.01, 0., 1, 1),
             bbox_transform=ax.transAxes,
             borderpad=0,
         )
@@ -942,7 +942,7 @@ class EnsembleTS:
         for i, alpha in zip(range(idx_mid), alphas[::-1]):
             ax.fill_between(
                 self.time, ts_qs[-(i+1)], ts_qs[i], color=color, alpha=alpha,
-                label=f'{qs[i]*100}% to {qs[-(i+1)]*100}%')
+                label=f'{qs[i]*100}-{qs[-(i+1)]*100}')
 
         time_label, value_label = self.make_labels()
         
