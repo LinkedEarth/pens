@@ -366,11 +366,12 @@ class EnsembleTS:
         else:
             es = pyleo.EnsembleSeries(series_list)   
         
-        # transfer unit metadata
+        # transfer metadata
         es.value_name = self.value_name 
         es.value_unit = self.value_unit
         es.time_name = self.time_name
-        es.value_name = self.value_name
+        es.time_unit = self.time_unit
+        
         return es
 
     def random_paths(self, model='fGn', param = None, p = 1, trend = None, seed=None):
@@ -738,7 +739,7 @@ class EnsembleTS:
         else:
             return ax
         
-    def plot_traces(self, num_traces = 10, figsize=[10, 4], title=None, 
+    def plot_traces(self, num_traces = 10, figsize=[10, 4], title=None, seed = None,
              xlim=None, ylim=None, linestyle='-', ax=None, plot_legend=True, 
              xlabel=None, ylabel=None,  color='grey', lw=0.5, alpha=0.1, lgd_kwargs=None):
         '''Plot EnsembleTS as a subset of traces.
@@ -835,6 +836,9 @@ class EnsembleTS:
         
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
+            
+        if seed is not None:
+            np.random.seed(seed)
         
         if num_traces is not None:
             if num_traces > nts_max:
@@ -851,15 +855,15 @@ class EnsembleTS:
         ax.plot(np.nan, np.nan, color=color, alpha=alpha, linestyle='-',
                 label=f'sample paths (n={num_traces})')
 
-        # if xlabel is not None:
-        #     ax.set_xlabel(xlabel)
-        # else:
-        #     ax.set_xlabel(time_label)
+        if xlabel is not None:
+            ax.set_xlabel(xlabel)
+        else:
+            ax.set_xlabel(time_label)
             
-        # if ylabel is not None:
-        #     ax.set_ylabel(ylabel)
-        # else:
-        #     ax.set_ylabel(value_label) 
+        if ylabel is not None:
+            ax.set_ylabel(ylabel)
+        else:
+            ax.set_ylabel(value_label) 
             
         if title is not None:
             ax.set_title(title)
@@ -945,7 +949,7 @@ class EnsembleTS:
             ax.set_xlim(xlim)
 
         if ylim is not None:
-            ax.set_xlim(ylim)
+            ax.set_ylim(ylim)
 
         _legend_kwargs = {'ncol': len(qs)//2+1, 'loc': 'upper left'}
         _legend_kwargs.update(legend_kwargs)
