@@ -15,6 +15,7 @@ import scipy.linalg as linalg
 from scipy.stats import multivariate_normal
 from pyleoclim.utils.tsutils import standardize
 from statsmodels.tsa.arima_process import arma_generate_sample
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 
 class EnsembleTS:
@@ -681,7 +682,17 @@ class EnsembleTS:
         pcm = ax.pcolormesh(xedges, yedges, h.T, cmap=cmap, rasterized=True, **pcm_kwargs)
 
         # assign colorbar to axis (instead of fig) : https://matplotlib.org/stable/gallery/subplots_axes_and_figures/colorbar_placement.html
-        plt.colorbar(pcm, ax=ax, label=self.label +' density', pad=0)
+        lb = f'{self.label} density' if self.label is not None else 'Density'
+        cax = inset_axes(
+            ax,
+            width='3%',
+            height='100%',
+            loc="lower left",
+            bbox_to_anchor=(1.05, 0., 1, 1),
+            bbox_transform=ax.transAxes,
+            borderpad=0,
+        )
+        plt.colorbar(pcm, cax=cax, label=lb)
 
         if title is not None:
             ax.set_title(title, **title_kwargs)
