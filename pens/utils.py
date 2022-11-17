@@ -113,6 +113,45 @@ def kl_div(p, q):
     res = np.sum(vec)
     return res
 
+def hdi1d(ary, hdi_prob, skipna=True):
+    '''Compute highest density interval over a 1d array.
+    h/t: Arviz code: https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi
+    
+    ary : NumPy array
+        values over which to compute HDI
+        
+    hdi_prob : float
+        probability 
+        
+    skipna : bool
+        flag to decide whether to drop NaNs (defaults to True)
+    
+    '''
+    if len(ary.shape) > 1:
+        raise ValueError("Array must be 1-dimensional")
+    
+    if skipna:
+        nans = np.isnan(ary)
+        if not nans.all():
+            ary = ary[~nans]
+    n = len(ary)
+
+    ary = np.sort(ary)
+    interval_idx_inc = int(np.floor(hdi_prob * n))
+    n_intervals = n - interval_idx_inc
+    interval_width = np.subtract(ary[interval_idx_inc:], ary[:n_intervals], dtype=np.float_)
+
+    if len(interval_width) == 0:
+        raise ValueError("Too few elements for interval calculation. ")
+
+    min_idx = np.argmin(interval_width)
+    hdi_min = ary[min_idx]
+    hdi_max = ary[min_idx + interval_idx_inc]
+
+    hdi_interval = np.array([hdi_min, hdi_max])
+
+    return hdi_interval
+
 def means_and_trends_ensemble(var,segment_length,step,years):
     ''' Calculates the means and trends on an ensemble array
         Uses statsmodels' OLS method

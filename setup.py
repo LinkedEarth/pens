@@ -16,7 +16,7 @@ setup(
     include_package_data=True,
     license="GPL 3.0 license",
     zip_safe=False,
-    keywords='paleocliamte reconstruction ensembles',
+    keywords='paleoclimate reconstruction ensembles',
     classifiers=[
         'Natural Language :: English',
         'Programming Language :: Python :: 3.8',
@@ -29,6 +29,8 @@ setup(
         'xarray',
         'dask',
         'stochastic',
+        'properscoring',
+        'covar'
     ],
     extras_require={
         'pyleo': ['pyleoclim'],

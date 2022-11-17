@@ -8,14 +8,18 @@ import xarray as xr
 import copy
 import sklearn.metrics
 from tqdm import tqdm
-from scipy.stats import gaussian_kde 
 from . import utils
 import statsmodels as sm
 import scipy.linalg as linalg
-from scipy.stats import multivariate_normal
+from scipy.stats import gaussian_kde 
+from scipy.stats import mode
+from scipy.optimize import curve_fit
+#from scipy.stats import multivariate_normal
 from pyleoclim.utils.tsutils import standardize
 from statsmodels.tsa.arima_process import arma_generate_sample
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import covar
+import properscoring as ps
 
 
 class EnsembleTS:
@@ -86,6 +90,13 @@ class EnsembleTS:
     def get_mean(self):
         res = self.copy() # copy object to get metadata
         res.value = self.mean[:, np.newaxis]
+        res.refresh()
+        return res
+    
+    def get_mode(self):
+        res = self.copy() # copy object to get metadata
+        md, counts = mode(self.value, axis=1, nan_policy='raise', keepdims=True)
+        res.value = md
         res.refresh()
         return res
 
@@ -247,6 +258,8 @@ class EnsembleTS:
         new : EnsembleTS
             The sliced EnsembleSeries object.
         '''
+        new = self.copy()
+        
         n_elements = len(timespan)
         if n_elements % 2 == 1:
             raise ValueError('The number of elements in timespan must be even!')
@@ -256,7 +269,10 @@ class EnsembleTS:
         for i in range(n_segments):
             mask |= (self.time >= timespan[i*2]) & (self.time <= timespan[i*2+1])
 
-        new = EnsembleTS(time=self.time[mask], value=self.value[mask])
+        new.time=self.time[mask]
+        new.value=self.value[mask]
+        new.refresh()
+        
         return new
     
     def load_nc(self, path, time_name='time', var=None):
@@ -517,10 +533,102 @@ class EnsembleTS:
 
         return dist
 
-          
-    def likelihood(self, target, acf):
+    def crps_trace(self, y):
         '''
-        Computes likelihood of observing a target trajectory conditional on 
+        Computes the continuous ranked probability score (CRPS) of trace y against the ensemble.
+        This view flips the traditional definition of the CRPS (Matheson and Winkler 1976; Hersbach 2000)
+        as verifying a forecast ensemble against a deterministic observation y. 
+        
+        
+        Parameters
+        ----------
+        y : array-like, length n
+            trace whose consistency with the ensemble is to be assessed
+            Must have n == self.nt. 
+
+        Returns
+        -------
+        crps : array-like, length n
+
+        '''
+        if len(y) != self.nt:
+            raise ValueError('the target series and the ensemble must have the same length')
+           
+        crps = np.zeros_like(y)
+        for i in range(self.nt):
+            crps[i] = ps.crps_ensemble(y[i], self.value[i,:])
+            
+        return crps
+
+    def hdi_score(self, y, prob=0.9):
+        '''
+        Computes HDI score for target series y
+        
+        Parameters
+        ----------
+        y : array-like, length n
+            trace whose intensity of probability ("likelihood") is to be assessed
+            Must have n == self.nt. 
+        
+        prob : float
+            probability for which the highest density interval will be computed. The default is 0.9.
+        
+        '''
+        if len(y) != self.nt:
+            raise ValueError('the target series and the ensemble must have the same length')
+        
+        HDI = np.zeros((self.nt,2))
+        sc = np.zeros(self.nt)
+        
+        for it in range(self.nt):
+            HDI[it,:] = utils.hdi1d(self.value[it,:], hdi_prob=prob)
+            if (y[it] >= HDI[it,0]) and (y[it] <= HDI[it,1]):
+                sc[it]=1
+        # normalize
+        score = sc.mean()
+        
+        return score, HDI
+       
+    def SmBP(self, y, Sigma, truncation=None):
+        '''
+        Computes a probability intensity based on the Small Ball Probability (SmBP)
+        ideas of [1, 2]. Note that this number is only meaningful in a relative sense, 
+        i.e. when comparing two traces y1 and y2 against an ensemble. 
+        For Gaussian processes, the SmBP has the true interpretation of an intensity 
+        of a probability, exactly like a true probability density function, 
+        i.e. like an ordinary likelihood L.
+
+        For such processes, L(ensemble mean) = 1, and any other trace has a 
+        lower likelihood
+        
+        Parameters
+        ----------
+        y : array-like, length n
+            trace whose intensity of probability ("likelihood") is to be assessed
+            Must have n == self.nt. 
+            
+        Sigma : array, n x n
+            covariance matrix of the Gaussian process (symmetric and positive semi-definite)
+        
+        truncation : int, optional
+            Truncation of the eigenvalue expansion of the ensemble's covariance.
+            If no truncation is provided, all n eigenmodes are used. 
+            
+        References
+        ----------
+        [1]_ Bongiorno, E. G., and A. Goia (2017), Some insights about the small ball probability factorization for Hilbert random elements, Statistica Sinica, pp. 1949–1965, doi: 10.5705/ss.202016.0128.
+
+        [2]_ Li, W. V., and Shao, Q. M. (2001), Gaussian processes: Inequalities, small ball probabilities and applications, vol. 19, pp. 533–597, Elsevier, doi:10.1016/S0169-7161(01)19019- X.
+        
+        Returns
+        -------
+        L(y|X), the likelihood of observing y given X.  
+
+        '''
+        
+    def likelihood(self, target, acf, inv_method = 'pseudoinverse'):
+        '''
+        Computes the likelihood of observing a target trajectory conditional on 
         the ensemble's distribution (self).
         Removes deterministic trends and time-dependent scaling ; make sure the
         specified autocorrelation function (acf) corresponds to a model fit 
@@ -532,69 +640,65 @@ class EnsembleTS:
         target : Pyleoclim Series object
             Timeseries to be evaluated against ensemble EnsTS
             
-        acf : autocorrelation function associated with the model
+        acf : array (same length as EnsTS and target)
+            autocorrelation function associated with the model
         
+        inv_method : str
+            Method to use in inverting the covariance matrix
+            Acceptable choices include:
+            - Moore-Penrose inverse ('pseudoinverse') [default]
+            - Chen, Wiesel, and Hero (2009) ('CWH09') see https://arxiv.org/pdf/1009.5331.pdf
+        (the last one courtesy of the covar package: https://pythonhosted.org/covar/)
 
         Returns
         -------
-        LL, LR : log-likelihood difference and likelihood ratio between the target and the ensemble mean
-
+        L : likelihood ratio between the target and the ensemble mean
+        D : Mahalanobis distance to the ensemble mean
         '''
+        
+        
         y = target.value
         mu = self.get_mean().value[:,0]
         sig = self.get_std().value[:,0]
         
         #self = (self - mu)/sig
-        y = (y - mu)/sig
+        ys = (y - mu)/sig
 
         if len(y) != self.nt:
             raise ValueError("The series and ensemble must have the same time dimension")
              
-        # if phi is not None:
-        #     mod_sel = sm.tsa.ar_model.ar_select_order(mu, maxlag=max_lag)
-        #     ar_order = len(mod_sel.ar_lags)     
-        # else:
-        #     ar_order = phi.shape[1]
-        #     self_pyleo = self.to_pyleo()
-        #     # estimate autocorrelation parameters
-        #     for i, s in enumerate(self_pyleo.series_list):
-        #         ts_mod = sm.tsa.ar_model.AutoReg(s.value, ar_order) # set up the model
-        #         ts_res = ts_mod.fit(cov_type='HAC', cov_kwds={'maxlags': ar_order})  # Heteroskedasticity-autocorrelation robust covariance estimation.
-        #         phi[i,:] = ts_res.params[1:] # export estimated parameters
-            
-        # f     = np.empty((self.nEns)) # array to store likelihood of y
-        # fmu   = np.empty_like(f) # array to store likelihoods of the mean (for reference)
-              
-        # for j in tqdm(range(self.nEns), total=self.nEns, disable=mute_pbar): # loop over ensemble members
-        #     rho = np.empty((self.nt))
-        #     x = self.value[:,j]      
-        #     acf = sm.tsa.stattools.acf(x,nlags=ar_order)
-        #     rho[:ar_order+1] = acf
-        #     for k in range(ar_order+1,self.nt):
-        #         rho[k] = phi[j,0]*rho[k-1]+phi[j,1]*rho[k-2]+phi[j,2]*rho[k-3]  # apply the recurrence relation R
-            
-        #     #rho[0] = np.var(x) # overprint first lag with the variance
-
-        # construct the covariance matrix
+        # form covariance matrix
         Sigma = linalg.toeplitz(acf)
         
-        # compute its pseudoinverse
-        #Sigma_i = linalg.pinv(Sigma)
+        # compute its inverse
+        if inv_method == 'pseudoinverse':
+            Sigma_i = linalg.pinv(Sigma)
+        elif inv_method == 'CWH09':
+            # first estimate the ACF e-folding scale to get DOFs
+            monoExp = lambda x, A, tau: A*np.exp(-x/tau)
+            lags = np.arange(self.nt)
+            p0 = (1, 10) # start with values near those we expect
+            params, cv = curve_fit(monoExp, lags, acf, p0)
+            tau = params[1] # e-folding time
+            dof =  0.5*self.nt/tau  # https://www.earthinversion.com/geophysics/estimation-degrees-of-freedom/
+            Sigma_i, g  = covar.cov_shrink_rblw(Sigma,n=dof)  
+            print('Optimal Covariance Shrinkage: {:3.2f}'.format(g))
+     
+        # Mahalanobis distance
+        d2 = ys.T.dot(Sigma_i).dot(ys)
+        D = np.sqrt(d2)
+        # likelihood
+        L = np.exp(-d2/2) 
+
         #dy = scipy.spatial.distance.mahalanobis(y,mu,Sigma_i)
         
         # compute the log PDFs (vectors are so large that the numbers are impossibly close to 0 otherwise)
+        #log_y = multivariate_normal.logpdf(y, mean=0, cov=Sigma, allow_singular=True)
+        #log_mu = multivariate_normal.logpdf(0, mean=0, cov=Sigma, allow_singular=True)
+        #loglik = log_y-log_mu
         
-        log_y = multivariate_normal.logpdf(y, mean=0, cov=Sigma, allow_singular=True)
-        log_mu = multivariate_normal.logpdf(0, mean=0, cov=Sigma, allow_singular=True)
-              
         
-        loglik = log_y-log_mu
-        lik_ratio = np.exp(loglik) 
-        # average them all together
-        #f_bar = f.mean()
-        #fmu_bar = fmu.mean()
-        
-        return loglik, lik_ratio
+        return L, D
             
 
    
@@ -890,6 +994,105 @@ class EnsembleTS:
             lgd_args.update(lgd_kwargs)
             ax.legend(**lgd_args)
 
+    def plot_hdi(self, prob = 0.9, median=True, figsize=[12, 4], color = 'tab:blue',
+        xlabel=None, ylabel=None, title=None, ylim=None, xlim=None, alpha=0.2,
+        legend_kwargs=None, title_kwargs=None, ax=None, **plot_kwargs):
+        '''
+        h/t: Arviz code: https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi
+
+        Parameters
+        ----------
+        prob : float
+            probability for which the highest density interval will be computed. The default is 0.9.
+        median : bool
+            If True (default), the posterior median is added.
+        figsize : TYPE, optional
+            DESCRIPTION. The default is [12, 4].
+        xlabel : TYPE, optional
+            DESCRIPTION. The default is None.
+        ylabel : TYPE, optional
+            DESCRIPTION. The default is None.
+        title : TYPE, optional
+            DESCRIPTION. The default is None.
+        ylim : TYPE, optional
+            DESCRIPTION. The default is None.
+        xlim : TYPE, optional
+            DESCRIPTION. The default is None.
+        alpha : TYPE, optional
+            DESCRIPTION. The default is 0.3.
+        legend_kwargs : TYPE, optional
+            DESCRIPTION. The default is None.
+        title_kwargs : TYPE, optional
+            DESCRIPTION. The default is None.
+        ax : TYPE, optional
+            DESCRIPTION. The default is None.
+        **plot_kwargs : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        '''
+
+        legend_kwargs = {} if legend_kwargs is None else legend_kwargs
+        title_kwargs = {} if title_kwargs is None else title_kwargs
+
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+
+        ax.margins(0)
+        
+        # compute HDI
+        HDI = np.zeros((self.nt,2))
+        for it in range(self.nt):
+            HDI[it,:] = utils.hdi1d(self.value[it,:], hdi_prob=prob)
+        
+        ax.fill_between(
+            self.time, HDI[:,0], HDI[:,1], color=color, alpha=alpha,
+            label=f'{prob*100}% HDI')
+        
+        if median == True:
+            ym = self.get_median().value[:,0] 
+            _plot_kwargs = {'linewidth': 1}
+            _plot_kwargs.update(plot_kwargs)
+            ax.plot(self.time, ym, label = 'median', color = color, **_plot_kwargs)
+        
+        time_label, value_label = self.make_labels()
+        
+        _legend_kwargs = {'ncol': 2, 'loc': 'upper center'}
+        _legend_kwargs.update(legend_kwargs)
+        ax.legend(**_legend_kwargs)
+
+        if xlabel is not None:
+            ax.set_xlabel(xlabel)
+        else:
+            ax.set_xlabel(time_label)
+            
+        if ylabel is not None:
+            ax.set_ylabel(ylabel)
+        else:
+            ax.set_ylabel(value_label) 
+
+        if xlim is not None:
+            ax.set_xlim(xlim)
+
+        if ylim is not None:
+            ax.set_ylim(ylim)
+
+        _title_kwargs = {'fontweight': 'bold'}
+        _title_kwargs.update(title_kwargs)
+        
+        if title is not None:       
+            ax.set_title(title, **_title_kwargs)
+        elif title is None and self.label is not None:
+            ax.set_title(self.label, **_title_kwargs)
+            
+        if 'fig' in locals():
+            return fig, ax
+        else:
+            return ax    
         
 
     def plot_qs(self, figsize=[10, 4], qs=[0.025, 0.25, 0.5, 0.75, 0.975], color='indianred',
@@ -942,7 +1145,7 @@ class EnsembleTS:
         for i, alpha in zip(range(idx_mid), alphas[::-1]):
             ax.fill_between(
                 self.time, ts_qs[-(i+1)], ts_qs[i], color=color, alpha=alpha,
-                label=f'{qs[i]*100}-{qs[-(i+1)]*100}')
+                label=f'{qs[i]*100}-{qs[-(i+1)]*100}%')
 
         time_label, value_label = self.make_labels()
         
@@ -964,24 +1167,9 @@ class EnsembleTS:
 
         _legend_kwargs = {'ncol': len(qs)//2+1, 'loc': 'upper left'}
         _legend_kwargs.update(legend_kwargs)
-        ax.legend(**_legend_kwargs)
+        leg = ax.legend(**_legend_kwargs)
+        #leg.set_in_layout(False)
 
-        if hasattr(self, 'trend_dict') and plot_trend:
-            means = self.trend_dict['means']
-            trends = self.trend_dict['trends']
-            tm = self.trend_dict['tm']
-            idxs = self.trend_dict['idxs']
-            all_idxs = np.arange(idxs[-1,0],idxs[-1,1]+1)
-            segment_years = self.time[all_idxs]
-            dot = ax.scatter(tm[-1],means[-1].mean(),100,color='black',zorder=99,alpha=0.5)
-            mean_line = ax.axhline(means[-1].mean(),color='black',linewidth=2,ls='-.',alpha=0.5)
-            slope_segment_values = all_idxs*trends[-1].mean()
-            slope_segment_values -= slope_segment_values.mean()
-            slope_segment_values += means[-1].mean()
-            trend_line = ax.plot(segment_years,slope_segment_values,color='black',linewidth=2)
-            ax.axvspan(segment_years[0],segment_years[-1],alpha=0.2,color='silver')
-
-        
         _title_kwargs = {'fontweight': 'bold'}
         _title_kwargs.update(title_kwargs)
         
