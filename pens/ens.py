@@ -1,5 +1,5 @@
-from multiprocessing.sharedctypes import Value
-from matplotlib import gridspec
+#from multiprocessing.sharedctypes import Value
+#from matplotlib import gridspec
 from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,11 +9,12 @@ import copy
 import sklearn.metrics
 from tqdm import tqdm
 from . import utils
-import statsmodels as sm
+#import statsmodels as sm
 import scipy.linalg as linalg
 from scipy.stats import gaussian_kde 
 from scipy.stats import mode
 from scipy.optimize import curve_fit
+from scipy.stats import percentileofscore 
 #from scipy.stats import multivariate_normal
 from pyleoclim.utils.tsutils import standardize
 from statsmodels.tsa.arima_process import arma_generate_sample
@@ -86,6 +87,31 @@ class EnsembleTS:
         self.median = np.nanmedian(self.value, axis=1)
         self.mean = np.nanmean(self.value, axis=1)
         self.std = np.nanstd(self.value, axis=1)
+        
+    def thin(self, nsamples):
+        '''
+        Thin out original ensemble by drawing nsamples at random
+
+        Parameters
+        ----------
+        nsamples : int
+            number of samples to draw at random from the original ensemble.
+            If nsamples >= self.nEns, no change is made.
+
+        Returns
+        -------
+        res : EnsembleTS 
+            Downsized object.
+
+        '''
+        
+        if nsamples < self.nEns:     
+            res = self.copy() # copy object to get metadata
+            res.value = self.value[:,np.random.randint(low=0, high=self.nEns, size=nsamples)] # subsample
+            res.refresh()
+        else:
+            res = self
+        return res 
 
     def get_mean(self):
         res = self.copy() # copy object to get metadata
@@ -559,6 +585,31 @@ class EnsembleTS:
             crps[i] = ps.crps_ensemble(y[i], self.value[i,:])
             
         return crps
+    
+    def trace_rank(self, y):
+        '''
+        Computes ensemble rank (expressed as percentile) for trace y
+        
+        Parameters
+        ----------
+        y : array-like, length n
+            trace whose rank within the ensemble is to be assessed
+            Must have n == self.nt. 
+        
+        Returns
+        -------
+        percent : array-like, length n
+        
+        '''
+        if len(y) != self.nt:
+            raise ValueError('the target series and the ensemble must have the same length')
+        
+        percent = np.zeros_like(y)
+        for k in range(self.nt):
+            percent[k] = percentileofscore(self.value[k,:],y[k])
+
+        return percent
+       
 
     def hdi_score(self, y, prob=0.9):
         '''
@@ -572,6 +623,11 @@ class EnsembleTS:
         
         prob : float
             probability for which the highest density interval will be computed. The default is 0.9.
+            
+        Returns
+        -------
+        score: the score (scalar)
+        HDI : the n x 2 array
         
         '''
         if len(y) != self.nt:
@@ -589,7 +645,7 @@ class EnsembleTS:
         
         return score, HDI
        
-    def SmBP(self, y, Sigma, truncation=None):
+    def SmBP(self, y, acf, d=None):
         '''
         Computes a probability intensity based on the Small Ball Probability (SmBP)
         ideas of [1, 2]. Note that this number is only meaningful in a relative sense, 
@@ -599,7 +655,7 @@ class EnsembleTS:
         i.e. like an ordinary likelihood L.
 
         For such processes, L(ensemble mean) = 1, and any other trace has a 
-        lower likelihood
+        lower likelihood. Note that y is centered prior to analysis.
         
         Parameters
         ----------
@@ -607,10 +663,10 @@ class EnsembleTS:
             trace whose intensity of probability ("likelihood") is to be assessed
             Must have n == self.nt. 
             
-        Sigma : array, n x n
-            covariance matrix of the Gaussian process (symmetric and positive semi-definite)
+        acf : array (same length as EnsTS and target)
+            autocorrelation function associated with the model
         
-        truncation : int, optional
+        d : int, optional
             Truncation of the eigenvalue expansion of the ensemble's covariance.
             If no truncation is provided, all n eigenmodes are used. 
             
@@ -625,6 +681,33 @@ class EnsembleTS:
         L(y|X), the likelihood of observing y given X.  
 
         '''
+    
+        if len(y) != self.nt:
+            raise ValueError("The series and ensemble must have the same time dimension")
+            
+        if d is None:
+            d = self.nt
+            print('No truncation provided. Using all ' +str(d)+ ' modes')
+             
+        ys, mu, std = standardize(y)
+        
+        # form covariance matrix
+        Sigma = linalg.toeplitz(acf)
+        
+        # eigendecomposition 
+        L, V = np.linalg.eigh(Sigma)
+        eigvals = np.flipud(L) # change to decreasing order 
+        eigvecs = np.flip(V,axis=1)
+        #var = np.cumsum(eigvals) %/eigvals.sum()*100
+
+        # project y onto the eigenvectors
+        yj = np.dot(ys,eigvecs)
+    
+        # compute the SmBP
+        Psi_vec = -0.5*np.square(yj)/eigvals
+        Psi_d = np.exp(np.sum(Psi_vec[:d]))
+        
+        return Psi_d
         
     def likelihood(self, target, acf, inv_method = 'pseudoinverse'):
         '''
@@ -808,7 +891,7 @@ class EnsembleTS:
             return ax
     
     def plot(self, figsize=[12, 4],
-        xlabel=None, ylabel=None, title=None, ylim=None, xlim=None, alphas=[0.5, 0.1],
+        xlabel=None, ylabel=None, title=None, ylim=None, xlim=None,
         legend_kwargs=None, title_kwargs=None, ax=None, **plot_kwargs):
         ''' Plot the raw values (multiple series)
         '''
