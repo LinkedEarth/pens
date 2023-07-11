@@ -88,7 +88,7 @@ class EnsembleTS:
         self.mean = np.nanmean(self.value, axis=1)
         self.std = np.nanstd(self.value, axis=1)
         
-    def thin(self, nsamples):
+    def subsample(self, nsamples):
         '''
         Thin out original ensemble by drawing nsamples at random
 
@@ -420,7 +420,7 @@ class EnsembleTS:
     def random_paths(self, model='fGn', param = None, p = 1, trend = None, seed=None):
         ''' 
         Generate `p` random walks through the ensemble according to a given
-        parametric model. 
+        parametric model with random parameter sampling
             
         Parameters
         ----------
@@ -435,11 +435,11 @@ class EnsembleTS:
         param : variable type [default is None]
             parameter of the model. 
             - 'unif': no parameter 
-            - 'ar': param is the result from fitting Statsmodels Autoreg.fit()
+            - 'ar': param is the result from fitting Statsmodels Autoreg.fit() (with zero-lag term)
             - 'fGn': param is the Hurst exponent, H (float)
             - 'power-law': param is the spectral exponent beta (float)
             
-        Under allowable values, 'fGn' and 'power-law' should return equivalent results as long as H = (beta+1)/2 and H in [0, 1)
+        Under allowable values, 'fGn' and 'power-law' should return equivalent results as long as H = (beta+1)/2 is in [0, 1)
             
         p : int
             number of series to export
@@ -456,10 +456,8 @@ class EnsembleTS:
             np.random.seed(seed)
             
         N = self.nt                            
-        scale = self.get_std()
-        
-        if trend is None:
-            trend = self.get_mean()
+        scale = self.get_std()       
+        trend = self.get_mean()
             
         paths = np.ndarray((N, p))
         
@@ -484,8 +482,10 @@ class EnsembleTS:
                 paths[:,j] = z
             
         elif model == 'ar':
-            arparams = np.r_[1, -param]
-            maparams = np.r_[1, np.zeros_like(param)]
+            # TODO: enable random sampling of parameters
+            coeffs = param[1:] # ignore the zero-lag term
+            arparams = np.r_[1, -coeffs]
+            maparams = np.r_[1, np.zeros_like(coeffs)]
            
             for j in tqdm(range(p)):
                 y = arma_generate_sample(arparams, maparams, N)
@@ -558,6 +558,7 @@ class EnsembleTS:
             dist[i] = dist_func[metric](self.value[i, :max_nens], ens.value[i, :max_nens])
 
         return dist
+    
 
     def crps_trace(self, y):
         '''
@@ -644,31 +645,152 @@ class EnsembleTS:
         score = sc.mean()
         
         return score, HDI
-       
-    def SmBP(self, y, acf, d=None):
+    
+    def distance(self, y, ord=1):
         '''
-        Computes a probability intensity based on the Small Ball Probability (SmBP)
-        ideas of [1, 2]. Note that this number is only meaningful in a relative sense, 
-        i.e. when comparing two traces y1 and y2 against an ensemble. 
+        Compute the distance between the trace y and the ensemble object.
+        
+        Parameters
+        ----------
+        y : array-like, length n
+            trace whose probability is to be assessed
+            Must have n == self.nt
+    
+        ord : int, or inf
+            Order of the norm. inf means numpy’s inf object. The default is 1.
+        
+        See Also
+        --------
+        np.linalg.norm: https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html
+
+        Returns
+        -------
+        dist : numpy array, dimension (self.nEns,)
+            
+        '''
+        if len(y) != self.nt:
+            raise ValueError('the target series and the ensemble must have the same length')
+        
+        dist = np.zeros((self.nEns))
+        for i in range(self.nEns):
+            dist[i] = np.linalg.norm(self.value[:,i]-y, ord = ord)/self.nt
+        return dist
+    
+    
+    def compatibility_distance(self, obj, num=50, ord=1, dist=None):
+        '''
+        Compute the (quantile-based) compatibility distance between 
+        an ensemble and another object (whether a single trace or another ensemble)
+        
+        Parameters
+        ----------
+        obj : array-like, length self.nt
+           if 1d, trace whose probability is to be assessed
+           if ensemble
+        num : int
+            number of quantiles for the estimation of the distance
+        ord : int, or inf
+            Order of the norm. inf means numpy’s inf object. The default is 1.
+        dist : array-like, length self.nEns
+            if provided, uses this as vector of distances. Otherwise it is computed internally
+            
+        See Also
+        --------
+        np.linalg.norm: https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html
+
+        Returns
+        -------
+        P : float in [0,1]
+            Probability that the trace y is within a distance eps of the ensemble object
+
+        '''
+        # establish what kind of object is being used
+        if isinstance(obj, np.ndarray):
+            print('Distance from ensemble to trace')
+            dist = self.distance(obj, ord=ord)
+
+        elif isinstance(obj, EnsembleTS):
+            print('Distance between ensembles')
+        else:
+            raise ValueError('Unsupported object type ' + str(type(obj)))
+        
+        if dist is None:
+            
+        prob = np.zeros_like(eps)
+        for j, tol in enumerate(eps):
+            prob[j] = np.where(dist<=tol)[0].size/self.nEns
+    
+            
+        return D
+        
+    
+    def proximity_prob(self, y, eps, ord=1, dist=None):
+        '''
+        Compute the probability P that the trace y is within a distance eps of the ensemble object.
+        
+        Parameters
+        ----------
+        y : array-like, length self.nt
+            trace whose probability is to be assessed
+        eps : array of float64
+            numerical tolerance for the distance. 
+        ord : int, or inf
+            Order of the ord. inf means numpy’s inf object. The default is 1.
+        dist : array-like, length self.nEns
+            if provided, uses this as vector of distances. Otherwise it is computed internally
+            
+        See Also
+        --------
+        np.linalg.norm: https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html
+
+        Returns
+        -------
+        P : float in [0,1]
+            Probability that the trace y is within a distance eps of the ensemble object
+
+        '''
+        if dist is None:
+            dist = self.distance(y, ord=ord)
+            
+        if isinstance(eps, np.ndarray): 
+            prob = np.zeros_like(eps)
+            for j, tol in enumerate(eps):
+                prob[j] = np.where(dist<=tol)[0].size/self.nEns
+        elif isinstance(eps, float):
+            prob = np.where(dist<=eps)[0].size/self.nEns
+        else:
+            raise ValueError('eps is of unsupported type '+ str(type(eps)))
+            
+        return prob
+        
+       
+    def SmBP(self, y1, y2, acf, d=None):
+        '''
+        Computes the ratio of probability intensities based on the Small Ball Probability (SmBP)
+        concept of [1, 2]. Because of normalization issues, this number is only meaningful in a 
+        relative sense, i.e. when comparing how two traces y1 and y2 fit within an ensemble. 
         For Gaussian processes, the SmBP has the true interpretation of an intensity 
         of a probability, exactly like a true probability density function, 
         i.e. like an ordinary likelihood L.
 
         For such processes, L(ensemble mean) = 1, and any other trace has a 
-        lower likelihood. Note that y is centered prior to analysis.
+        lower likelihood. Note that y1, y2 are internally standardized prior to analysis.
         
         Parameters
         ----------
-        y : array-like, length n
-            trace whose intensity of probability ("likelihood") is to be assessed
+        y1 : array-like, length n            
             Must have n == self.nt. 
             
-        acf : array (same length as EnsTS and target)
+        y2 : array-like, length n
+            Must have n == self.nt.  
+            
+        acf : array-like, length n
             autocorrelation function associated with the model
         
         d : int, optional
             Truncation of the eigenvalue expansion of the ensemble's covariance.
             If no truncation is provided, all n eigenmodes are used. 
+            If d is a vector of integers, a vector of likelihood ratios is returned. 
             
         References
         ----------
@@ -678,18 +800,19 @@ class EnsembleTS:
         
         Returns
         -------
-        L(y|X), the likelihood of observing y given X.  
+        L(y2|X,d)/L(y1|X,d), the likelihood ratio of observing y2 vs y1, given X and d.  
 
         '''
     
-        if len(y) != self.nt:
+        if len(y1) != self.nt or len(y2) != self.nt:
             raise ValueError("The series and ensemble must have the same time dimension")
             
         if d is None:
             d = self.nt
             print('No truncation provided. Using all ' +str(d)+ ' modes')
              
-        ys, mu, std = standardize(y)
+        ys1, mu1, std1 = standardize(y1)
+        ys2, mu2, std2 = standardize(y2)
         
         # form covariance matrix
         Sigma = linalg.toeplitz(acf)
@@ -698,90 +821,96 @@ class EnsembleTS:
         L, V = np.linalg.eigh(Sigma)
         eigvals = np.flipud(L) # change to decreasing order 
         eigvecs = np.flip(V,axis=1)
-        #var = np.cumsum(eigvals) %/eigvals.sum()*100
-
+        
         # project y onto the eigenvectors
-        yj = np.dot(ys,eigvecs)
+        yj1 = np.dot(ys1,eigvecs)
+        yj2 = np.dot(ys2,eigvecs)
     
         # compute the SmBP
-        Psi_vec = -0.5*np.square(yj)/eigvals
-        Psi_d = np.exp(np.sum(Psi_vec[:d]))
+        Psi_1 = -0.5*np.square(yj1)/eigvals
+        Psi_2 = -0.5*np.square(yj2)/eigvals
+        loglik = np.sum(Psi_2[:d]) - np.sum(Psi_1[:d])
+        lik = np.exp(loglik)
         
-        return Psi_d
+        # gather diagnostics
+        #diag = {}
+        #diag['var '] = np.cumsum(eigvals)/eigvals.sum()*100
+                     
+        return lik
         
-    def likelihood(self, target, acf, inv_method = 'pseudoinverse'):
-        '''
-        Computes the likelihood of observing a target trajectory conditional on 
-        the ensemble's distribution (self).
-        Removes deterministic trends and time-dependent scaling ; make sure the
-        specified autocorrelation function (acf) corresponds to a model fit 
-        under such assumptions.
+    # def likelihood(self, target, acf, inv_method = 'pseudoinverse'):
+    #     '''
+    #     Computes the likelihood of observing a target trajectory conditional on 
+    #     the ensemble's distribution (self).
+    #     Removes deterministic trends and time-dependent scaling ; make sure the
+    #     specified autocorrelation function (acf) corresponds to a model fit 
+    #     under such assumptions.
         
-        Parameters
-        ----------
+    #     Parameters
+    #     ----------
         
-        target : Pyleoclim Series object
-            Timeseries to be evaluated against ensemble EnsTS
+    #     target : Pyleoclim Series object
+    #         Timeseries to be evaluated against ensemble EnsTS
             
-        acf : array (same length as EnsTS and target)
-            autocorrelation function associated with the model
+    #     acf : array (same length as EnsTS and target)
+    #         autocorrelation function associated with the model
         
-        inv_method : str
-            Method to use in inverting the covariance matrix
-            Acceptable choices include:
-            - Moore-Penrose inverse ('pseudoinverse') [default]
-            - Chen, Wiesel, and Hero (2009) ('CWH09') see https://arxiv.org/pdf/1009.5331.pdf
-        (the last one courtesy of the covar package: https://pythonhosted.org/covar/)
+    #     inv_method : str
+    #         Method to use in inverting the covariance matrix
+    #         Acceptable choices include:
+    #         - Moore-Penrose inverse ('pseudoinverse') [default]
+    #         - Chen, Wiesel, and Hero (2009) ('CWH09') see https://arxiv.org/pdf/1009.5331.pdf
+    #     (the last one courtesy of the covar package: https://pythonhosted.org/covar/)
 
-        Returns
-        -------
-        L : likelihood ratio between the target and the ensemble mean
-        D : Mahalanobis distance to the ensemble mean
-        '''
+    #     Returns
+    #     -------
+    #     L : likelihood ratio between the target and the ensemble mean
+    #     D : Mahalanobis distance to the ensemble mean
+    #     '''
         
         
-        y = target.value
-        mu = self.get_mean().value[:,0]
-        sig = self.get_std().value[:,0]
+    #     y = target.value
+    #     mu = self.get_mean().value[:,0]
+    #     sig = self.get_std().value[:,0]
         
-        #self = (self - mu)/sig
-        ys = (y - mu)/sig
+    #     #self = (self - mu)/sig
+    #     ys = (y - mu)/sig
 
-        if len(y) != self.nt:
-            raise ValueError("The series and ensemble must have the same time dimension")
+    #     if len(y) != self.nt:
+    #         raise ValueError("The series and ensemble must have the same time dimension")
              
-        # form covariance matrix
-        Sigma = linalg.toeplitz(acf)
+    #     # form covariance matrix
+    #     Sigma = linalg.toeplitz(acf)
         
-        # compute its inverse
-        if inv_method == 'pseudoinverse':
-            Sigma_i = linalg.pinv(Sigma)
-        elif inv_method == 'CWH09':
-            # first estimate the ACF e-folding scale to get DOFs
-            monoExp = lambda x, A, tau: A*np.exp(-x/tau)
-            lags = np.arange(self.nt)
-            p0 = (1, 10) # start with values near those we expect
-            params, cv = curve_fit(monoExp, lags, acf, p0)
-            tau = params[1] # e-folding time
-            dof =  0.5*self.nt/tau  # https://www.earthinversion.com/geophysics/estimation-degrees-of-freedom/
-            Sigma_i, g  = covar.cov_shrink_rblw(Sigma,n=dof)  
-            print('Optimal Covariance Shrinkage: {:3.2f}'.format(g))
+    #     # compute its inverse
+    #     if inv_method == 'pseudoinverse':
+    #         Sigma_i = linalg.pinv(Sigma)
+    #     elif inv_method == 'CWH09':
+    #         # first estimate the ACF e-folding scale to get DOFs
+    #         monoExp = lambda x, A, tau: A*np.exp(-x/tau)
+    #         lags = np.arange(self.nt)
+    #         p0 = (1, 10) # start with values near those we expect
+    #         params, cv = curve_fit(monoExp, lags, acf, p0)
+    #         tau = params[1] # e-folding time
+    #         dof =  0.5*self.nt/tau  # https://www.earthinversion.com/geophysics/estimation-degrees-of-freedom/
+    #         Sigma_i, g  = covar.cov_shrink_rblw(Sigma,n=dof)  
+    #         print('Optimal Covariance Shrinkage: {:3.2f}'.format(g))
      
-        # Mahalanobis distance
-        d2 = ys.T.dot(Sigma_i).dot(ys)
-        D = np.sqrt(d2)
-        # likelihood
-        L = np.exp(-d2/2) 
+    #     # Mahalanobis distance
+    #     d2 = ys.T.dot(Sigma_i).dot(ys)
+    #     D = np.sqrt(d2)
+    #     # likelihood
+    #     L = np.exp(-d2/2) 
 
-        #dy = scipy.spatial.distance.mahalanobis(y,mu,Sigma_i)
+    #     #dy = scipy.spatial.distance.mahalanobis(y,mu,Sigma_i)
         
-        # compute the log PDFs (vectors are so large that the numbers are impossibly close to 0 otherwise)
-        #log_y = multivariate_normal.logpdf(y, mean=0, cov=Sigma, allow_singular=True)
-        #log_mu = multivariate_normal.logpdf(0, mean=0, cov=Sigma, allow_singular=True)
-        #loglik = log_y-log_mu
+    #     # compute the log PDFs (vectors are so large that the numbers are impossibly close to 0 otherwise)
+    #     #log_y = multivariate_normal.logpdf(y, mean=0, cov=Sigma, allow_singular=True)
+    #     #log_mu = multivariate_normal.logpdf(0, mean=0, cov=Sigma, allow_singular=True)
+    #     #loglik = log_y-log_mu
         
         
-        return L, D
+    #     return L, D
             
 
    
