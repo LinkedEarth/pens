@@ -138,15 +138,15 @@ class EnsembleTS:
         res.refresh()
         return res
     
-    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200)):
+    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200), bw = 0.2):
         new = self.copy()
         means, trends, tm, idxs = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
         dmeans  = means[-1:] - means[:-1] # difference of means
         dtrends = segment_length*(trends[-1:] - trends[:-1]) # difference of trends
 
-        dm_kde = gaussian_kde(dmeans.flatten(),bw_method=0.2)
+        dm_kde = gaussian_kde(dmeans.flatten(),bw_method=bw)
         dm_prob = dm_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
-        dt_kde = gaussian_kde(dtrends.flatten(),bw_method=0.2)
+        dt_kde = gaussian_kde(dtrends.flatten(),bw_method=bw)
         dt_prob = dt_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
         res_dict = {
             'means': means,
@@ -646,17 +646,17 @@ class EnsembleTS:
         
         return score, HDI
     
-    def distance(self, y, ord=1):
+    def distance(self, y, order=1):
         '''
-        Compute the distance between the trace y and the ensemble object.
+        Compute the distance between a target y and the ensemble object.
         
         Parameters
         ----------
         y : array-like, length n
-            trace whose probability is to be assessed
+            trace/plume whose probability is to be assessed
             Must have n == self.nt
     
-        ord : int, or inf
+        order : int, or inf
             Order of the norm. inf means numpy’s inf object. The default is 1.
         
         See Also
@@ -668,28 +668,37 @@ class EnsembleTS:
         dist : numpy array, dimension (self.nEns,)
             
         '''
+        if isinstance(y, EnsembleTS):
+            y = y.value # extract NumPy array
+            
         if len(y) != self.nt:
             raise ValueError('the target series and the ensemble must have the same length')
-        
-        dist = np.zeros((self.nEns))
-        for i in range(self.nEns):
-            dist[i] = np.linalg.norm(self.value[:,i]-y, ord = ord)/self.nt
-        return dist
+        # handle plume dimension 
+        if len(y.shape) > 1:
+            ncol = y.shape[1]
+            d = np.zeros((self.nEns,ncol))
+            for i in range(self.nEns):
+                for j in range(ncol):
+                    d[i,j] = np.linalg.norm(self.value[:,i]-y[:,j], ord = order)/self.nt
+            d = np.reshape(d, (self.nEns*ncol))
+        else:
+            d = np.zeros((self.nEns))
+            for i in range(self.nEns):
+                d[i] = np.linalg.norm(self.value[:,i]-y, ord = order)/self.nt
+            
+        return d
     
-    
-    def compatibility_distance(self, obj, num=50, ord=1, dist=None):
+    def proximity_prob(self, y, eps, order=1, dist=None):
         '''
-        Compute the (quantile-based) compatibility distance between 
-        an ensemble and another object (whether a single trace or another ensemble)
+        Compute the probability P that the trace y is within a distance eps of the ensemble object.
         
         Parameters
         ----------
-        obj : array-like, length self.nt
-           if 1d, trace whose probability is to be assessed
-           if ensemble
-        num : int
-            number of quantiles for the estimation of the distance
-        ord : int, or inf
+        y : array-like, length self.nt
+            trace/plume whose proximity is to be assessed
+        eps : array of float64
+            numerical tolerance for the distance. 
+        order : int, or inf
             Order of the norm. inf means numpy’s inf object. The default is 1.
         dist : array-like, length self.nEns
             if provided, uses this as vector of distances. Otherwise it is computed internally
@@ -704,38 +713,38 @@ class EnsembleTS:
             Probability that the trace y is within a distance eps of the ensemble object
 
         '''
-        # establish what kind of object is being used
-        if isinstance(obj, np.ndarray):
-            print('Distance from ensemble to trace')
-            dist = self.distance(obj, ord=ord)
-
-        elif isinstance(obj, EnsembleTS):
-            print('Distance between ensembles')
-        else:
-            raise ValueError('Unsupported object type ' + str(type(obj)))
-        
         if dist is None:
+            dist = self.distance(y, order=order)
             
-        prob = np.zeros_like(eps)
-        for j, tol in enumerate(eps):
-            prob[j] = np.where(dist<=tol)[0].size/self.nEns
-    
+        if isinstance(eps, np.ndarray): 
+            prob = np.zeros_like(eps)
+            for j, tol in enumerate(eps):
+                prob[j] = np.where(dist<=tol)[0].size/self.nEns
+        elif isinstance(eps, float):
+            prob = np.where(dist<=eps)[0].size/self.nEns
+        else:
+            raise ValueError('eps is of unsupported type '+ str(type(eps)))
             
-        return D
-        
-    
-    def proximity_prob(self, y, eps, ord=1, dist=None):
+        return prob
+         
+    def plume_distance(self, y, max_dist, num=100, order=1, statistic = 'max', dist=None):
         '''
-        Compute the probability P that the trace y is within a distance eps of the ensemble object.
+        Compute the (quantile-based) plume distance between 
+        an ensemble and another object (whether a single trace or another ensemble).
+        By convention, this distance is the largest 
         
         Parameters
         ----------
         y : array-like, length self.nt
-            trace whose probability is to be assessed
-        eps : array of float64
-            numerical tolerance for the distance. 
-        ord : int, or inf
-            Order of the ord. inf means numpy’s inf object. The default is 1.
+           trace/plume whose probability is to be assessed
+        max_dist : maximum distance to consider in the calculation of proximity probabilities
+            
+        num : int
+            number of quantiles for the estimation of the distance
+        order : int, or inf
+            Order of the norm. inf means numpy’s inf object. The default is 1.
+        statistic : str
+            What statistic to use to quantify the distance between distributions. Default is 'max'
         dist : array-like, length self.nEns
             if provided, uses this as vector of distances. Otherwise it is computed internally
             
@@ -749,21 +758,19 @@ class EnsembleTS:
             Probability that the trace y is within a distance eps of the ensemble object
 
         '''
-        if dist is None:
-            dist = self.distance(y, ord=ord)
-            
-        if isinstance(eps, np.ndarray): 
-            prob = np.zeros_like(eps)
-            for j, tol in enumerate(eps):
-                prob[j] = np.where(dist<=tol)[0].size/self.nEns
-        elif isinstance(eps, float):
-            prob = np.where(dist<=eps)[0].size/self.nEns
-        else:
-            raise ValueError('eps is of unsupported type '+ str(type(eps)))
-            
-        return prob
+
+        eps = np.linspace(0,max_dist,num=num) # vector of distances
+        # assess proximity probability between the ensemble and the object (trace or ensemble)
+        prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist)
         
-       
+        def find_roots(x,y):
+            s = np.abs(np.diff(np.sign(y))).astype(bool)
+            return x[:-1][s] + np.diff(x)[s]/(np.abs(y[1:][s]/y[:-1][s])+1)   
+    
+        eps_med = find_roots(eps, prob - 0.5)[0]
+            
+        return eps_med
+           
     def SmBP(self, y1, y2, acf, d=None):
         '''
         Computes the ratio of probability intensities based on the Small Ball Probability (SmBP)
