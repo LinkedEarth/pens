@@ -748,11 +748,11 @@ class EnsembleTS:
             
         return prob
          
-    def plume_distance(self, y, max_dist, num=100, order=1, statistic = 'max', dist=None):
+    def plume_distance(self, y, max_dist, num=100, q = 0.5, order=1, dist=None):
         '''
-        Compute the (quantile-based) plume distance between 
-        an ensemble and another object (whether a single trace or another ensemble).
-        By convention, this distance is the largest 
+        Compute the (quantile-based) characteristic distance between 
+        a plume (ensemble) and another object (whether a single trace or another plume).
+        Searches for quantile q of the "proximity probability" distribution
         
         Parameters
         ----------
@@ -764,8 +764,8 @@ class EnsembleTS:
             number of quantiles for the estimation of the distance
         order : int, or inf
             Order of the norm. inf means numpy’s inf object. The default is 1.
-        statistic : str
-            What statistic to use to quantify the distance between distributions. Default is 'max'
+        q : float
+           Quantile from which the characteristic distance is derived. Default = 0.5 (median)     
         dist : array-like, length self.nEns
             if provided, uses this as vector of distances. Otherwise it is computed internally
             
@@ -775,22 +775,26 @@ class EnsembleTS:
 
         Returns
         -------
-        P : float in [0,1]
-            Probability that the trace y is within a distance eps of the ensemble object
+        charac_eps: float 
+            Representative distance (in same units as self or y)
 
         '''
-
-        eps = np.linspace(0,max_dist,num=num) # vector of distances
-        # assess proximity probability between the ensemble and the object (trace or ensemble)
-        prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist)
         
-        def find_roots(x,y):
-            s = np.abs(np.diff(np.sign(y))).astype(bool)
-            return x[:-1][s] + np.diff(x)[s]/(np.abs(y[1:][s]/y[:-1][s])+1)   
-    
-        eps_med = find_roots(eps, prob - 0.5)[0]
+        if isinstance(y, EnsembleTS) and np.allclose(y.value, self.value):
+            print('objects are numerically identical')
+            charac_eps = 0
+        else:
+            eps = np.linspace(0,max_dist,num=num) # vector of distances
+            # assess proximity probability between the ensemble and the object (trace or ensemble)
+            prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist)
             
-        return eps_med
+            def find_roots(x,y):
+                s = np.abs(np.diff(np.sign(y))).astype(bool)
+                return x[:-1][s] + np.diff(x)[s]/(np.abs(y[1:][s]/y[:-1][s])+1)
+        
+            charac_eps = find_roots(eps, prob - 0.5)[0]
+            
+        return charac_eps
            
     def SmBP(self, y1, y2, acf, d=None):
         '''
