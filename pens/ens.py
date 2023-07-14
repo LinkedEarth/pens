@@ -150,7 +150,7 @@ class EnsembleTS:
             DESCRIPTION. The default is 10.
         xm : NumPy array, optional
             axis over which KDE is calculated The default is np.linspace(-0.5,1.5,200).
-        bw : TYPE, optional
+        bw : str, scalar or callable, optional
             The method used to calculate the estimator bandwidth. 
             This can be ‘scott’, ‘silverman’, a scalar constant or a callable. If a scalar, this will be used directly as kde.factor. If a callable, it should take a gaussian_kde instance as only parameter and return a scalar. If None (default), ‘scott’ is used. 
 
