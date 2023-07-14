@@ -138,7 +138,28 @@ class EnsembleTS:
         res.refresh()
         return res
     
-    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200), bw = 0.2):
+    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200), bw = 'silverman'):
+        '''
+        Extract trend distributions from EnsembleTS object via Gaussian Kernel Density Estimation
+
+        Parameters
+        ----------
+        segment_length : int, optional
+            DESCRIPTION. The default is 10.
+        step : int, optional
+            DESCRIPTION. The default is 10.
+        xm : NumPy array, optional
+            axis over which KDE is calculated The default is np.linspace(-0.5,1.5,200).
+        bw : TYPE, optional
+            The method used to calculate the estimator bandwidth. 
+            This can be ‘scott’, ‘silverman’, a scalar constant or a callable. If a scalar, this will be used directly as kde.factor. If a callable, it should take a gaussian_kde instance as only parameter and return a scalar. If None (default), ‘scott’ is used. 
+
+        Returns
+        -------
+        new : TYPE
+            DESCRIPTION.
+
+        '''
         new = self.copy()
         means, trends, tm, idxs = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
         dmeans  = means[-1:] - means[:-1] # difference of means
