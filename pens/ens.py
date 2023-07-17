@@ -667,7 +667,7 @@ class EnsembleTS:
         
         return score, HDI
     
-    def distance(self, y, order=1):
+    def distance(self, y, order=1, nsamples=None):
         '''
         Compute the distance between a target y and the ensemble object.
         
@@ -679,6 +679,9 @@ class EnsembleTS:
     
         order : int, or inf
             Order of the norm. inf means numpy’s inf object. The default is 1.
+            
+        nsamples : int
+            number of samples to use (to speed up computation for very large ensembles)
         
         See Also
         --------
@@ -689,27 +692,34 @@ class EnsembleTS:
         dist : numpy array, dimension (self.nEns,)
             
         '''
+        if nsamples is not None:
+            left = self.subsample(nsamples=nsamples)
+        else:
+            left = self.copy()
+        
         if isinstance(y, EnsembleTS):
-            y = y.value # extract NumPy array
+            if nsamples is not None:
+                right = y.subsample(nsamples=nsamples)
+                y = right.value  # extract NumPy array
             
         if len(y) != self.nt:
             raise ValueError('the target series and the ensemble must have the same length')
         # handle plume dimension 
         if len(y.shape) > 1:
             ncol = y.shape[1]
-            d = np.zeros((self.nEns,ncol))
-            for i in range(self.nEns):
+            d = np.zeros((left.nEns,ncol))
+            for i in range(left.nEns):
                 for j in range(ncol):
-                    d[i,j] = np.linalg.norm(self.value[:,i]-y[:,j], ord = order)/self.nt
-            d = np.reshape(d, (self.nEns*ncol))
+                    d[i,j] = np.linalg.norm(left.value[:,i]-y[:,j], ord = order)/left.nt
+            d = np.reshape(d, (left.nEns*ncol))
         else:
-            d = np.zeros((self.nEns))
-            for i in range(self.nEns):
-                d[i] = np.linalg.norm(self.value[:,i]-y, ord = order)/self.nt
+            d = np.zeros((left.nEns))
+            for i in range(left.nEns):
+                d[i] = np.linalg.norm(left.value[:,i]-y, ord = order)/self.nt
             
         return d
     
-    def proximity_prob(self, y, eps, order=1, dist=None):
+    def proximity_prob(self, y, eps, order=1, dist=None, nsamples=None):
         '''
         Compute the probability P that the trace y is within a distance eps of the ensemble object.
         
@@ -735,7 +745,7 @@ class EnsembleTS:
 
         '''
         if dist is None:
-            dist = self.distance(y, order=order)
+            dist = self.distance(y, order=order, nsamples=nsamples)
             
         if isinstance(eps, np.ndarray): 
             prob = np.zeros_like(eps)
@@ -748,7 +758,7 @@ class EnsembleTS:
             
         return prob
          
-    def plume_distance(self, y, max_dist, num=100, q = 0.5, order=1, dist=None):
+    def plume_distance(self, y, max_dist, num=100, q = 0.5, order=1, dist=None, nsamples=None):
         '''
         Compute the (quantile-based) characteristic distance between 
         a plume (ensemble) and another object (whether a single trace or another plume).
