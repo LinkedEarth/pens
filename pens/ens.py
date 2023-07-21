@@ -719,7 +719,7 @@ class EnsembleTS:
                     right = y.subsample(nsamples=nsamples)
                     y = right.value  # extract NumPy array
                 
-            if len(y) != self.nt:
+            if y.shape[0] != self.nt:
                 raise ValueError('the target series and the ensemble must have the same length')
             # handle plume dimension 
             if len(y.shape) > 1:
