@@ -21,6 +21,7 @@ from statsmodels.tsa.arima_process import arma_generate_sample
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import covar
 import properscoring as ps
+from more_itertools import distinct_combinations
 
 
 class EnsembleTS:
@@ -464,6 +465,11 @@ class EnsembleTS:
             
         p : int
             number of series to export
+            
+        trend : array, length self.nt
+            general trend of the ensemble. 
+            If None, it is calculated as the ensemble mean.
+            If provided, it will be added to the ensemble. 
               
         seed : int
             seed for the random generator (provided for reproducibility)
@@ -475,10 +481,11 @@ class EnsembleTS:
         '''
         if seed is not None:
             np.random.seed(seed)
+        if trend is None:
+            trend = self.get_mean()
             
         N = self.nt                            
         scale = self.get_std()       
-        trend = self.get_mean()
             
         paths = np.ndarray((N, p))
         
@@ -667,7 +674,7 @@ class EnsembleTS:
         
         return score, HDI
     
-    def distance(self, y, order=1, nsamples=None):
+    def distance(self, y=None, order=1, nsamples=None):
         '''
         Compute the distance between a target y and the ensemble object.
         
@@ -675,7 +682,8 @@ class EnsembleTS:
         ----------
         y : array-like, length n
             trace/plume whose probability is to be assessed
-            Must have n == self.nt
+            If None, the distance is computed between every possible pair of trajectories within the ensemble
+            If specified, Must have n == self.nt
     
         order : int, or inf
             Order of the norm. inf means numpy’s inf object. The default is 1.
@@ -696,26 +704,35 @@ class EnsembleTS:
             left = self.subsample(nsamples=nsamples)
         else:
             left = self.copy()
-        
-        if isinstance(y, EnsembleTS):
-            if nsamples is not None:
-                right = y.subsample(nsamples=nsamples)
-                y = right.value  # extract NumPy array
             
-        if len(y) != self.nt:
-            raise ValueError('the target series and the ensemble must have the same length')
-        # handle plume dimension 
-        if len(y.shape) > 1:
-            ncol = y.shape[1]
-            d = np.zeros((left.nEns,ncol))
-            for i in range(left.nEns):
-                for j in range(ncol):
-                    d[i,j] = np.linalg.norm(left.value[:,i]-y[:,j], ord = order)/left.nt
-            d = np.reshape(d, (left.nEns*ncol))
+            
+        if y is None:  # compute intra ensemble distance, pairwise
+           candidate_pairs = distinct_combinations(np.arange(left.nEns), 2)
+           dist = []
+           for p in tqdm(list(candidate_pairs),desc='Computing intra-ensemble distance among possible pairs'):
+               series_diff = left.value[:,p[0]]-left.value[:,p[1]]
+               dist.append(np.linalg.norm(series_diff, ord = order)/left.nt)
+           d = np.array(dist)    
         else:
-            d = np.zeros((left.nEns))
-            for i in range(left.nEns):
-                d[i] = np.linalg.norm(left.value[:,i]-y, ord = order)/self.nt
+            if isinstance(y, EnsembleTS):
+                if nsamples is not None:
+                    right = y.subsample(nsamples=nsamples)
+                    y = right.value  # extract NumPy array
+                
+            if len(y) != self.nt:
+                raise ValueError('the target series and the ensemble must have the same length')
+            # handle plume dimension 
+            if len(y.shape) > 1:
+                ncol = y.shape[1]
+                d = np.zeros((left.nEns,ncol))
+                for i in range(left.nEns):
+                    for j in range(ncol):
+                        d[i,j] = np.linalg.norm(left.value[:,i]-y[:,j], ord = order)/left.nt
+                d = np.reshape(d, (left.nEns*ncol))
+            else:
+                d = np.zeros((left.nEns))
+                for i in range(left.nEns):
+                    d[i] = np.linalg.norm(left.value[:,i]-y, ord = order)/self.nt
             
         return d
     
@@ -758,7 +775,7 @@ class EnsembleTS:
             
         return prob
          
-    def plume_distance(self, y, max_dist, num=100, q = 0.5, order=1, dist=None, nsamples=None):
+    def plume_distance(self, y=None, max_dist=1, num=100, q = 0.5, order=1, dist=None, nsamples=None):
         '''
         Compute the (quantile-based) characteristic distance between 
         a plume (ensemble) and another object (whether a single trace or another plume).
@@ -769,9 +786,9 @@ class EnsembleTS:
         y : array-like, length self.nt
            trace/plume whose probability is to be assessed
         max_dist : maximum distance to consider in the calculation of proximity probabilities
-            
+            default is 1, which may or may not make sense for your application!  
         num : int
-            number of quantiles for the estimation of the distance
+            number of discrete points for the estimation of the distance distribution
         order : int, or inf
             Order of the norm. inf means numpy’s inf object. The default is 1.
         q : float
@@ -789,21 +806,29 @@ class EnsembleTS:
             Representative distance (in same units as self or y)
 
         '''
+        eps = np.linspace(0,max_dist,num=num) # vector of distances
+        def find_roots(x,y):
+            s = np.abs(np.diff(np.sign(y))).astype(bool)
+            return x[:-1][s] + np.diff(x)[s]/(np.abs(y[1:][s]/y[:-1][s])+1)
         
-        if isinstance(y, EnsembleTS) and np.allclose(y.value, self.value):
-            print('objects are numerically identical')
-            charac_eps = 0
-        else:
-            eps = np.linspace(0,max_dist,num=num) # vector of distances
-            # assess proximity probability between the ensemble and the object (trace or ensemble)
-            prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist)
-            
-            def find_roots(x,y):
-                s = np.abs(np.diff(np.sign(y))).astype(bool)
-                return x[:-1][s] + np.diff(x)[s]/(np.abs(y[1:][s]/y[:-1][s])+1)
-        
+        if y is None:  # compute intra ensemble distance
+            d = self.distance(order=order, nsamples=nsamples)
+            prob = self.proximity_prob(self.value, eps=eps, dist=d, nsamples=nsamples)
             charac_eps = find_roots(eps, prob - 0.5)[0]
-            
+        else:  # compute plume distance to y (EnsembleTS or array)
+            if isinstance(y, EnsembleTS):
+                if y.nEns == self.nEns:
+                    if np.allclose(y.value, self.value):
+                        print('objects are numerically identical')
+                        charac_eps = 0
+                    else:
+                        prob = self.proximity_prob(y.value, eps=eps, order=order, dist=dist, nsamples=nsamples)
+                        charac_eps = find_roots(eps, prob - 0.5)[0]
+            else :
+                # assess proximity probability between the ensemble and the object (trace or ensemble)
+                prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist, nsamples=nsamples)
+                charac_eps = find_roots(eps, prob - 0.5)[0]
+
         return charac_eps
            
     def SmBP(self, y1, y2, acf, d=None):
