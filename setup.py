@@ -30,7 +30,6 @@ setup(
         'dask',
         'stochastic',
         'properscoring',
-        'covar'
     ],
     extras_require={
         'pyleo': ['pyleoclim'],

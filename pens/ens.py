@@ -13,13 +13,13 @@ from . import utils
 import scipy.linalg as linalg
 from scipy.stats import gaussian_kde 
 from scipy.stats import mode
-from scipy.optimize import curve_fit
+#from scipy.optimize import curve_fit
 from scipy.stats import percentileofscore 
 #from scipy.stats import multivariate_normal
 from pyleoclim.utils.tsutils import standardize
 from statsmodels.tsa.arima_process import arma_generate_sample
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-import covar
+#import covar
 import properscoring as ps
 from more_itertools import distinct_combinations
 
