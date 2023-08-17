@@ -231,6 +231,8 @@ def means_and_trends_ensemble(var,segment_length,step,years):
        print("Beef up your ensemble, yo. Ain't got nothing in it")
 
     n_years, n_ens = var.shape
+    if segment_length +2*step >= n_years:
+        raise ValueError(f'Too few samples ({n_years}) for a segment length of {segment_length}')
 
     n_segments = int(((n_years-segment_length)/step)+1)
     skip_idx = np.remainder(n_years-segment_length,step)  # If the segments don't cover the entire time-span, skip years at the beginning.
