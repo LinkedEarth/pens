@@ -725,7 +725,7 @@ class EnsembleTS:
             if len(y.shape) > 1:
                 ncol = y.shape[1]
                 d = np.zeros((left.nEns,ncol))
-                for i in range(left.nEns):
+                for i in tqdm(range(left.nEns),desc='Computing inter-ensemble distance'):
                     for j in range(ncol):
                         d[i,j] = np.linalg.norm(left.value[:,i]-y[:,j], ord = order)/left.nt
                 d = np.reshape(d, (left.nEns*ncol))
@@ -814,7 +814,7 @@ class EnsembleTS:
         if y is None:  # compute intra ensemble distance
             d = self.distance(order=order, nsamples=nsamples)
             prob = self.proximity_prob(self.value, eps=eps, dist=d, nsamples=nsamples)
-            charac_eps = find_roots(eps, prob - 0.5)[0]
+            charac_eps = find_roots(eps, prob - q)[0]
         else:  # compute plume distance to y (EnsembleTS or array)
             if isinstance(y, EnsembleTS):
                 if y.nEns == self.nEns:
@@ -823,11 +823,11 @@ class EnsembleTS:
                         charac_eps = 0
                     else:
                         prob = self.proximity_prob(y.value, eps=eps, order=order, dist=dist, nsamples=nsamples)
-                        charac_eps = find_roots(eps, prob - 0.5)[0]
+                        charac_eps = find_roots(eps, prob - q)[0]
             else :
                 # assess proximity probability between the ensemble and the object (trace or ensemble)
                 prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist, nsamples=nsamples)
-                charac_eps = find_roots(eps, prob - 0.5)[0]
+                charac_eps = find_roots(eps, prob - q)[0]
 
         return charac_eps
            
@@ -1133,13 +1133,17 @@ class EnsembleTS:
         else:
             return ax
         
-    def plot_traces(self, num_traces = 10, figsize=[10, 4], title=None, seed = None,
-             xlim=None, ylim=None, linestyle='-', ax=None, plot_legend=True, 
-             xlabel=None, ylabel=None,  color='grey', lw=0.5, alpha=0.1, lgd_kwargs=None):
+    def plot_traces(self, num_traces = 5, figsize=[10, 4], title=None, label = None,
+                    seed = None, indices = None, xlim=None, ylim=None,
+                    linestyle='-', ax=None, plot_legend=True,  lgd_kwargs=None,
+                    xlabel=None, ylabel=None,  color='grey', lw=0.5, alpha=0.1):
         '''Plot EnsembleTS as a subset of traces.
 
         Parameters
         ----------
+        
+        num_traces : int
+            Number of traces to plot, chosen at random. Default is 5. 
 
         figsize : list, optional
 
@@ -1156,6 +1160,19 @@ class EnsembleTS:
         title : str, optional
 
             Plot title. The default is None.
+            
+        label : str, optional
+        
+            Label to use on the plot legend. 
+            Automatically generated if not provided. 
+            
+        seed : int, optional
+            seed for the random number generator. Useful for reproducibility.
+            The default is None. Disregarded if indices is not None
+            
+        indices : int, optional
+            (0-based) indices of the traces. 
+            The default is None. If provided, supersedes "seed" and "num_traces".
 
         xlim : list, optional
 
@@ -1226,28 +1243,38 @@ class EnsembleTS:
         
         time_label, value_label = self.make_labels()
         
-        nts_max = 200
+        nts_max = 20
         
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
             
+        # Select traces to plot    
         if seed is not None:
             np.random.seed(seed)
-        
-        if num_traces is not None:
+        if indices is not None:
+            num_traces = len(indices)
             if num_traces > nts_max:
-                ValueError('num_traces is too large; reduced to '+str(nts_max))
-            num_traces = np.min([num_traces,nts_max]) # cap it
-            trace_idx = np.random.choice(self.nEns, num_traces, replace=False)
+                ValueError(f'Please pick a maximum of {nts_max} traces')
+            trace_idx = indices
+            trace_lbl = label if label is not None else f'sample paths {np.array(indices)+1}'
+                
         else:
-            num_traces = self.nEns
-            trace_idx = range(num_traces)
+            if num_traces is not None:
+                if num_traces > nts_max:
+                    ValueError('num_traces is too large; reduced to '+str(nts_max))
+                num_traces = np.min([num_traces,nts_max]) # cap it
+                trace_idx = np.random.choice(self.nEns, num_traces, replace=False)
+            else:
+                trace_idx = range(nts_max)
+            trace_lbl = label if label is not None else f'sample paths (n={num_traces})'
             
+        # plot the traces
         for idx in trace_idx:
             ax.plot(self.time, self.value[:,idx], zorder=99, linewidth=lw,
                     color=color, alpha=alpha, linestyle='-')
+        # dummy plot for trace labels
         ax.plot(np.nan, np.nan, color=color, alpha=alpha, linestyle='-',
-                label=f'sample paths (n={num_traces})')
+                label=trace_lbl)
 
         if xlabel is not None:
             ax.set_xlabel(xlabel)
@@ -1272,9 +1299,14 @@ class EnsembleTS:
             lgd_args = {'frameon': False}
             lgd_args.update(lgd_kwargs)
             ax.legend(**lgd_args)
+            
+        if 'fig' in locals():
+            return fig, ax
+        else:
+            return ax    
 
     def plot_hdi(self, prob = 0.9, median=True, figsize=[12, 4], color = 'tab:blue',
-        xlabel=None, ylabel=None, title=None, ylim=None, xlim=None, alpha=0.2,
+        xlabel=None, ylabel=None, label=None, title=None, ylim=None, xlim=None, alpha=0.2,
         legend_kwargs=None, title_kwargs=None, ax=None, **plot_kwargs):
         '''
         h/t: Arviz code: https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi
@@ -1285,12 +1317,15 @@ class EnsembleTS:
             probability for which the highest density interval will be computed. The default is 0.9.
         median : bool
             If True (default), the posterior median is added.
-        figsize : TYPE, optional
-            DESCRIPTION. The default is [12, 4].
-        xlabel : TYPE, optional
-            DESCRIPTION. The default is None.
-        ylabel : TYPE, optional
-            DESCRIPTION. The default is None.
+        figsize : tuple, optional
+            dimensions of the figure. The default is [12, 4].
+        xlabel : str, optional
+            Label for x axis. The default is None.
+        ylabel : str, optional
+            Label for y axis. The default is None.
+        label : str, optional
+            Label for the plotted objects; useful for multi-plots.
+            If None (default) is specified, will attempt to use the object's label.
         title : TYPE, optional
             DESCRIPTION. The default is None.
         ylim : TYPE, optional
@@ -1317,6 +1352,9 @@ class EnsembleTS:
 
         legend_kwargs = {} if legend_kwargs is None else legend_kwargs
         title_kwargs = {} if title_kwargs is None else title_kwargs
+        
+        if label is None:
+            label = '' if self.label is None else self.label
 
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
@@ -1330,13 +1368,13 @@ class EnsembleTS:
         
         ax.fill_between(
             self.time, HDI[:,0], HDI[:,1], color=color, alpha=alpha,
-            label=f'{prob*100}% HDI')
+            label=label+f' {prob*100}% HDI')
         
         if median == True:
             ym = self.get_median().value[:,0] 
             _plot_kwargs = {'linewidth': 1}
             _plot_kwargs.update(plot_kwargs)
-            ax.plot(self.time, ym, label = 'median', color = color, **_plot_kwargs)
+            ax.plot(self.time, ym, label = label+' median', color = color, **_plot_kwargs)
         
         time_label, value_label = self.make_labels()
         
