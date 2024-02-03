@@ -38,7 +38,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'nbsphinx',
     'sphinx_copybutton',
-    'sphinxcontrib.napoleon',                                                   
+    # 'sphinx.ext.napolean'
     # 'sphinx.ext.mathjax',
     # 'sphinxcontrib.bibtex',
     # 'sphinxcontrib.rsvgconverter',

@@ -7,5 +7,5 @@
    :caption: User Guide
 
    ug-installation
-   ug-quickstart
    ug-api
+..    ug-quickstart

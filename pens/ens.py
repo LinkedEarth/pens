@@ -557,35 +557,35 @@ class EnsembleTS:
         return new
         
 
-    def compare_nearest(self, ens, metric='MSE'):
-        ''' Compare with the nearest path from another EnsembleTS
+    # def compare_nearest(self, ens, metric='MSE'):
+    #     ''' Compare with the nearest path from another EnsembleTS
 
-        Note that we assume the size of the time axis is consistent.
-        If not, please call EnsembleTS.slice() ahead.
-        '''
-        dist = np.zeros(ens.nEns)
-        for i in tqdm(range(ens.nEns)):
-            target = ens.value[:, i]
-            dist[i] = self.sample_nearest(target, metric=metric).distance
+    #     Note that we assume the size of the time axis is consistent.
+    #     If not, please call EnsembleTS.slice() ahead.
+    #     '''
+    #     dist = np.zeros(ens.nEns)
+    #     for i in tqdm(range(ens.nEns)):
+    #         target = ens.value[:, i]
+    #         dist[i] = self.sample_nearest(target, metric=metric).distance
 
-        return dist
+    #     return dist
 
-    def compare(self, ens, metric='MSE'):
-        ''' Compare with another EnsembleTS
+    # def compare(self, ens, metric='MSE'):
+    #     ''' Compare with another EnsembleTS
 
-        Note that we assume the size of the time axis is consistent.
-        If not, please call EnsembleTS.slice() ahead.
-        '''
-        dist_func = {
-            'MSE': sklearn.metrics.mean_squared_error,
-            'KLD': utils.kl_div,
-        }
-        max_nens = np.min([self.nEns, ens.nEns])
-        dist = np.zeros(ens.nt)
-        for i in tqdm(range(ens.nt)):
-            dist[i] = dist_func[metric](self.value[i, :max_nens], ens.value[i, :max_nens])
+    #     Note that we assume the size of the time axis is consistent.
+    #     If not, please call EnsembleTS.slice() ahead.
+    #     '''
+    #     dist_func = {
+    #         'MSE': sklearn.metrics.mean_squared_error,
+    #         'KLD': utils.kl_div,
+    #     }
+    #     max_nens = np.min([self.nEns, ens.nEns])
+    #     dist = np.zeros(ens.nt)
+    #     for i in tqdm(range(ens.nt)):
+    #         dist[i] = dist_func[metric](self.value[i, :max_nens], ens.value[i, :max_nens])
 
-        return dist
+    #     return dist
     
 
     def crps_trace(self, y):
