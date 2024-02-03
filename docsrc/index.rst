@@ -18,7 +18,7 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
 
         Installation instructions.
 
-    .. grid-item-card::  Emile-Geay et al. (2024)
+    .. grid-item-card::  Examples
         :class-title: custom-title
         :class-body: custom-body
         :img-top: _static/examples.png
@@ -42,5 +42,5 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
    :caption: User Guide
 
    ug-installation
-   ug-eg24
+   ug-examples
    ug-api
