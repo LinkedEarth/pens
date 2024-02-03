@@ -16,8 +16,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'pens'
-authors = 'Feng Zhu, Julien Emile-Geay, Gregory J. Hakim, Dan Amrhein, Luke Parsons'
-copyright = f'2022, {authors}'
+copyright = f'2024, Julien Emile-Geay, Feng Zhu'
 
 
 # -- General configuration ---------------------------------------------------
@@ -32,18 +31,19 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = [
+    '_build',
+    'Thumbs.db',
+    '.DS_Store',
+    'notebooks/test*.ipynb',  # notebooks starting with test won't be rendered
+]
 
 extensions = [
-    'sphinx.ext.autodoc',
     'nbsphinx',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
     'sphinx_copybutton',
-    # 'sphinx.ext.napolean'
-    # 'sphinx.ext.mathjax',
-    # 'sphinxcontrib.bibtex',
-    # 'sphinxcontrib.rsvgconverter',
-    # 'sphinx_copybutton',
-    # 'sphinx_gallery.load_style',
+    'sphinx_design',
 ]
 
 # html_logo = 'favicon.ico'
@@ -69,7 +69,11 @@ html_theme_options = {
     'use_fullscreen_button': False,
 }
 
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
+
+html_static_path = ['_static']
+html_css_files = ['style.css']
+def setup(app):
+    app.add_css_file('theme_overrides.css')

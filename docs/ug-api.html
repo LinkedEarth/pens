@@ -1,0 +1,1039 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API Reference &#8212; pens  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css?v=db61ab07" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css?v=fca5bd30" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ug-api';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Installation" href="ug-installation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pens  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ug-installation.html">Installation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">API Reference</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/fzhu2e/pens" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fzhu2e/pens/edit/main/ug-api.rst" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/fzhu2e/pens/issues/new?title=Issue%20on%20page%20%2Fug-api.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/ug-api.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>API Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ensemblets">EnsembleTS</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS"><code class="docutils literal notranslate"><span class="pre">EnsembleTS</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.distance"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.distance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.from_df"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.from_df()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.get_means_and_trends"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.get_means_and_trends()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.hdi_score"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.hdi_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.line_density"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.line_density()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.load_nc"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.load_nc()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.make_labels"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.make_labels()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot_hdi"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot_hdi()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot_qs"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot_qs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot_traces"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot_traces()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plume_distance"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plume_distance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.proximity_prob"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.proximity_prob()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.random_paths"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.random_paths()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.sample_nearest"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.sample_nearest()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.slice"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.slice()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.subsample"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.subsample()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.to_df"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.to_df()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.to_pyleo"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.to_pyleo()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.trace_rank"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.trace_rank()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pens.utils">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.hdi1d"><code class="docutils literal notranslate"><span class="pre">hdi1d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.model_acf"><code class="docutils literal notranslate"><span class="pre">model_acf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h1>
+<section id="ensemblets">
+<h2>EnsembleTS<a class="headerlink" href="#ensemblets" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pens.ens.</span></span><span class="sig-name descname"><span class="pre">EnsembleTS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS" title="Link to this definition">#</a></dt>
+<dd><p>Ensemble Timeseries</p>
+<p>Note that annual reconstruction is assumed so the time axis is in years.
+The ensembles variable should be in shape of (nt, nEns), where nt is the number of years,
+and nEns is the number of ensemble members.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.distance" title="Link to this definition">#</a></dt>
+<dd><p>Compute the distance between a target y and the ensemble object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>length n</em>) – trace/plume whose probability is to be assessed
+If None, the distance is computed between every possible pair of trajectories within the ensemble
+If specified, Must have n == self.nt</p></li>
+<li><p><strong>order</strong> (<em>int</em><em>, or </em><em>inf</em>) – Order of the norm. inf means numpy’s inf object. The default is 1.</p></li>
+<li><p><strong>nsamples</strong> (<em>int</em>) – number of samples to use (to speed up computation for very large ensembles)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.linalg.norm</span></code></dt><dd><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html">https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html</a></p>
+</dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dist</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy array, dimension (self.nEns,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.from_df">
+<span class="sig-name descname"><span class="pre">from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.from_df" title="Link to this definition">#</a></dt>
+<dd><p>Load data from a pandas.DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The pandas.DataFrame object.</p></li>
+<li><p><strong>time_column</strong> (<em>str</em>) – The label of the column for the time axis.</p></li>
+<li><p><strong>value_columns</strong> (<em>list</em><em> of </em><em>str</em>) – The list of the labels for the value axis of the ensemble members.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.get_means_and_trends">
+<span class="sig-name descname"><span class="pre">get_means_and_trends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([-0.5,</span> <span class="pre">-0.48994975,</span> <span class="pre">-0.4798995,</span> <span class="pre">-0.46984925,</span> <span class="pre">-0.45979899,</span> <span class="pre">-0.44974874,</span> <span class="pre">-0.43969849,</span> <span class="pre">-0.42964824,</span> <span class="pre">-0.41959799,</span> <span class="pre">-0.40954774,</span> <span class="pre">-0.39949749,</span> <span class="pre">-0.38944724,</span> <span class="pre">-0.37939698,</span> <span class="pre">-0.36934673,</span> <span class="pre">-0.35929648,</span> <span class="pre">-0.34924623,</span> <span class="pre">-0.33919598,</span> <span class="pre">-0.32914573,</span> <span class="pre">-0.31909548,</span> <span class="pre">-0.30904523,</span> <span class="pre">-0.29899497,</span> <span class="pre">-0.28894472,</span> <span class="pre">-0.27889447,</span> <span class="pre">-0.26884422,</span> <span class="pre">-0.25879397,</span> <span class="pre">-0.24874372,</span> <span class="pre">-0.23869347,</span> <span class="pre">-0.22864322,</span> <span class="pre">-0.21859296,</span> <span class="pre">-0.20854271,</span> <span class="pre">-0.19849246,</span> <span class="pre">-0.18844221,</span> <span class="pre">-0.17839196,</span> <span class="pre">-0.16834171,</span> <span class="pre">-0.15829146,</span> <span class="pre">-0.14824121,</span> <span class="pre">-0.13819095,</span> <span class="pre">-0.1281407,</span> <span class="pre">-0.11809045,</span> <span class="pre">-0.1080402,</span> <span class="pre">-0.09798995,</span> <span class="pre">-0.0879397,</span> <span class="pre">-0.07788945,</span> <span class="pre">-0.0678392,</span> <span class="pre">-0.05778894,</span> <span class="pre">-0.04773869,</span> <span class="pre">-0.03768844,</span> <span class="pre">-0.02763819,</span> <span class="pre">-0.01758794,</span> <span class="pre">-0.00753769,</span> <span class="pre">0.00251256,</span> <span class="pre">0.01256281,</span> <span class="pre">0.02261307,</span> <span class="pre">0.03266332,</span> <span class="pre">0.04271357,</span> <span class="pre">0.05276382,</span> <span class="pre">0.06281407,</span> <span class="pre">0.07286432,</span> <span class="pre">0.08291457,</span> <span class="pre">0.09296482,</span> <span class="pre">0.10301508,</span> <span class="pre">0.11306533,</span> <span class="pre">0.12311558,</span> <span class="pre">0.13316583,</span> <span class="pre">0.14321608,</span> <span class="pre">0.15326633,</span> <span class="pre">0.16331658,</span> <span class="pre">0.17336683,</span> <span class="pre">0.18341709,</span> <span class="pre">0.19346734,</span> <span class="pre">0.20351759,</span> <span class="pre">0.21356784,</span> <span class="pre">0.22361809,</span> <span class="pre">0.23366834,</span> <span class="pre">0.24371859,</span> <span class="pre">0.25376884,</span> <span class="pre">0.2638191,</span> <span class="pre">0.27386935,</span> <span class="pre">0.2839196,</span> <span class="pre">0.29396985,</span> <span class="pre">0.3040201,</span> <span class="pre">0.31407035,</span> <span class="pre">0.3241206,</span> <span class="pre">0.33417085,</span> <span class="pre">0.34422111,</span> <span class="pre">0.35427136,</span> <span class="pre">0.36432161,</span> <span class="pre">0.37437186,</span> <span class="pre">0.38442211,</span> <span class="pre">0.39447236,</span> <span class="pre">0.40452261,</span> <span class="pre">0.41457286,</span> <span class="pre">0.42462312,</span> <span class="pre">0.43467337,</span> <span class="pre">0.44472362,</span> <span class="pre">0.45477387,</span> <span class="pre">0.46482412,</span> <span class="pre">0.47487437,</span> <span class="pre">0.48492462,</span> <span class="pre">0.49497487,</span> <span class="pre">0.50502513,</span> <span class="pre">0.51507538,</span> <span class="pre">0.52512563,</span> <span class="pre">0.53517588,</span> <span class="pre">0.54522613,</span> <span class="pre">0.55527638,</span> <span class="pre">0.56532663,</span> <span class="pre">0.57537688,</span> <span class="pre">0.58542714,</span> <span class="pre">0.59547739,</span> <span class="pre">0.60552764,</span> <span class="pre">0.61557789,</span> <span class="pre">0.62562814,</span> <span class="pre">0.63567839,</span> <span class="pre">0.64572864,</span> <span class="pre">0.65577889,</span> <span class="pre">0.66582915,</span> <span class="pre">0.6758794,</span> <span class="pre">0.68592965,</span> <span class="pre">0.6959799,</span> <span class="pre">0.70603015,</span> <span class="pre">0.7160804,</span> <span class="pre">0.72613065,</span> <span class="pre">0.7361809,</span> <span class="pre">0.74623116,</span> <span class="pre">0.75628141,</span> <span class="pre">0.76633166,</span> <span class="pre">0.77638191,</span> <span class="pre">0.78643216,</span> <span class="pre">0.79648241,</span> <span class="pre">0.80653266,</span> <span class="pre">0.81658291,</span> <span class="pre">0.82663317,</span> <span class="pre">0.83668342,</span> <span class="pre">0.84673367,</span> <span class="pre">0.85678392,</span> <span class="pre">0.86683417,</span> <span class="pre">0.87688442,</span> <span class="pre">0.88693467,</span> <span class="pre">0.89698492,</span> <span class="pre">0.90703518,</span> <span class="pre">0.91708543,</span> <span class="pre">0.92713568,</span> <span class="pre">0.93718593,</span> <span class="pre">0.94723618,</span> <span class="pre">0.95728643,</span> <span class="pre">0.96733668,</span> <span class="pre">0.97738693,</span> <span class="pre">0.98743719,</span> <span class="pre">0.99748744,</span> <span class="pre">1.00753769,</span> <span class="pre">1.01758794,</span> <span class="pre">1.02763819,</span> <span class="pre">1.03768844,</span> <span class="pre">1.04773869,</span> <span class="pre">1.05778894,</span> <span class="pre">1.0678392,</span> <span class="pre">1.07788945,</span> <span class="pre">1.0879397,</span> <span class="pre">1.09798995,</span> <span class="pre">1.1080402,</span> <span class="pre">1.11809045,</span> <span class="pre">1.1281407,</span> <span class="pre">1.13819095,</span> <span class="pre">1.14824121,</span> <span class="pre">1.15829146,</span> <span class="pre">1.16834171,</span> <span class="pre">1.17839196,</span> <span class="pre">1.18844221,</span> <span class="pre">1.19849246,</span> <span class="pre">1.20854271,</span> <span class="pre">1.21859296,</span> <span class="pre">1.22864322,</span> <span class="pre">1.23869347,</span> <span class="pre">1.24874372,</span> <span class="pre">1.25879397,</span> <span class="pre">1.26884422,</span> <span class="pre">1.27889447,</span> <span class="pre">1.28894472,</span> <span class="pre">1.29899497,</span> <span class="pre">1.30904523,</span> <span class="pre">1.31909548,</span> <span class="pre">1.32914573,</span> <span class="pre">1.33919598,</span> <span class="pre">1.34924623,</span> <span class="pre">1.35929648,</span> <span class="pre">1.36934673,</span> <span class="pre">1.37939698,</span> <span class="pre">1.38944724,</span> <span class="pre">1.39949749,</span> <span class="pre">1.40954774,</span> <span class="pre">1.41959799,</span> <span class="pre">1.42964824,</span> <span class="pre">1.43969849,</span> <span class="pre">1.44974874,</span> <span class="pre">1.45979899,</span> <span class="pre">1.46984925,</span> <span class="pre">1.4798995,</span> <span class="pre">1.48994975,</span> <span class="pre">1.5])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'silverman'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.get_means_and_trends" title="Link to this definition">#</a></dt>
+<dd><p>Extract trend distributions from EnsembleTS object via Gaussian Kernel Density Estimation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment_length</strong> (<em>int</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is 10.</p></li>
+<li><p><strong>step</strong> (<em>int</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is 10.</p></li>
+<li><p><strong>xm</strong> (<em>NumPy array</em><em>, </em><em>optional</em>) – axis over which KDE is calculated The default is np.linspace(-0.5,1.5,200).</p></li>
+<li><p><strong>bw</strong> (<em>str</em><em>, </em><em>scalar</em><em> or </em><em>callable</em><em>, </em><em>optional</em>) – The method used to calculate the estimator bandwidth.
+This can be “scott”, “silverman”, a scalar constant or a callable.
+If a scalar, this will be used directly as kde.factor.
+If a callable, it should take a gaussian_kde instance as only parameter and return a scalar.
+If None (default), “scott” is used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>new</strong> – DESCRIPTION.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.hdi_score">
+<span class="sig-name descname"><span class="pre">hdi_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.hdi_score" title="Link to this definition">#</a></dt>
+<dd><p>Computes HDI score for target series y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>length n</em>) – trace whose intensity of probability (“likelihood”) is to be assessed
+Must have n == self.nt.</p></li>
+<li><p><strong>prob</strong> (<em>float</em>) – probability for which the highest density interval will be computed. The default is 0.9.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>score</strong> (<em>the score (scalar)</em>)</p></li>
+<li><p><strong>HDI</strong> (<em>the n x 2 array</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.line_density">
+<span class="sig-name descname"><span class="pre">line_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Greys'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_fine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pcolormesh_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.line_density" title="Link to this definition">#</a></dt>
+<dd><p>Plot the timeseries 2-D histogram</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmap</strong> (<em>str</em>) – The colormap for the histogram.</p></li>
+<li><p><strong>color_scale</strong> (<em>str</em>) – The scale of the colorbar; should be either ‘linear’ or ‘log’.</p></li>
+<li><p><strong>bins</strong> (<em>list/tuple</em><em> of </em><em>2 floats</em>) – The number of bins for each axis: nx, ny = bins.</p></li>
+<li><p><strong>Referneces</strong> – </p></li>
+<li><p><strong>----------</strong> – </p></li>
+<li><p><strong>https</strong> (<em>-</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.load_nc">
+<span class="sig-name descname"><span class="pre">load_nc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'time'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.load_nc" title="Link to this definition">#</a></dt>
+<dd><p>Load data from a .nc file with xarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – The path of the .nc file.</p></li>
+<li><p><strong>var</strong> (<em>str</em>) – The name of variable to load.
+Note that we assume the first axis of the loaded variable is time.</p></li>
+<li><p><strong>time_name</strong> (<em>str</em>) – The name of the time axis.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.make_labels">
+<span class="sig-name descname"><span class="pre">make_labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.make_labels" title="Link to this definition">#</a></dt>
+<dd><p>Initialization of plot labels based on object metadata</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>time_header</strong> (<em>str</em>) – Label for the time axis</p></li>
+<li><p><strong>value_header</strong> (<em>str</em>) – Label for the value axis</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[12,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot the raw values (multiple series)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.plot_hdi">
+<span class="sig-name descname"><span class="pre">plot_hdi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">median</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[12,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tab:blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot_hdi" title="Link to this definition">#</a></dt>
+<dd><p>h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi">https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob</strong> (<em>float</em>) – probability for which the highest density interval will be computed. The default is 0.9.</p></li>
+<li><p><strong>median</strong> (<em>bool</em>) – If True (default), the posterior median is added.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – dimensions of the figure. The default is [12, 4].</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for x axis. The default is None.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for y axis. The default is None.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the plotted objects; useful for multi-plots.
+If None (default) is specified, will attempt to use the object’s label.</p></li>
+<li><p><strong>title</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+<li><p><strong>ylim</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+<li><p><strong>xlim</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+<li><p><strong>alpha</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is 0.3.</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+<li><p><strong>title_kwargs</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+<li><p><strong>ax</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+<li><p><strong>**plot_kwargs</strong> (<em>TYPE</em>) – DESCRIPTION.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DESCRIPTION.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.plot_qs">
+<span class="sig-name descname"><span class="pre">plot_qs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.025,</span> <span class="pre">0.25,</span> <span class="pre">0.5,</span> <span class="pre">0.75,</span> <span class="pre">0.975]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'indianred'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.3,</span> <span class="pre">0.1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_trend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot_qs" title="Link to this definition">#</a></dt>
+<dd><p>Plot the quantiles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figsize</strong> (<em>list</em><em>, </em><em>optional</em>) – The size of the figure. Defaults to [12, 4].</p></li>
+<li><p><strong>qs</strong> (<em>list</em><em>, </em><em>optional</em>) – The list to denote the quantiles plotted. Defaults to [0.025, 0.25, 0.5, 0.75, 0.975].</p></li>
+<li><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – The basic color for the quantile envelopes. Defaults to ‘indianred’.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – The label for the x-axis. Defaults to ‘Year (CE)’.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – The label for the y-axis. Defaults to None.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – The title of the figure. Defaults to None.</p></li>
+<li><p><strong>ylim</strong> (<em>tuple</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The limit of the y-axis. Defaults to None.</p></li>
+<li><p><strong>xlim</strong> (<em>tuple</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The limit of the x-axis. Defaults to None.</p></li>
+<li><p><strong>alphas</strong> (<em>list</em><em>, </em><em>optional</em>) – The alphas for the quantile envelopes. Defaults to [0.5, 0.1].</p></li>
+<li><p><strong>plot_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – The keyword arguments for the <cite>ax.plot()</cite> function. Defaults to None.</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – The keyword arguments for the <cite>ax.legend()</cite> function. Defaults to None.</p></li>
+<li><p><strong>title_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – The keyword arguments for the <cite>ax.title()</cite> function. Defaults to None.</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes</em><em>, </em><em>optional</em>) – The <cite>matplotlib.axes</cite> object. If set the image will be plotted in the existing <cite>ax</cite>. Defaults to None.</p></li>
+<li><p><strong>plot_trend</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will plot the trend analysis result if existed. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.plot_traces">
+<span class="sig-name descname"><span class="pre">plot_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_traces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lgd_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'grey'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot_traces" title="Link to this definition">#</a></dt>
+<dd><p>Plot EnsembleTS as a subset of traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_traces</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of traces to plot, chosen at random. Default is 5.</p></li>
+<li><p><strong>figsize</strong> (<em>list</em><em>, </em><em>optional</em>) – The figure size. The default is [10, 4].</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – x-axis label. The default is None.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – y-axis label. The default is None.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Plot title. The default is None.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em>, </em><em>optional</em>) – Label to use on the plot legend.
+Automatically generated if not provided.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – seed for the random number generator. Useful for reproducibility.
+The default is None. Disregarded if indices is not None</p></li>
+<li><p><strong>indices</strong> (<em>int</em><em>, </em><em>optional</em>) – (0-based) indices of the traces.
+The default is None. If provided, supersedes “seed” and “num_traces”.</p></li>
+<li><p><strong>xlim</strong> (<em>list</em><em>, </em><em>optional</em>) – x-axis limits. The default is None.</p></li>
+<li><p><strong>ylim</strong> (<em>list</em><em>, </em><em>optional</em>) – y-axis limits. The default is None.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color of the traces. The default is sns.xkcd_rgb[‘pale red’].</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – Transparency of the lines representing the multiple members. The default is 0.3.</p></li>
+<li><p><strong>linestyle</strong> (<em>{'-'</em><em>, </em><em>'--'</em><em>, </em><em>'-.'</em><em>, </em><em>':'</em><em>, </em><em>''</em><em>, </em><em>(</em><em>offset</em><em>, </em><em>on-off-seq</em><em>)</em><em>, </em><em>...</em><em>}</em>) – Set the linestyle of the line</p></li>
+<li><p><strong>lw</strong> (<em>float</em><em>, </em><em>optional</em>) – Width of the lines representing the multiple members. The default is 0.5.</p></li>
+<li><p><strong>num_traces</strong> – Number of traces to plot. The default is None, which will plot all traces.</p></li>
+<li><p><strong>savefig_settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>the dictionary of arguments for plt.savefig(); some notes below:
+- “path” must be specified; it can be any existed or non-existed path,</p>
+<blockquote>
+<div><p>with or without a suffix; if the suffix is not given in “path”, it will follow “format”</p>
+</div></blockquote>
+<ul>
+<li><p>”format” can be one of {“pdf”, “eps”, “png”, “ps”} The default is None.</p></li>
+</ul>
+</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.ax</em><em>, </em><em>optional</em>) – Matplotlib axis on which to return the plot. The default is None.</p></li>
+<li><p><strong>plot_legend</strong> (<em>bool; {True</em><em>,</em><em>False}</em><em>, </em><em>optional</em>) – Whether to plot the legend. The default is True.</p></li>
+<li><p><strong>lgd_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Parameters for the legend. The default is None.</p></li>
+<li><p><strong>seed</strong> – Set the seed for the random number generator. Useful for reproducibility. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.figure</em>) – the figure object from matplotlib
+See [matplotlib.pyplot.figure](<a class="reference external" href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.figure.html">https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.figure.html</a>) for details.</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axis</em>) – the axis object from matplotlib
+See [matplotlib.axes](<a class="reference external" href="https://matplotlib.org/api/axes_api.html">https://matplotlib.org/api/axes_api.html</a>) for details.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.plume_distance">
+<span class="sig-name descname"><span class="pre">plume_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plume_distance" title="Link to this definition">#</a></dt>
+<dd><p>Compute the (quantile-based) characteristic distance between
+a plume (ensemble) and another object (whether a single trace or another plume).
+Searches for quantile q of the “proximity probability” distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>length self.nt</em>) – trace/plume whose probability is to be assessed</p></li>
+<li><p><strong>max_dist</strong> (<em>maximum distance to consider in the calculation</em><em> of </em><em>proximity probabilities</em>) – default is 1, which may or may not make sense for your application!</p></li>
+<li><p><strong>num</strong> (<em>int</em>) – number of discrete points for the estimation of the distance distribution</p></li>
+<li><p><strong>order</strong> (<em>int</em><em>, or </em><em>inf</em>) – Order of the norm. inf means numpy’s inf object. The default is 1.</p></li>
+<li><p><strong>q</strong> (<em>float</em>) – Quantile from which the characteristic distance is derived. Default = 0.5 (median)</p></li>
+<li><p><strong>dist</strong> (<em>array-like</em><em>, </em><em>length self.nEns</em>) – if provided, uses this as vector of distances. Otherwise it is computed internally</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.linalg.norm</span></code></dt><dd><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html">https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html</a></p>
+</dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>charac_eps</strong> – Representative distance (in same units as self or y)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.proximity_prob">
+<span class="sig-name descname"><span class="pre">proximity_prob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.proximity_prob" title="Link to this definition">#</a></dt>
+<dd><p>Compute the probability P that the trace y is within a distance eps of the ensemble object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>length self.nt</em>) – trace/plume whose proximity is to be assessed</p></li>
+<li><p><strong>eps</strong> (<em>array</em><em> of </em><em>float64</em>) – numerical tolerance for the distance.</p></li>
+<li><p><strong>order</strong> (<em>int</em><em>, or </em><em>inf</em>) – Order of the norm. inf means numpy’s inf object. The default is 1.</p></li>
+<li><p><strong>dist</strong> (<em>array-like</em><em>, </em><em>length self.nEns</em>) – if provided, uses this as vector of distances. Otherwise it is computed internally</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">np.linalg.norm</span></code></dt><dd><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html">https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html</a></p>
+</dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>P</strong> – Probability that the trace y is within a distance eps of the ensemble object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float in [0,1]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.random_paths">
+<span class="sig-name descname"><span class="pre">random_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fGn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.random_paths" title="Link to this definition">#</a></dt>
+<dd><p>Generate <cite>p</cite> random walks through the ensemble according to a given
+parametric model with random parameter sampling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>str</em>) – <p>Stochastic model for the temporal behavior. Accepted choices are:</p>
+<ul>
+<li><p><cite>unif</cite>: resample uniformly from the posterior distribution</p></li>
+<li><p><cite>ar</cite>: autoregressive model, see  <a class="reference external" href="https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar">https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar</a></p></li>
+<li><p><cite>fGn</cite>: fractional Gaussian noise, see <a class="reference external" href="https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise">https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise</a></p></li>
+<li><p><cite>power-law</cite>: aka Colored Noise, see <a class="reference external" href="https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise">https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise</a></p></li>
+</ul>
+</p></li>
+<li><p><strong>param</strong> (<em>variable type</em><em> [</em><em>default is None</em><em>]</em>) – <p>parameter of the model.</p>
+<ul>
+<li><p><cite>unif</cite>: no parameter</p></li>
+<li><p><cite>ar</cite>: param is the result from fitting Statsmodels Autoreg.fit() (with zero-lag term)</p></li>
+<li><p><cite>fGn</cite>: param is the Hurst exponent, H (float)</p></li>
+<li><p><cite>power-law</cite>: param is the spectral exponent beta (float)</p></li>
+</ul>
+<p>Under allowable values, <cite>fGn</cite> and <cite>power-law</cite> should return equivalent results as long as H = (beta+1)/2 is in [0, 1)</p>
+</p></li>
+<li><p><strong>p</strong> (<em>int</em>) – number of series to export</p></li>
+<li><p><strong>trend</strong> (<em>array</em><em>, </em><em>length self.nt</em>) – general trend of the ensemble.
+If None, it is calculated as the ensemble mean.
+If provided, it will be added to the ensemble.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – seed for the random generator (provided for reproducibility)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>new</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>EnsembleTS object containing the p series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.sample_nearest">
+<span class="sig-name descname"><span class="pre">sample_nearest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSE'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.sample_nearest" title="Link to this definition">#</a></dt>
+<dd><p>Get the nearest sample path against the target series</p>
+<p>Note that <cite>metric</cite> is used only for the final distance calculation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.slice">
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timespan</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.slice" title="Link to this definition">#</a></dt>
+<dd><p>Slicing the timeseries with a timespan (tuple or list)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>timespan</strong> (<em>tuple</em><em> or </em><em>list</em>) – The list of time points for slicing, whose length must be even.
+When there are n time points, the output Series includes n/2 segments.
+For example, if timespan = [a, b], then the sliced output includes one segment [a, b];
+if timespan = [a, b, c, d], then the sliced output includes segment [a, b] and segment [c, d].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>new</strong> – The sliced EnsembleSeries object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pens.ens.EnsembleTS" title="pens.ens.EnsembleTS">EnsembleTS</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.subsample">
+<span class="sig-name descname"><span class="pre">subsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nsamples</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.subsample" title="Link to this definition">#</a></dt>
+<dd><p>Thin out original ensemble by drawing nsamples at random</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nsamples</strong> (<em>int</em>) – number of samples to draw at random from the original ensemble.
+If nsamples &gt;= self.nEns, no change is made.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>res</strong> – Downsized object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pens.ens.EnsembleTS" title="pens.ens.EnsembleTS">EnsembleTS</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.to_df">
+<span class="sig-name descname"><span class="pre">to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ens'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.to_df" title="Link to this definition">#</a></dt>
+<dd><p>Convert an EnsembleTS to a pandas.DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_column</strong> (<em>str</em>) – The label of the column for the time axis.</p></li>
+<li><p><strong>value_column</strong> (<em>str</em>) – The base column label for the ensemble members.
+By default, the columns for the members will be labeled as “ens.0”, “ens.1”, “ens.2”, etc.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.to_pyleo">
+<span class="sig-name descname"><span class="pre">to_pyleo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.to_pyleo" title="Link to this definition">#</a></dt>
+<dd><p>Convert to a <cite>pyleoclim.EnsembleSeries</cite> or <cite>pyleoclim.Series</cite> object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> (<em>keyword arguments</em>) – keyword arguments for a <cite>pyleoclim.Series</cite> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pens.ens.EnsembleTS.trace_rank">
+<span class="sig-name descname"><span class="pre">trace_rank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.trace_rank" title="Link to this definition">#</a></dt>
+<dd><p>Computes ensemble rank (expressed as percentile) for trace y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> (<em>array-like</em><em>, </em><em>length n</em>) – trace whose rank within the ensemble is to be assessed
+Must have n == self.nt.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>percent</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, length n</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pens.utils">
+<span id="utilities"></span><h2>Utilities<a class="headerlink" href="#module-pens.utils" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pens.utils.hdi1d">
+<span class="sig-prename descclassname"><span class="pre">pens.utils.</span></span><span class="sig-name descname"><span class="pre">hdi1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdi_prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.utils.hdi1d" title="Link to this definition">#</a></dt>
+<dd><p>Compute highest density interval over a 1d array.
+h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi">https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi</a></p>
+<dl class="simple">
+<dt>ary<span class="classifier">NumPy array</span></dt><dd><p>values over which to compute HDI</p>
+</dd>
+<dt>hdi_prob<span class="classifier">float</span></dt><dd><p>probability</p>
+</dd>
+<dt>skipna<span class="classifier">bool</span></dt><dd><p>flag to decide whether to drop NaNs (defaults to True)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pens.utils.model_acf">
+<span class="sig-prename descclassname"><span class="pre">pens.utils.</span></span><span class="sig-name descname"><span class="pre">model_acf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.utils.model_acf" title="Link to this definition">#</a></dt>
+<dd><p>Generates the autocorrelation function (ACF) of a timeseries model given its parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>str</em>) – <p>Name of the stochastic model describing the temporal behavior. Accepted choices are:</p>
+<ul>
+<li><p><cite>ar</cite>: autoregressive model, see  <a class="reference external" href="https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar">https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar</a></p></li>
+<li><p><cite>fGn</cite>: fractional Gaussian noise, see <a class="reference external" href="https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise">https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise</a></p></li>
+<li><p><cite>power-law</cite>: aka Colored Noise, see <a class="reference external" href="https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise">https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise</a></p></li>
+</ul>
+</p></li>
+<li><p><strong>param</strong> (<em>variable type</em>) – <p>parameter of the model.</p>
+<ul>
+<li><p><cite>ar</cite>: param is the result from fitting with Statsmodels Autoreg.fit()</p></li>
+<li><p><cite>fGn</cite>: param is the Hurst exponent, H (float)</p></li>
+<li><p><cite>power-law</cite>: param is the spectral exponent beta (float)</p></li>
+</ul>
+<p>Under allowable values, <cite>fGn</cite> and <cite>power-law</cite> should return equivalent results as long as H = (beta+1)/2 and H in [0, 1)</p>
+</p></li>
+<li><p><strong>max_lag</strong> (<em>int</em>) – maximum lag</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ACF</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy array, length max_lag (zero is included)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ug-installation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Installation</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ensemblets">EnsembleTS</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS"><code class="docutils literal notranslate"><span class="pre">EnsembleTS</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.distance"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.distance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.from_df"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.from_df()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.get_means_and_trends"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.get_means_and_trends()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.hdi_score"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.hdi_score()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.line_density"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.line_density()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.load_nc"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.load_nc()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.make_labels"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.make_labels()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot_hdi"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot_hdi()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot_qs"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot_qs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plot_traces"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plot_traces()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.plume_distance"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.plume_distance()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.proximity_prob"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.proximity_prob()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.random_paths"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.random_paths()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.sample_nearest"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.sample_nearest()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.slice"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.slice()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.subsample"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.subsample()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.to_df"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.to_df()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.to_pyleo"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.to_pyleo()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.ens.EnsembleTS.trace_rank"><code class="docutils literal notranslate"><span class="pre">EnsembleTS.trace_rank()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pens.utils">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.hdi1d"><code class="docutils literal notranslate"><span class="pre">hdi1d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.model_acf"><code class="docutils literal notranslate"><span class="pre">model_acf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Julien Emile-Geay, Feng Zhu.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

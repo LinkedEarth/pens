@@ -139,7 +139,7 @@ class EnsembleTS:
         res.refresh()
         return res
     
-    def get_trend(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200), bw = 'silverman'):
+    def get_means_and_trends(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200), bw = 'silverman'):
         '''
         Extract trend distributions from EnsembleTS object via Gaussian Kernel Density Estimation
 
@@ -153,7 +153,10 @@ class EnsembleTS:
             axis over which KDE is calculated The default is np.linspace(-0.5,1.5,200).
         bw : str, scalar or callable, optional
             The method used to calculate the estimator bandwidth. 
-            This can be ‘scott’, ‘silverman’, a scalar constant or a callable. If a scalar, this will be used directly as kde.factor. If a callable, it should take a gaussian_kde instance as only parameter and return a scalar. If None (default), ‘scott’ is used. 
+            This can be "scott", "silverman", a scalar constant or a callable.
+            If a scalar, this will be used directly as kde.factor.
+            If a callable, it should take a gaussian_kde instance as only parameter and return a scalar.
+            If None (default), "scott" is used. 
 
         Returns
         -------
@@ -449,19 +452,21 @@ class EnsembleTS:
         
         model : str
             Stochastic model for the temporal behavior. Accepted choices are:
-            - 'unif': resample uniformly from the posterior distribution
-            - 'ar': autoregressive model, see  https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar
-            - 'fGn': fractional Gaussian noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise 
-            - 'power-law': aka Colored Noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise
+
+            - `unif`: resample uniformly from the posterior distribution
+            - `ar`: autoregressive model, see  https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar
+            - `fGn`: fractional Gaussian noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise 
+            - `power-law`: aka Colored Noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise
             
         param : variable type [default is None]
             parameter of the model. 
-            - 'unif': no parameter 
-            - 'ar': param is the result from fitting Statsmodels Autoreg.fit() (with zero-lag term)
-            - 'fGn': param is the Hurst exponent, H (float)
-            - 'power-law': param is the spectral exponent beta (float)
+
+            - `unif`: no parameter 
+            - `ar`: param is the result from fitting Statsmodels Autoreg.fit() (with zero-lag term)
+            - `fGn`: param is the Hurst exponent, H (float)
+            - `power-law`: param is the spectral exponent beta (float)
             
-        Under allowable values, 'fGn' and 'power-law' should return equivalent results as long as H = (beta+1)/2 is in [0, 1)
+            Under allowable values, `fGn` and `power-law` should return equivalent results as long as H = (beta+1)/2 is in [0, 1)
             
         p : int
             number of series to export
