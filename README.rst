@@ -9,3 +9,4 @@ Documentation
 
 + Homepage: https://fzhu2e.github.io/pens
 + Installation: https://fzhu2e.github.io/pens/ug-installation.html
++ Notebooks: https://fzhu2e.github.io/pens/ug-notebooks.html
