@@ -7,6 +7,6 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
 Documentation
 =============
 
-+ Homepage: https://fzhu2e.github.io/pens
-+ Installation: https://fzhu2e.github.io/pens/ug-installation.html
-+ Notebooks: https://fzhu2e.github.io/pens/ug-notebooks.html
++ Homepage: http://linked.earth/pens
++ Installation: https://linked.earth/pens/ug-installation.html
++ Notebooks: https://linked.earth/pens/ug-eg24.html
