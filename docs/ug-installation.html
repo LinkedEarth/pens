@@ -51,7 +51,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'ug-installation';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples" href="ug-examples.html" />
+    <link rel="next" title="Emile-Geay et al. (2024)" href="ug-eg24.html" />
     <link rel="prev" title="pens: utilities for comparing paleoclimate reconstruction ensembles" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -156,8 +156,15 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="ug-examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/paper-fig-01.html">Figure. 1</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="ug-eg24.html">Emile-Geay et al. (2024)</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig1_motivation.html">Motivation for the study</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig2_naive_resampling.html">Reproducing Fig 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig3_4_LMRonline.html">Making Figures 3 &amp; 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig5_resampling.html">Ensemble resampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-plume_distance.html">Proximity Probability and Plume Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-LMR_PMIP3_proximity_table.html">Proximity of PMIP3 traces to LMR ensembles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-compare_PAGES2k2019_recons.html">Consistency of the PAGES 2k ensemble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-compare_LMRvsB21.html">LMR v2.1 vs Büntgen et al ensemble</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ug-api.html">API Reference</a></li>
@@ -439,7 +446,7 @@ conda<span class="w"> </span>activate<span class="w"> </span>pens-env
 </pre></div>
 </div>
 <p>Once the above dependencies have been installed, simply</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pens
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>netcdf4<span class="w"> </span>xarray<span class="w"> </span>pens
 pip<span class="w"> </span>install<span class="w"> </span><span class="nv">scipy</span><span class="o">==</span><span class="m">1</span>.11.4<span class="w">  </span><span class="c1"># to handle a dependency issue (date: 02-02-2024)</span>
 </pre></div>
 </div>
@@ -472,11 +479,11 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">scipy
       </div>
     </a>
     <a class="right-next"
-       href="ug-examples.html"
+       href="ug-eg24.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Examples</p>
+        <p class="prev-next-title">Emile-Geay et al. (2024)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

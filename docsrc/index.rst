@@ -18,14 +18,14 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
 
         Installation instructions.
 
-    .. grid-item-card::  Notebooks
+    .. grid-item-card::  Examples in Emile-Geay et al. (2024)
         :class-title: custom-title
         :class-body: custom-body
         :img-top: _static/examples.png
-        :link: ug-notebooks
+        :link: ug-eg24
         :link-type: doc
 
-        Examples of the scientific use the package, as introduced in Emile-Geay et al. (2024).
+        Examples of the scientific use of the package, as introduced in Emile-Geay et al. (2024).
 
     .. grid-item-card:: package API
         :class-title: custom-title
@@ -42,5 +42,5 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
    :caption: User Guide
 
    ug-installation
-   ug-examples
+   ug-eg24
    ug-api

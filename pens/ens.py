@@ -528,7 +528,10 @@ class EnsembleTS:
         new = self.copy()                 
         new.value = paths
         new.nEns = p 
-        new.label = self.label + '(' + model + ' resampling)'
+        if self.label is not None:
+            new.label = f'{self.label} ({model} resampling)'
+        else:
+            new.label = f'{model} resampling'
         
         if model != 'unif':
             scale = self.get_std()

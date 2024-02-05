@@ -76,7 +76,7 @@ Once the above dependencies have been installed, simply
 
 .. code-block:: bash
 
-    pip install pens
+    pip install netcdf4 xarray pens
     pip install scipy==1.11.4  # to handle a dependency issue (date: 02-02-2024)
 
 and you are ready to
