@@ -35,5 +35,6 @@ setup(
         'properscoring',
         'pyleoclim',
         'more_itertools',
+        'num2tex'
     ],
 )

@@ -89,7 +89,7 @@ class EnsembleTS:
         self.mean = np.nanmean(self.value, axis=1)
         self.std = np.nanstd(self.value, axis=1)
         
-    def subsample(self, nsamples):
+    def subsample(self, nsamples, seed=None):
         '''
         Thin out original ensemble by drawing nsamples at random
 
@@ -97,7 +97,10 @@ class EnsembleTS:
         ----------
         nsamples : int
             number of samples to draw at random from the original ensemble.
-            If nsamples >= self.nEns, no change is made.
+            If nsamples >= self.nEns, the object is returned unchanged.
+            
+        seed : int
+            seed for the random generator (provided for reproducibility)
 
         Returns
         -------
@@ -105,6 +108,8 @@ class EnsembleTS:
             Downsized object.
 
         '''
+        if seed is not None:
+            np.random.seed(seed)
         
         if nsamples < self.nEns:     
             res = self.copy() # copy object to get metadata
@@ -726,6 +731,8 @@ class EnsembleTS:
                 if nsamples is not None:
                     right = y.subsample(nsamples=nsamples)
                     y = right.value  # extract NumPy array
+                else:
+                    y = y.value
                 
             if y.shape[0] != self.nt:
                 raise ValueError('the target series and the ensemble must have the same length')
@@ -775,11 +782,14 @@ class EnsembleTS:
         if isinstance(eps, np.ndarray): 
             prob = np.zeros_like(eps)
             for j, tol in enumerate(eps):
-                prob[j] = np.where(dist<=tol)[0].size/self.nEns
+                prob[j] = np.where(dist<=tol)[0].size/dist.size
         elif isinstance(eps, float):
-            prob = np.where(dist<=eps)[0].size/self.nEns
+            prob = np.where(dist<=eps)[0].size/dist.size
         else:
             raise ValueError('eps is of unsupported type '+ str(type(eps)))
+            
+        if any(prob > 1):
+            raise ValueError("Did you know? Probabilities are bounded by unity.")
             
         return prob
          
