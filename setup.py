@@ -5,13 +5,13 @@ with open('README.rst', 'r') as fh:
 
 setup(
     name='pens',  # required
-    version='2023.8.16',
+    version='2024.8.23',
     description='pens: utilities for comparing paleoclimate reconstruction ensembles',
     long_description=long_description,
     long_description_content_type='text/x-rst',
-    author='Feng Zhu, Julien Emile-Geay',
-    author_email='fengzhu@ucar.edu, julieneg@usc.edu',
-    url='https://github.com/fzhu2e/pens',
+    author='Julien Emile-Geay, Feng Zhu',
+    author_email='julieneg@usc.edu, fengzhu@ucar.edu',
+    url='https://linked.earth/pens',
     packages=find_packages(),
     include_package_data=True,
     license="GPL 3.0 license",
@@ -19,8 +19,8 @@ setup(
     keywords='paleoclimate reconstruction ensembles',
     classifiers=[
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     install_requires=[
         'termcolor',
