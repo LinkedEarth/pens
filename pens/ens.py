@@ -793,7 +793,8 @@ class EnsembleTS:
             
         return prob
          
-    def plume_distance(self, y=None, max_dist=1, num=100, q = 0.5, order=1, dist=None, nsamples=None):
+    def plume_distance(self, y=None, max_dist=1, num=100, q = 0.5, 
+                       order=1, spread_stat='iqr', dist=None, nsamples=None):
         '''
         Compute the (quantile-based) characteristic distance between 
         a plume (ensemble) and another object (whether a single trace or another plume).
@@ -803,16 +804,29 @@ class EnsembleTS:
         ----------
         y : array-like, length self.nt
            trace/plume whose probability is to be assessed
+        
         max_dist : maximum distance to consider in the calculation of proximity probabilities
             default is 1, which may or may not make sense for your application!  
+        
         num : int
             number of discrete points for the estimation of the distance distribution
+        
+        q : float
+           Quantile from which the characteristic distance is derived. Default = 0.5 (median)  
+           
         order : int, or inf
             Order of the norm. inf means numpy’s inf object. The default is 1.
-        q : float
-           Quantile from which the characteristic distance is derived. Default = 0.5 (median)     
+            
+        spread_stat : str
+            Statistic to be used for distributional spread. Choices: 'SD' or 'IQR'
+            SD is the standard deviation, appropriate for Gaussian situations
+            IQR (default) is the interquartile-range (a non-parametric measure, robust and resistant) 
+            
         dist : array-like, length self.nEns
             if provided, uses this as vector of distances. Otherwise it is computed internally
+            
+        nsamples : int
+            number of samples to use from the ensemble. Default is None, which uses all samples. 
             
         See Also
         --------
@@ -820,9 +834,12 @@ class EnsembleTS:
 
         Returns
         -------
-        charac_eps: float 
-            Representative distance (in same units as self or y)
-
+        eps_q: float 
+            Representative distance at quantile q (in same units as self or y)
+        
+        eps_spread : float
+            Measure of distributional spread
+        
         '''
         eps = np.linspace(0,max_dist,num=num) # vector of distances
         def find_roots(x,y):
@@ -832,22 +849,25 @@ class EnsembleTS:
         if y is None:  # compute intra ensemble distance
             d = self.distance(order=order, nsamples=nsamples)
             prob = self.proximity_prob(self.value, eps=eps, dist=d, nsamples=nsamples)
-            charac_eps = find_roots(eps, prob - q)[0]
+            eps_q = find_roots(eps, prob - q)[0]
         else:  # compute plume distance to y (EnsembleTS or array)
             if isinstance(y, EnsembleTS):
                 if y.nEns == self.nEns:
                     if np.allclose(y.value, self.value):
                         print('objects are numerically identical')
-                        charac_eps = 0
+                        eps_q = 0
                     else:
                         prob = self.proximity_prob(y.value, eps=eps, order=order, dist=dist, nsamples=nsamples)
-                        charac_eps = find_roots(eps, prob - q)[0]
+                        eps_q = find_roots(eps, prob - q)[0]
             else :
                 # assess proximity probability between the ensemble and the object (trace or ensemble)
                 prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist, nsamples=nsamples)
-                charac_eps = find_roots(eps, prob - q)[0]
-
-        return charac_eps
+                eps_q = find_roots(eps, prob - q)[0]
+                
+        #eps_hdi = utils.hdi1d(prob, hdi_prob) # compute HDI
+        eps_iqr = find_roots(eps, prob - 0.75)[0] - find_roots(eps, prob - 0.25)[0]
+        
+        return eps_q, eps_iqr
            
     def SmBP(self, y1, y2, acf, d=None):
         '''
