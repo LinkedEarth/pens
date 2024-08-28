@@ -2,7 +2,7 @@
 pens: utilities for comparing paleoclimate reconstruction ensembles
 *******************************************************************
 
-`pens` aims to provide a toolbox for comparing paleoclimate reconstruction ensembles.
+`pens` provides a tools for comparing paleoclimate reconstruction ensembles to each other and to other traces.
 
 Documentation
 =============
