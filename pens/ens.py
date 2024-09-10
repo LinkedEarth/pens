@@ -12,7 +12,7 @@ from . import utils
 #import statsmodels as sm
 import scipy.linalg as linalg
 from scipy.stats import gaussian_kde 
-from scipy.stats import mode
+from scipy.stats import mode, iqr
 #from scipy.optimize import curve_fit
 from scipy.stats import percentileofscore 
 #from scipy.stats import multivariate_normal
@@ -794,7 +794,7 @@ class EnsembleTS:
         return prob
          
     def plume_distance(self, y=None, max_dist=1, num=100, q = 0.5, 
-                       order=1, spread_stat='iqr', dist=None, nsamples=None):
+                       order=1, spread_stat='IQR', dist=None, nsamples=None):
         '''
         Compute the (quantile-based) characteristic distance between 
         a plume (ensemble) and another object (whether a single trace or another plume).
@@ -805,12 +805,6 @@ class EnsembleTS:
         y : array-like, length self.nt
            trace/plume whose probability is to be assessed
         
-        max_dist : maximum distance to consider in the calculation of proximity probabilities
-            default is 1, which may or may not make sense for your application!  
-        
-        num : int
-            number of discrete points for the estimation of the distance distribution
-        
         q : float
            Quantile from which the characteristic distance is derived. Default = 0.5 (median)  
            
@@ -818,9 +812,10 @@ class EnsembleTS:
             Order of the norm. inf means numpy’s inf object. The default is 1.
             
         spread_stat : str
-            Statistic to be used for distributional spread. Choices: 'SD' or 'IQR'
+            Statistic to be used for distributional spread. Choices: 'SD', 'IQR' or 'HDI'
             SD is the standard deviation, appropriate for Gaussian situations
-            IQR (default) is the interquartile-range (a non-parametric measure, robust and resistant) 
+            IQR (default) is the interquartile-range (a non-parametric measure, robust and resistant)
+            HDI returns the 95% highest-density interval as a NumPy 2-array
             
         dist : array-like, length self.nEns
             if provided, uses this as vector of distances. Otherwise it is computed internally
@@ -841,15 +836,10 @@ class EnsembleTS:
             Measure of distributional spread
         
         '''
-        eps = np.linspace(0,max_dist,num=num) # vector of distances
-        def find_roots(x,y):
-            s = np.abs(np.diff(np.sign(y))).astype(bool)
-            return x[:-1][s] + np.diff(x)[s]/(np.abs(y[1:][s]/y[:-1][s])+1)
         
         if y is None:  # compute intra ensemble distance
-            d = self.distance(order=order, nsamples=nsamples)
-            prob = self.proximity_prob(self.value, eps=eps, dist=d, nsamples=nsamples)
-            eps_q = find_roots(eps, prob - q)[0]
+            dist = self.distance(order=order, nsamples=nsamples)
+            eps_q = np.quantile(dist,q=q)
         else:  # compute plume distance to y (EnsembleTS or array)
             if isinstance(y, EnsembleTS):
                 if y.nEns == self.nEns:
@@ -857,17 +847,23 @@ class EnsembleTS:
                         print('objects are numerically identical')
                         eps_q = 0
                     else:
-                        prob = self.proximity_prob(y.value, eps=eps, order=order, dist=dist, nsamples=nsamples)
-                        eps_q = find_roots(eps, prob - q)[0]
+                        dist = self.distance(y.value, order=order, nsamples=nsamples)
+                        eps_q = np.quantile(dist,q=q)
             else :
                 # assess proximity probability between the ensemble and the object (trace or ensemble)
-                prob = self.proximity_prob(y=y, eps=eps, order=order, dist=dist, nsamples=nsamples)
-                eps_q = find_roots(eps, prob - q)[0]
+                dist = self.distance(y=y,order=order,nsamples=nsamples)
+                eps_q = np.quantile(dist,q=q)
                 
-        #eps_hdi = utils.hdi1d(prob, hdi_prob) # compute HDI
-        eps_iqr = find_roots(eps, prob - 0.75)[0] - find_roots(eps, prob - 0.25)[0]
+        if spread_stat == 'IQR':
+            eps_spread = iqr(dist)
+        elif spread_stat == 'SD':
+            eps_spread = np.std(dist)
+        elif spread_stat == 'HDI':
+            eps_spread = utils.hdi1d(dist, 0.95)
+        else:
+            raise ValueError(f"unknown statistic: {spread_stat}. Please choose one of IQR, SD or HDI")
         
-        return eps_q, eps_iqr
+        return eps_q, eps_spread
            
     def SmBP(self, y1, y2, acf, d=None):
         '''
