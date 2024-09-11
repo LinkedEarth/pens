@@ -1,5 +1,4 @@
-#from multiprocessing.sharedctypes import Value
-#from matplotlib import gridspec
+
 from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 import matplotlib.collections as mcol
@@ -12,17 +11,13 @@ import copy
 import sklearn.metrics
 from tqdm import tqdm
 from . import utils
-#import statsmodels as sm
 import scipy.linalg as linalg
 from scipy.stats import gaussian_kde 
 from scipy.stats import mode, iqr
-#from scipy.optimize import curve_fit
 from scipy.stats import percentileofscore 
-#from scipy.stats import multivariate_normal
 from pyleoclim.utils.tsutils import standardize
 from statsmodels.tsa.arima_process import arma_generate_sample
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-#import covar
 import properscoring as ps
 from more_itertools import distinct_combinations
 
@@ -890,6 +885,7 @@ class EnsembleTS:
                 if y.nEns == self.nEns:
                     if np.allclose(y.value, self.value):
                         print('objects are numerically identical')
+                        dist = np.zeros((y.nEns))
                         eps_q = 0
                     else:
                         dist = self.distance(y.value, order=order, nsamples=nsamples)
