@@ -1,6 +1,4 @@
 import numpy as np
-from datetime import datetime, timedelta
-import cftime
 from termcolor import cprint
 from scipy.special import rel_entr
 import statsmodels.api as sm
