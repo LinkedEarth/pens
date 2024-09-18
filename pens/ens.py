@@ -1151,7 +1151,9 @@ class EnsembleTS:
             bbox_transform=ax.transAxes,
             borderpad=0,
         )
-        plt.colorbar(pcm, cax=cax, label=lb)
+        cb = plt.colorbar(pcm, cax=cax, label=lb)
+        cax.set_in_layout(True)
+        #cb.ax.text.set_in_layout(True)
 
         if title is not None:
             ax.set_title(title, **title_kwargs)
@@ -1209,7 +1211,7 @@ class EnsembleTS:
             return ax
         
     def plot_traces(self, num_traces = 5, figsize=[10, 4], title=None, label = None,
-                    seed = None, indices = None, xlim=None, ylim=None,
+                    seed = None, indices = None, xlim=None, ylim=None, color = None,
                     linestyle='-', ax=None, plot_legend=True,  lgd_kwargs=None,
                     xlabel=None, ylabel=None, lw=0.5, alpha=0.1):
         '''Plot EnsembleTS as a subset of traces.
@@ -1259,7 +1261,7 @@ class EnsembleTS:
 
         color : str, optional
 
-            Color of the traces. The default is sns.xkcd_rgb['pale red'].
+            Color of the traces. The default uses the property cycler: https://matplotlib.org/stable/gallery/color/color_cycle_default.html
 
         alpha : float, optional
 
@@ -1345,7 +1347,10 @@ class EnsembleTS:
             
             
         # define colors
-        colors = plt.rcParams['axes.prop_cycle'].by_key()['color'][:num_traces]
+        if color is None:
+            colors = plt.rcParams['axes.prop_cycle'].by_key()['color'][:num_traces]
+        else:
+            colors = num_traces*[color]
 
         # plot the traces
         for i, idx in enumerate(trace_idx):
