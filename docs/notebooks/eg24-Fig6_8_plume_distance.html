@@ -787,7 +787,7 @@ Time axis values sorted in ascending order
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Evaluating association on surrogate pairs: 100%|██████████| 1000/1000 [00:00&lt;00:00, 1178.82it/s]
+Evaluating association on surrogate pairs: 100%|██████████| 1000/1000 [00:00&lt;00:00, 2963.05it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -815,7 +815,7 @@ Evaluating association on surrogate pairs: 100%|██████████| 
 <h2>Pathwise Approach : proximity probability<a class="headerlink" href="#Pathwise-Approach-:-proximity-probability" title="Link to this heading">#</a></h2>
 <p>Let’s plot the HadCM3 and CCSM4 past1000 GMST traces and vs the density of the LMRonline ensemble:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ens_on</span><span class="o">.</span><span class="n">line_density</span><span class="p">()</span>
@@ -834,7 +834,7 @@ Evaluating association on surrogate pairs: 100%|██████████| 
 </div>
 <p>Visually, it is evident that HadCM3 is closer to LMRonline than CCSM4. Is this borne out by these metrics? Let us compute the distances between these traces and the ensemble, using different norms:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HadCM3&#39;</span><span class="p">,</span> <span class="s1">&#39;CCSM4&#39;</span><span class="p">]</span>
@@ -847,7 +847,7 @@ Evaluating association on surrogate pairs: 100%|██████████| 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
@@ -875,7 +875,7 @@ Evaluating association on surrogate pairs: 100%|██████████| 
 </div>
 <p>Indeed, HadCM3 is measurably closer. The results are qualitatively robust to the choice of norm, and surprisingly enough, nearly unchanged from <span class="math notranslate nohighlight">\(q=1\)</span> to <span class="math notranslate nohighlight">\(q=2\)</span>. These results may now guide the choice of <span class="math notranslate nohighlight">\(\epsilon\)</span> to compute a probability, e.g. a Cumulative Distribution Function (CDF). For instance with the 1-norm:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -894,7 +894,7 @@ Evaluating association on surrogate pairs: 100%|██████████| 
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -917,7 +917,7 @@ Text(0.5, 1.0, &#39;Proximity probability with respect to LMRonline GMST&#39;)
 <h3>Definition<a class="headerlink" href="#Definition" title="Link to this heading">#</a></h3>
 <p>From the CDFs obtained above, we would like to extract one metric that best summarizes the differences. In our tests, the shapes are very similar (abrupt climb for intermediate values of the proximity threshold), so a simple approach is to pick the difference between the values of epsilon for which these CDFs intersect <span class="math notranslate nohighlight">\(P = 0.5\)</span>:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use this strategy for root finding: https://stackoverflow.com/a/46911822</span>
@@ -928,7 +928,7 @@ Text(0.5, 1.0, &#39;Proximity probability with respect to LMRonline GMST&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eps_med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)))</span>
@@ -948,12 +948,12 @@ Text(0.5, 1.0, &#39;Proximity probability with respect to LMRonline GMST&#39;)
 </div>
 <p>This metric suggests that HadCM3 is closer to LMRonline by about 0.27 degrees. (<span class="math notranslate nohighlight">\(\epsilon\)</span> has the same units as the variable of interest, in this case GMST). This is implemented as <code class="docutils literal notranslate"><span class="pre">plume_distance()</span></code> in <code class="docutils literal notranslate"><span class="pre">pens</span></code>:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dist_HadCM3</span> <span class="o">=</span> <span class="n">ens_on</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;HadCM3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
 <span class="n">dist_CCSM4</span> <span class="o">=</span> <span class="n">ens_on</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;CCSM4&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
-<span class="n">delta_eps</span> <span class="o">=</span>  <span class="n">dist_CCSM4</span> <span class="o">-</span>  <span class="n">dist_HadCM3</span>
+<span class="n">delta_eps</span> <span class="o">=</span>  <span class="n">dist_CCSM4</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>  <span class="n">dist_HadCM3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;$\Delta_\epsilon = </span><span class="si">{</span><span class="n">delta_eps</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -963,11 +963,11 @@ Text(0.5, 1.0, &#39;Proximity probability with respect to LMRonline GMST&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-$\Delta_\epsilon = 0.2752498938114215$
+$\Delta_\epsilon = 0.2755582258356961$
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
@@ -1036,7 +1036,7 @@ Max distance = 0.3606060606060606, prob = 0.004
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 objects are numerically identical
-0
+(0, 0.0)
 </pre></div></div>
 </div>
 <p>More interesting is the case where thin subsets of the same ensemble are compared: the distance between two subsamples of the same plume will be small, but finite:</p>
@@ -1053,7 +1053,7 @@ objects are numerically identical
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 400/400 [00:01&lt;00:00, 373.64it/s]
+Computing inter-ensemble distance: 100%|██████████| 400/400 [00:00&lt;00:00, 1009.76it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1062,7 +1062,7 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.1441727977702109
+(0.14142790802947053, 0.05058905937812187)
 </pre></div></div>
 </div>
 <p>It tends to decrease as the ensemble size gets larger (better sampling of the full distribution):</p>
@@ -1081,7 +1081,7 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:28&lt;00:00, 70.87it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:10&lt;00:00, 198.12it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1090,7 +1090,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.14101401978467296
+(0.14160741602147853, 0.051939271665834175)
 </pre></div></div>
 </div>
 <ul class="simple">
@@ -1106,7 +1106,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 <span class="n">ens2</span> <span class="o">=</span> <span class="n">ens_on</span><span class="o">.</span><span class="n">subsample</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
 <span class="n">d21</span> <span class="o">=</span> <span class="n">ens1</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">ens2</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">d12</span> <span class="o">=</span> <span class="n">ens2</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">ens1</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">d21</span><span class="o">-</span><span class="n">d12</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d21</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">d12</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -1115,8 +1115,8 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 400/400 [00:01&lt;00:00, 394.87it/s]
-Computing inter-ensemble distance: 100%|██████████| 400/400 [00:01&lt;00:00, 388.32it/s]
+Computing inter-ensemble distance: 100%|██████████| 400/400 [00:00&lt;00:00, 1014.00it/s]
+Computing inter-ensemble distance: 100%|██████████| 400/400 [00:00&lt;00:00, 1022.20it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1143,7 +1143,7 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 <section id="Updated-Fig-7">
 <h2>Updated Fig 7<a class="headerlink" href="#Updated-Fig-7" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
@@ -1192,7 +1192,7 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 <h3>LMRoffline vs LMRonline<a class="headerlink" href="#LMRoffline-vs-LMRonline" title="Link to this heading">#</a></h3>
 <p>Let’s see how compatible LMRonline and LMRv2.1 (offline) are by this metric:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;../data/gmt_MCruns_ensemble_full_LMRv2.1.nc&#39;</span>
@@ -1205,7 +1205,7 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ens_o2000</span> <span class="o">=</span> <span class="n">ens_on</span><span class="o">.</span><span class="n">subsample</span><span class="p">(</span><span class="n">nsamples</span><span class="o">=</span><span class="n">ens_off</span><span class="o">.</span><span class="n">nEns</span><span class="p">)</span>
@@ -1219,11 +1219,11 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:44&lt;00:00, 44.64it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:13&lt;00:00, 151.60it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1239,7 +1239,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMR_on_off_plume_dist</span> <span class="o">=</span> <span class="n">ens_o2000</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">ens_off</span><span class="p">,</span><span class="n">dist</span><span class="o">=</span><span class="n">LMR_on_off_dist</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
@@ -1247,17 +1247,25 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:13&lt;00:00, 147.88it/s]
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.14355947794581914, 0.08371215422180997)
+(0.14314926587664106, 0.08246367512627469)
 </pre></div></div>
 </div>
 <p>How notable is this difference? A natural point of comparison would be the distribution of <strong>intra-ensemble distances</strong>: the distances (in whatever norm , here <span class="math notranslate nohighlight">\(q=1\)</span>) between any two pairs of ensemble members. For an ensemble of size <span class="math notranslate nohighlight">\(N\)</span>, there are <span class="math notranslate nohighlight">\(N(N-1)/2\)</span> such pairs, so this can take a few seconds to compute):</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMRon_intra_dist</span> <span class="o">=</span> <span class="n">ens_o2000</span><span class="o">.</span><span class="n">distance</span><span class="p">()</span>
@@ -1269,11 +1277,11 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:13&lt;00:00, 150939.84it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:05&lt;00:00, 354623.08it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
@@ -1284,16 +1292,16 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.9659219324097915
+0.9621604593786395
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMRoff_intra_dist</span> <span class="o">=</span> <span class="n">ens_off</span><span class="o">.</span><span class="n">distance</span><span class="p">()</span>
@@ -1305,12 +1313,12 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:33&lt;00:00, 59270.24it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:10&lt;00:00, 197845.43it/s]
 </pre></div></div>
 </div>
 <p>Now let’s plot these 3 quantities on the same graph (the plume distance is the dashed line):</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LMRonline&#39;</span><span class="p">:</span> <span class="n">LMRon_intra_dist</span><span class="p">,</span> <span class="s1">&#39;LMR v2.1&#39;</span><span class="p">:</span> <span class="n">LMRoff_intra_dist</span><span class="p">}</span>
@@ -1323,12 +1331,12 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.lines.Line2D at 0x1c8df3fd0&gt;
+&lt;matplotlib.lines.Line2D at 0x3476015e0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1341,7 +1349,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 <p>We see that the plume distance falls between the intra-ensemble distances. The <code class="docutils literal notranslate"><span class="pre">LMRonline</span></code> distances are clustured relatively tigthly around 0.2, and are entirely encompassed by the much wider range of distances found in LMR2.1. This would argue for the ensembles being considered compatible with each other. Let us make sure this is not an artifact of the lack of temporal varaibility in individual traces in the LMR 2.1 (offline) ensemble. Let’s resample it according to a power law, as done in
 the <code class="docutils literal notranslate"><span class="pre">resampling.ipynb</span></code> notebook:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ens_off_pl</span> <span class="o">=</span> <span class="n">ens_off</span><span class="o">.</span><span class="n">random_paths</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;power-law&#39;</span><span class="p">,</span><span class="n">param</span><span class="o">=</span><span class="mf">0.92</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
@@ -1353,11 +1361,11 @@ the <code class="docutils literal notranslate"><span class="pre">resampling.ipyn
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:01&lt;00:00, 1192.71it/s]
+100%|██████████| 2000/2000 [00:00&lt;00:00, 2731.14it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMRoff_pl_intra_dist</span> <span class="o">=</span> <span class="n">ens_off_pl</span><span class="o">.</span><span class="n">distance</span><span class="p">()</span>
@@ -1369,11 +1377,11 @@ the <code class="docutils literal notranslate"><span class="pre">resampling.ipyn
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:32&lt;00:00, 61118.74it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:08&lt;00:00, 238234.22it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMR_on_off_pl_dist</span> <span class="o">=</span> <span class="n">ens_o2000</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">ens_off_pl</span><span class="p">)</span>
@@ -1387,7 +1395,8 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:46&lt;00:00, 43.21it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:14&lt;00:00, 138.14it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:14&lt;00:00, 139.98it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1395,11 +1404,11 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.16255464379866089, 0.02864323128366253)
+(0.1632133968530639, 0.02783630604386758)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LMRonline&#39;</span><span class="p">:</span> <span class="n">LMRon_intra_dist</span><span class="p">,</span> <span class="s1">&#39;LMR v2.1&#39;</span><span class="p">:</span> <span class="n">LMRoff_pl_intra_dist</span><span class="p">}</span>
@@ -1430,7 +1439,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1446,7 +1455,7 @@ Text(0.5, 0, &#39;Proximity threshold $\\epsilon \\, ({}^\\circ \\mathrm{C})$&#3
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;../figures/Fig8_LMR_on_off_distances.pdf&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
@@ -1521,15 +1530,15 @@ Name: GMST [°C], Length: 999, dtype: float64
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1998</span><span class="p">]</span> <span class="c1"># FGOALS is ruining it for everyone else.</span>
 <span class="n">pmip3_plume_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">ts_list</span><span class="p">)))</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ts</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ms_pmip</span><span class="o">.</span><span class="n">series_list</span><span class="p">):</span>
     <span class="n">ts_lm</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">common</span><span class="p">)</span>
-    <span class="n">pmip3_plume_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ens_on</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">common</span><span class="p">)</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">ts_lm</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
-    <span class="n">pmip3_plume_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ens_off</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">common</span><span class="p">)</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">ts_lm</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">pmip3_plume_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ens_on</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">common</span><span class="p">)</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">ts_lm</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pmip3_plume_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ens_off</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">common</span><span class="p">)</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">ts_lm</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Model </span><span class="si">{</span><span class="n">ts</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s1"> has distance </span><span class="si">{</span><span class="n">pmip3_plume_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1"> to LMRonline&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Model </span><span class="si">{</span><span class="n">ts</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s1"> has distance </span><span class="si">{</span><span class="n">pmip3_plume_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1"> to LMRv2.1&#39;</span><span class="p">)</span>
 </pre></div>
@@ -1540,31 +1549,31 @@ Name: GMST [°C], Length: 999, dtype: float64
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Model bcc_csm1_1 has distance 0.41085444610034777 to LMRonline
-Model bcc_csm1_1 has distance 0.43046251993620416 to LMRv2.1
-Model CCSM4 has distance 0.49210526315789477 to LMRonline
-Model CCSM4 has distance 0.5127978817299206 to LMRv2.1
-Model FGOALS_gl has distance 0.2326785442363332 to LMRonline
-Model FGOALS_gl has distance 0.2362778730703259 to LMRv2.1
-Model FGOALS_s2 has distance 0.977866620314039 to LMRonline
-Model FGOALS_s2 has distance 1.0034364261168385 to LMRv2.1
-Model IPSL_CM5A_LR has distance 0.6359961555857078 to LMRonline
-Model IPSL_CM5A_LR has distance 0.657354797979798 to LMRv2.1
-Model MPI_ESM_P has distance 0.34887920298879205 to LMRonline
-Model MPI_ESM_P has distance 0.3657543173672206 to LMRv2.1
-Model CSIRO has distance 0.2902808573540281 to LMRonline
-Model CSIRO has distance 0.30498533724340177 to LMRv2.1
-Model HadCM3 has distance 0.2167681659207083 to LMRonline
-Model HadCM3 has distance 0.21379145788594608 to LMRv2.1
-Model CESM has distance 0.14846864365580945 to LMRonline
-Model CESM has distance 0.12552532625525326 to LMRv2.1
-Model GISS has distance 0.29222922292229225 to LMRonline
-Model GISS has distance 0.30972886762360446 to LMRv2.1
+Model bcc_csm1_1 has distance 0.41122165184578463 to LMRonline
+Model bcc_csm1_1 has distance 0.43061836299386946 to LMRv2.1
+Model CCSM4 has distance 0.4924558270224748 to LMRonline
+Model CCSM4 has distance 0.5127193275900492 to LMRv2.1
+Model FGOALS_gl has distance 0.23326211990115073 to LMRonline
+Model FGOALS_gl has distance 0.23476287690846337 to LMRv2.1
+Model FGOALS_s2 has distance 0.978092246110303 to LMRonline
+Model FGOALS_s2 has distance 1.0033572883855542 to LMRv2.1
+Model IPSL_CM5A_LR has distance 0.6358790945189334 to LMRonline
+Model IPSL_CM5A_LR has distance 0.6572388754183671 to LMRv2.1
+Model MPI_ESM_P has distance 0.3489545292443897 to LMRonline
+Model MPI_ESM_P has distance 0.3653459146799062 to LMRv2.1
+Model CSIRO has distance 0.290704050192928 to LMRonline
+Model CSIRO has distance 0.30436399229309186 to LMRv2.1
+Model HadCM3 has distance 0.21652265207791915 to LMRonline
+Model HadCM3 has distance 0.21430357496984626 to LMRv2.1
+Model CESM has distance 0.14846731161092247 to LMRonline
+Model CESM has distance 0.12467358616019808 to LMRv2.1
+Model GISS has distance 0.29227668421737935 to LMRonline
+Model GISS has distance 0.3096662656988495 to LMRv2.1
 </pre></div></div>
 </div>
 <p>Export to a LaTeX table for the paper:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pmip3_plume_dist</span><span class="p">,</span>
@@ -1585,7 +1594,7 @@ Model GISS has distance 0.30972886762360446 to LMRv2.1
  &amp; bcc_csm1_1 &amp; CCSM4 &amp; FGOALS_gl &amp; FGOALS_s2 &amp; IPSL_CM5A_LR &amp; MPI_ESM_P &amp; CSIRO &amp; HadCM3 &amp; CESM &amp; GISS \\
 \midrule
 LMRon &amp; 0.41 &amp; 0.49 &amp; 0.23 &amp; 0.98 &amp; 0.64 &amp; 0.35 &amp; 0.29 &amp; 0.22 &amp; 0.15 &amp; 0.29 \\
-LMRoff &amp; 0.43 &amp; 0.51 &amp; 0.24 &amp; 1.00 &amp; 0.66 &amp; 0.37 &amp; 0.30 &amp; 0.21 &amp; 0.13 &amp; 0.31 \\
+LMRoff &amp; 0.43 &amp; 0.51 &amp; 0.23 &amp; 1.00 &amp; 0.66 &amp; 0.37 &amp; 0.30 &amp; 0.21 &amp; 0.12 &amp; 0.31 \\
 \bottomrule
 \end{tabular}
 
@@ -1593,7 +1602,7 @@ LMRoff &amp; 0.43 &amp; 0.51 &amp; 0.24 &amp; 1.00 &amp; 0.66 &amp; 0.37 &amp; 0
 </div>
 <p>Benchmarks:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMRon_q95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">LMRon_intra_dist</span><span class="p">,</span><span class="mf">0.95</span><span class="p">)</span>
@@ -1606,11 +1615,11 @@ LMRoff &amp; 0.43 &amp; 0.51 &amp; 0.24 &amp; 1.00 &amp; 0.66 &amp; 0.37 &amp; 0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.25
+0.26
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMRoff_q95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">LMRoff_pl_intra_dist</span><span class="p">,</span><span class="mf">0.95</span><span class="p">)</span>
@@ -1630,7 +1639,7 @@ LMRoff &amp; 0.43 &amp; 0.51 &amp; 0.24 &amp; 1.00 &amp; 0.66 &amp; 0.37 &amp; 0
 <section id="Illustrate-tube-around-HadCM3">
 <h3>Illustrate tube around HadCM3<a class="headerlink" href="#Illustrate-tube-around-HadCM3" title="Link to this heading">#</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pens</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;journal_grid&#39;</span><span class="p">)</span>
@@ -1648,7 +1657,7 @@ LMRoff &amp; 0.43 &amp; 0.51 &amp; 0.24 &amp; 1.00 &amp; 0.66 &amp; 0.37 &amp; 0
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1664,7 +1673,7 @@ Text(0.5, 1.0, &#39;Finding HadCM3 neighbors in LMRonline&#39;)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig_a</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;../figures/HadCM3_tube.pdf&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>

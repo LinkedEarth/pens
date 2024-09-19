@@ -377,7 +377,7 @@ document.write(`
 <h1>[Figs. 11-12] LMR v2.1 vs Büntgen et al ensemble<a class="headerlink" href="#[Figs.-11-12]-LMR-v2.1-vs-Büntgen-et-al-ensemble" title="Link to this heading">#</a></h1>
 <p>For this application we quantify the distance between LMR2.1 vs the ensemble of Büntgen et al, 2021 (B21). Since the latter reconstructed only NH summer temperature, we load NH temperature from LMR. The notebook reproduces Figs 11-12.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pens</span>
@@ -396,7 +396,7 @@ document.write(`
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;../data/nhmt_MCruns_ensemble_full_LMRv2.1.nc&#39;</span>
@@ -408,7 +408,7 @@ document.write(`
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -426,7 +426,7 @@ document.write(`
 </div>
 <p>To choose the most appropriate temporal model, we plot the ensemble spectra:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psd</span>  <span class="o">=</span> <span class="n">LMR_nht</span><span class="o">.</span><span class="n">to_pyleo</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">spectral</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;mtm&#39;</span><span class="p">,</span><span class="n">settings</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NW&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">})</span>
@@ -438,11 +438,11 @@ document.write(`
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:18&lt;00:00, 105.84it/s]
+Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:14&lt;00:00, 134.90it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psd_med</span> <span class="o">=</span> <span class="n">psd</span><span class="o">.</span><span class="n">quantiles</span><span class="p">(</span><span class="n">qs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">])</span>
@@ -452,7 +452,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -468,7 +468,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psd_med</span><span class="o">.</span><span class="n">beta_est</span><span class="p">()</span><span class="o">.</span><span class="n">beta_est_res</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
@@ -476,17 +476,17 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.911183977428213
+0.9111839774282136
 </pre></div></div>
 </div>
 <p>Let us thus resample according to a power-law, using the median slope as parameter:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMR_nht_pl</span> <span class="o">=</span> <span class="n">LMR_nht</span><span class="o">.</span><span class="n">random_paths</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;power-law&#39;</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="n">psd_med</span><span class="o">.</span><span class="n">beta_est</span><span class="p">()</span><span class="o">.</span><span class="n">beta_est_res</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
@@ -499,12 +499,12 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:02&lt;00:00, 709.69it/s]
+100%|██████████| 2000/2000 [00:01&lt;00:00, 1417.09it/s]
 </pre></div></div>
 </div>
 <p>Now load the B21 data from NOAA file:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;../data/buentgen2021recon.txt&#39;</span>  <span class="c1"># modified for weird characters</span>
@@ -516,7 +516,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -678,7 +678,7 @@ Performing spectral analysis on individual series: 100%|████████
 <p>Note: the column <code class="docutils literal notranslate"><span class="pre">Rmed</span></code>, inexplicably, is blank (or full of NaNs if <code class="docutils literal notranslate"><span class="pre">na_filter=True</span></code>). With the standard tab delimiter, the <code class="docutils literal notranslate"><span class="pre">Rmed</span></code> column is good, but the <code class="docutils literal notranslate"><span class="pre">R12</span></code> column is all NaNs. There does not appear to be a way to coerce pandas to simultaneously extract both columns from this txt file. Let’s drop Rmed as it is not a primary reconstruction.</p>
 <p>Now let’s harmonize time axes for comparison with LMR:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_LMR</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">LMR_nht</span><span class="o">.</span><span class="n">time</span><span class="p">)]</span>
@@ -688,7 +688,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <p>We can now plot everything on the same graph. First define colors:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
@@ -700,7 +700,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
@@ -716,12 +716,12 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x17f772710&gt;
+&lt;matplotlib.legend.Legend at 0x334a282f0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -732,7 +732,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;../figures/LMRvsB21_NHT_traces.pdf&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
@@ -741,7 +741,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <p>Let’s quantify the plume distance to the median and mean reconstructions from B21</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d_med</span> <span class="o">=</span> <span class="n">LMR_nht</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">df_LMR</span><span class="p">[</span><span class="s1">&#39;Rmean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -754,12 +754,12 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.26278030489631854, 0.010570627661429632)
+(0.26310989864184986, 0.010775974357377482)
 </pre></div></div>
 </div>
 <p>How do these measures of distance that compare to the distance from plume to plume?</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMR_B21_plume_dist</span><span class="o">=</span><span class="n">LMR_nht</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">df_LMR</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
@@ -772,7 +772,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:00&lt;00:00, 3592.85it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:00&lt;00:00, 12456.95it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -780,7 +780,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.3115764092600447, 0.12121211783245589)
+(0.31168018520276464, 0.12110757793765714)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -793,7 +793,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <p>This is in the same ballpark. The question becomes: are these differences “significant”? For reference, one could look at the distribution of distances between randomly chosen trajectories:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMR_B21_dist</span> <span class="o">=</span> <span class="n">LMR_nht</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">df_LMR</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -806,11 +806,11 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:00&lt;00:00, 3615.57it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:00&lt;00:00, 13109.25it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -828,7 +828,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 <p>It is clear that there are multiple “clumps” corresponding to invidual reconstructions in the B21 ensemble. Overall, the ensemble distance of about 0.25 falls near the mode of this distribution, which is at the low end. Therefore, the sampling variations observed earlier (between 0.22 and 0.25 or so) seem relatively minor.</p>
 <p>Let us compare this to the intra-ensemble distances from LMRv2.1:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMR_nht_pl_intra</span> <span class="o">=</span> <span class="n">LMR_nht</span><span class="o">.</span><span class="n">distance</span><span class="p">()</span>
@@ -841,11 +841,11 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:49&lt;00:00, 40376.57it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:12&lt;00:00, 164767.88it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -861,7 +861,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMR_nht_pl_intra_q95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">LMR_nht_pl_intra</span><span class="p">,</span><span class="mf">0.95</span><span class="p">)</span>
@@ -901,7 +901,7 @@ Text(0.5, 1.0, &#39;NHT distances&#39;)
 </div>
 <p>It would be more instructive to redo this with B21 reconstructions separated by color:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -918,7 +918,7 @@ Text(0.5, 1.0, &#39;NHT distances&#39;)
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -934,7 +934,7 @@ Text(0.5, 1.0, &#39;LMRv2.1 to B21 NHT distances&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dist_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dist</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
@@ -953,7 +953,7 @@ Text(0.5, 1.0, &#39;LMRv2.1 to B21 NHT distances&#39;)
 </div>
 <p>Try as a ridgeplot, modified from <a class="reference external" href="https://matplotlib.org/matplotblog/posts/create-ridgeplots-in-matplotlib/">this guy</a>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gs</span> <span class="o">=</span> <span class="n">grid_spec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">df_LMR</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
@@ -1017,7 +1017,7 @@ Text(0.5, 1.0, &#39;LMRv2.1 to B21 NHT distances&#39;)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;../figures/LMRvsB21_distance.pdf&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>

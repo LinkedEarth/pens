@@ -396,8 +396,8 @@ document.write(`
 <h1>[Fig. 9] Schematic for the Plume Distance<a class="headerlink" href="#[Fig.-9]-Schematic-for-the-Plume-Distance" title="Link to this heading">#</a></h1>
 <p>Reviewer 1: <em>I think it would help improve the understanding and adoption of the plume distance metric if the authors included a schematic/cartoon that illustrates and combines more steps of the process than is currently shown in Figs 6-8. For example, the schematic could show the time series (or part of the time series) from Fig 6, then draw the tube around a trace, then show what distance you’re calculating with respect to the tube and the ensembles, then how that connects to the ideas shown
 in Figs 7 and 8 (also made more feasible if you only worry about plotting the L1 norm from Fig 7). This schematic then might either replace or supplement Figs 6-8. Even though I’m already familiar with many of the concepts discussed in the paper, I found myself needing to make my own little cartoon to make sure I understood what was going on. This is particularly the case when the authors get to the ideas of intra- vs inter-ensemble distances</em>.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
@@ -411,15 +411,6 @@ in Figs 7 and 8 (also made more feasible if you only worry about plotting the L1
 <span class="n">pens</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;journal_nogrid&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-The autoreload extension is already loaded. To reload it, use:
-  %reload_ext autoreload
-</pre></div></div>
 </div>
 <section id="Loading-data">
 <h2>Loading data<a class="headerlink" href="#Loading-data" title="Link to this heading">#</a></h2>
@@ -506,7 +497,7 @@ The autoreload extension is already loaded. To reload it, use:
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:01&lt;00:00, 1285.76it/s]
+100%|██████████| 2000/2000 [00:00&lt;00:00, 2652.11it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -540,7 +531,7 @@ The autoreload extension is already loaded. To reload it, use:
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:42&lt;00:00, 47.01it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:14&lt;00:00, 136.82it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -560,7 +551,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.1</span><span class="p">,</span><span class="n">num</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
@@ -570,12 +561,12 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&lt;matplotlib.lines.Line2D at 0x1837b6490&gt;]
+[&lt;matplotlib.lines.Line2D at 0x327e8aae0&gt;]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -587,7 +578,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <p>### Find the plume distance</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">delta_eps</span>  <span class="o">=</span> <span class="n">ens_o2000</span><span class="o">.</span><span class="n">plume_distance</span><span class="p">(</span><span class="n">ens_off_pl</span><span class="p">,</span><span class="n">dist</span><span class="o">=</span><span class="n">inter_dist</span><span class="p">)</span>
@@ -599,11 +590,11 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:43&lt;00:00, 45.55it/s]
+Computing inter-ensemble distance: 100%|██████████| 2000/2000 [00:14&lt;00:00, 139.30it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">delta_eps</span>
@@ -611,12 +602,12 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.7597472309262043, 0.06367070354325344)
+(0.7601925753950028, 0.06606677293571162)
 </pre></div></div>
 </div>
 </section>
@@ -624,7 +615,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 <section id="Plot-schematic">
 <h2>Plot schematic<a class="headerlink" href="#Plot-schematic" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
@@ -674,7 +665,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -693,7 +684,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 <section id="Proximity-Probability">
 <h2>Proximity Probability<a class="headerlink" href="#Proximity-Probability" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -724,7 +715,7 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 <section id="Proximity-Densities">
 <h2>Proximity Densities<a class="headerlink" href="#Proximity-Densities" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMRon_intra_dist</span> <span class="o">=</span> <span class="n">ens_o2000</span><span class="o">.</span><span class="n">distance</span><span class="p">()</span>
@@ -736,11 +727,11 @@ Computing inter-ensemble distance: 100%|██████████| 2000/200
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:13&lt;00:00, 152216.47it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:05&lt;00:00, 362266.71it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LMRoff_intra_dist_pl</span> <span class="o">=</span> <span class="n">ens_off_pl</span><span class="o">.</span><span class="n">distance</span><span class="p">()</span>
@@ -752,12 +743,12 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:32&lt;00:00, 60603.90it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:08&lt;00:00, 236841.75it/s]
 </pre></div></div>
 </div>
 <p>Now let’s plot these 3 quantities on the same graph (the plume distance is the dashed line):</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LMRonline&#39;</span><span class="p">:</span> <span class="n">LMRon_intra_dist</span><span class="p">,</span>
@@ -785,7 +776,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -801,7 +792,7 @@ Text(0.5, 0, &#39;Proximity threshold $\\epsilon \\, ({}^\\circ \\mathrm{C})$ &#
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[194]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#fig.savefig(&#39;../figures/plume_distance_comparison.pdf&#39;,dpi=200)</span>
@@ -812,7 +803,7 @@ Text(0.5, 0, &#39;Proximity threshold $\\epsilon \\, ({}^\\circ \\mathrm{C})$ &#
 <section id="Combine-into-one">
 <h2>Combine into one<a class="headerlink" href="#Combine-into-one" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[87]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot_mosaic</span><span class="p">([[</span><span class="s1">&#39;a)&#39;</span><span class="p">,</span> <span class="s1">&#39;a)&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;b)&#39;</span><span class="p">,</span> <span class="s1">&#39;c)&#39;</span><span class="p">]],</span>
@@ -894,7 +885,7 @@ Text(0.5, 0, &#39;Proximity threshold $\\epsilon \\, ({}^\\circ \\mathrm{C})$ &#
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[87]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -910,7 +901,7 @@ Text(0.5, 0, &#39;Proximity threshold $\\epsilon \\, ({}^\\circ \\mathrm{C})$ &#
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[88]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;../figures/Fig9_plume_schematic.pdf&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>

@@ -475,11 +475,20 @@ Kalman filter - respect independent constraints on temporal structure.</p>
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1000x400 with 1 Axes&gt;, &lt;Axes: xlabel=&#39;time&#39;, ylabel=&#39;GMST [°C]&#39;&gt;)
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_eg24-Fig5_resampling_7_0.png" src="../_images/notebooks_eg24-Fig5_resampling_7_0.png" />
+<img alt="../_images/notebooks_eg24-Fig5_resampling_7_1.png" src="../_images/notebooks_eg24-Fig5_resampling_7_1.png" />
 </div>
 </div>
 <p>The resampling results in a much greater temporal variance, with many “cold” years from the posterior (usually, those corresponding to the aftermath of strong volcanic eruptions in the CCSM4 prior) being sampled with replacement. However, it is easy to check that the ensemble variance is unchanged:</p>
@@ -499,7 +508,7 @@ Kalman filter - respect independent constraints on temporal structure.</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x1a7d42610&gt;
+&lt;matplotlib.legend.Legend at 0x31c049790&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -517,7 +526,7 @@ Kalman filter - respect independent constraints on temporal structure.</p>
 <p>Another constraint comes from the temporal behavior of the online LMR algorithm of Perkins &amp; Hakim [2021]. Unlike offline DA, online DA carries information from timestep to timestep via an explicit model (here, a linear inverse model, or LIM). This results in much improved reconstruction of quantities, like the ocean heat content, that are known to exhibit long-term memory but are only indirectly constrained by most climate proxy observations. To a lesser extent, Perkins &amp; Hakim [2021] also
 showed improved reconstructions of GMST, with a narrower ensemble spread and more homoskedastic behavior of the ensemble mean (or median). Let us load and visualize this reconstruction:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ens_o</span> <span class="o">=</span> <span class="n">pens</span><span class="o">.</span><span class="n">EnsembleTS</span><span class="p">()</span><span class="o">.</span><span class="n">load_nc</span><span class="p">(</span><span class="s1">&#39;../data/gmt_MCruns_ensemble_full_LMRonline.nc&#39;</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s1">&#39;glob_mean&#39;</span><span class="p">,</span> <span class="n">time_name</span><span class="o">=</span><span class="s1">&#39;year&#39;</span><span class="p">)</span>
@@ -534,7 +543,7 @@ showed improved reconstructions of GMST, with a narrower ensemble spread and mor
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ens_o</span><span class="o">.</span><span class="n">plot_traces</span><span class="p">(</span><span class="n">num_traces</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
@@ -542,7 +551,7 @@ showed improved reconstructions of GMST, with a narrower ensemble spread and mor
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -560,7 +569,7 @@ showed improved reconstructions of GMST, with a narrower ensemble spread and mor
 <p>The individual traces also retain more temporal variance than their offline counterparts (see above).</p>
 <p>To devise a sensible resampling scheme, we analyze the spectral behavior of the online LMR to determine which timeseries model would be most appropriate. Because the ensemble mean may be viewed as a deterministic response to external forcing (e.g. explosive volcanism), we analyze the spectral behaior of residuals from the mean:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ens_o2000</span> <span class="o">=</span> <span class="n">ens_o</span><span class="o">.</span><span class="n">subsample</span><span class="p">(</span><span class="n">nsamples</span><span class="o">=</span><span class="n">ens_LMR</span><span class="o">.</span><span class="n">nEns</span><span class="p">)</span> <span class="c1"># downsample to the same ensemble size as LMRv2.1</span>
@@ -572,7 +581,7 @@ showed improved reconstructions of GMST, with a narrower ensemble spread and mor
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -589,7 +598,7 @@ showed improved reconstructions of GMST, with a narrower ensemble spread and mor
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PSD_o</span> <span class="o">=</span> <span class="n">ens_d</span><span class="o">.</span><span class="n">to_pyleo</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">spectral</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;mtm&#39;</span><span class="p">,</span><span class="n">settings</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;standardize&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">})</span> <span class="c1"># this generate a MultiplePSD object</span>
@@ -601,11 +610,11 @@ showed improved reconstructions of GMST, with a narrower ensemble spread and mor
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:13&lt;00:00, 147.85it/s]
+Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:09&lt;00:00, 214.37it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PSD_oaa</span> <span class="o">=</span> <span class="n">PSD_o</span><span class="o">.</span><span class="n">anti_alias</span><span class="p">()</span>
@@ -617,11 +626,11 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:23&lt;00:00, 84.29it/s]
+Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:11&lt;00:00, 175.82it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PSD_oaa</span><span class="o">.</span><span class="n">plot_envelope</span><span class="p">(</span><span class="n">curve_clr</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span><span class="n">shade_clr</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
@@ -629,7 +638,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -648,7 +657,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 <p>The median spectrum is not so different from an AR(1) (the aliasing at periods shorter than ~3y can be ignored). Let’s extract it, add random phase, and invert it back to the time domain.</p>
 <p>Let’s do this as in <a class="reference external" href="https://dsp.stackexchange.com/a/7703">this example</a></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -676,12 +685,12 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&lt;matplotlib.lines.Line2D at 0x17bbee8d0&gt;]
+[&lt;matplotlib.lines.Line2D at 0x31c0dfe60&gt;]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -693,7 +702,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <p>Let’s fit an autoregressive model to this series:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels</span> <span class="k">as</span> <span class="nn">sm</span>
@@ -703,7 +712,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -718,7 +727,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.tsa.ar_model</span> <span class="kn">import</span> <span class="n">AutoReg</span>
@@ -737,55 +746,55 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
                             AutoReg Model Results
 ==============================================================================
 Dep. Variable:                      y   No. Observations:                 1001
-Model:                    AutoReg(15)   Log Likelihood                4942.711
+Model:                    AutoReg(15)   Log Likelihood                4914.636
 Method:               Conditional MLE   S.D. of innovations              0.002
-Date:                Fri, 16 Aug 2024   AIC                          -9851.422
-Time:                        11:37:38   BIC                          -9768.229
-Sample:                            15   HQIC                         -9819.781
+Date:                Thu, 19 Sep 2024   AIC                          -9795.273
+Time:                        12:52:52   BIC                          -9712.081
+Sample:                            15   HQIC                         -9763.632
                                  1001
 ==============================================================================
                  coef    std err          z      P&gt;|z|      [0.025      0.975]
 ------------------------------------------------------------------------------
-const       5.562e-06   5.04e-05      0.110      0.912   -9.33e-05       0.000
-y.L1           0.6878      0.032     21.785      0.000       0.626       0.750
-y.L2           0.1323      0.037      3.567      0.000       0.060       0.205
-y.L3          -0.0259      0.039     -0.659      0.510      -0.103       0.051
-y.L4           0.0137      0.038      0.360      0.719      -0.061       0.088
-y.L5           0.0093      0.033      0.285      0.776      -0.055       0.073
-y.L6           0.0629      0.041      1.539      0.124      -0.017       0.143
-y.L7          -0.0240      0.036     -0.673      0.501      -0.094       0.046
-y.L8          -0.0443      0.032     -1.378      0.168      -0.107       0.019
-y.L9           0.0657      0.034      1.923      0.055      -0.001       0.133
-y.L10         -0.0207      0.040     -0.522      0.602      -0.099       0.057
-y.L11         -0.0372      0.042     -0.879      0.379      -0.120       0.046
-y.L12          0.0067      0.035      0.192      0.848      -0.062       0.075
-y.L13          0.0282      0.041      0.689      0.491      -0.052       0.109
-y.L14         -0.0665      0.039     -1.711      0.087      -0.143       0.010
-y.L15          0.0653      0.032      2.016      0.044       0.002       0.129
+const      -1.102e-05   5.22e-05     -0.211      0.833      -0.000    9.13e-05
+y.L1           0.6905      0.033     20.853      0.000       0.626       0.755
+y.L2           0.0838      0.040      2.073      0.038       0.005       0.163
+y.L3           0.0305      0.039      0.775      0.438      -0.047       0.108
+y.L4           0.0494      0.036      1.361      0.173      -0.022       0.121
+y.L5           0.0311      0.041      0.764      0.445      -0.049       0.111
+y.L6          -0.0639      0.040     -1.583      0.113      -0.143       0.015
+y.L7           0.0444      0.040      1.108      0.268      -0.034       0.123
+y.L8           0.0137      0.041      0.336      0.737      -0.066       0.093
+y.L9          -0.0149      0.041     -0.361      0.718      -0.096       0.066
+y.L10          0.0082      0.039      0.210      0.834      -0.069       0.085
+y.L11          0.0017      0.038      0.044      0.965      -0.072       0.076
+y.L12         -0.0112      0.032     -0.347      0.729      -0.075       0.052
+y.L13          0.0011      0.036      0.031      0.975      -0.069       0.071
+y.L14         -0.0545      0.034     -1.593      0.111      -0.122       0.013
+y.L15          0.0605      0.031      1.954      0.051      -0.000       0.121
                                     Roots
 ==============================================================================
                    Real          Imaginary           Modulus         Frequency
 ------------------------------------------------------------------------------
-AR.1            -1.1430           -0.2643j            1.1732           -0.4638
-AR.2            -1.1430           +0.2643j            1.1732            0.4638
-AR.3            -0.9598           -0.7356j            1.2093           -0.3959
-AR.4            -0.9598           +0.7356j            1.2093            0.3959
-AR.5            -0.5056           -1.0411j            1.1574           -0.3220
-AR.6            -0.5056           +1.0411j            1.1574            0.3220
-AR.7             0.0299           -1.2653j            1.2656           -0.2462
-AR.8             0.0299           +1.2653j            1.2656            0.2462
-AR.9             1.0905           -0.0000j            1.0905           -0.0000
-AR.10            1.1538           -0.3350j            1.2015           -0.0450
-AR.11            1.1538           +0.3350j            1.2015            0.0450
-AR.12            0.8933           -0.8168j            1.2104           -0.1179
-AR.13            0.8933           +0.8168j            1.2104            0.1179
-AR.14            0.4951           -1.1369j            1.2400           -0.1846
-AR.15            0.4951           +1.1369j            1.2400            0.1846
+AR.1            -1.1744           -0.2765j            1.2065           -0.4632
+AR.2            -1.1744           +0.2765j            1.2065            0.4632
+AR.3            -0.9394           -0.7290j            1.1890           -0.3950
+AR.4            -0.9394           +0.7290j            1.1890            0.3950
+AR.5            -0.5478           -1.1161j            1.2433           -0.3226
+AR.6            -0.5478           +1.1161j            1.2433            0.3226
+AR.7            -0.0261           -1.1940j            1.1943           -0.2535
+AR.8            -0.0261           +1.1940j            1.1943            0.2535
+AR.9             0.4810           -1.1201j            1.2190           -0.1854
+AR.10            0.4810           +1.1201j            1.2190            0.1854
+AR.11            0.9219           -0.7930j            1.2160           -0.1131
+AR.12            0.9219           +0.7930j            1.2160            0.1131
+AR.13            1.0837           -0.0000j            1.0837           -0.0000
+AR.14            1.1932           -0.3237j            1.2364           -0.0422
+AR.15            1.1932           +0.3237j            1.2364            0.0422
 ------------------------------------------------------------------------------
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
@@ -802,7 +811,7 @@ AR.15            0.4951           +1.1369j            1.2400            0.1846
 </div>
 <p>An excellent fit, except for some of the more extreme values. Let’s see what AR order is being determined automatically. From the CIs on coefficients, it looks like 2-4 would be a good choice:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod_sel</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">ar_model</span><span class="o">.</span><span class="n">ar_select_order</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">maxlag</span><span class="o">=</span><span class="n">max_lag</span><span class="p">)</span>
@@ -821,7 +830,7 @@ retained AR order: 2
 </div>
 <p>AR(2) it is. All we need to do now is pass those parameters to the <code class="docutils literal notranslate"><span class="pre">._random_paths()</span></code> function in <code class="docutils literal notranslate"><span class="pre">pens</span></code> to simulate sensible trajectories. Before we do so, let us obtain the distribution of AR parameters from the ensemble:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ar_mod</span> <span class="o">=</span> <span class="n">AutoReg</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">ar_order</span><span class="p">)</span>
@@ -833,7 +842,7 @@ retained AR order: 2
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -849,7 +858,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to LMRonline median residual spectrum&#39;)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;../figures/LMRonline_AR2fit.pdf&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
@@ -857,7 +866,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to LMRonline median residual spectrum&#39;)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">ens_d</span><span class="o">.</span><span class="n">nEns</span><span class="p">,</span><span class="n">ar_order</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
@@ -871,7 +880,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to LMRonline median residual spectrum&#39;)
 </div>
 <p>Now let us plot the estimated parameters:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
@@ -888,7 +897,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to LMRonline median residual spectrum&#39;)
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -905,7 +914,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 <p>This confirms that only the first 2 AR coefficients are appreciably different from 0 in most ensemble members, so an AR(2) fit is warranted. Let us compute the mean coefficients:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi_o</span> <span class="o">=</span> <span class="n">ar_res2</span><span class="o">.</span><span class="n">params</span>
@@ -918,7 +927,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[1.97704197e-06 6.87489909e-01 1.43084211e-01]
+[5.02056611e-07 7.01145589e-01 1.48088879e-01]
 </pre></div></div>
 </div>
 </section>
@@ -927,7 +936,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 <p>We now return to our original offline DA ensemble and try 3 timeseries models: - an autoregressive model (AR(2)) - fractional Gaussian noise (fGn) - power-law behavior</p>
 <p>The target spectrum is the median of the distribution of detrended, standardized LMRonline spectra:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PSD_oaa_beta</span>  <span class="o">=</span> <span class="n">PSD_oaa</span><span class="o">.</span><span class="n">quantiles</span><span class="p">(</span><span class="n">qs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">])</span><span class="o">.</span><span class="n">beta_est</span><span class="p">()</span>
@@ -942,7 +951,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.9278696644415955
+0.9271495631598354
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -956,7 +965,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 <h3>AR resampling<a class="headerlink" href="#AR-resampling" title="Link to this heading">#</a></h3>
 <p>We start with an autoregressive model Because such models are stationary by construction, they cannot generate increasing variance back in time. We solve this problem (internally) by scaling the simulated AR series to unit variance, then rescaling it by the ensemble standard deviation. The result is here:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">paths_ar</span> <span class="o">=</span> <span class="n">ens_LMR</span><span class="o">.</span><span class="n">random_paths</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;ar&#39;</span><span class="p">,</span><span class="n">param</span><span class="o">=</span><span class="n">phi_o</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
@@ -972,16 +981,16 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:00&lt;00:00, 4466.85it/s]
+100%|██████████| 2000/2000 [00:00&lt;00:00, 10442.16it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x17c87ec90&gt;
+&lt;matplotlib.legend.Legend at 0x33b2f6a80&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -992,7 +1001,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ens_LMR</span><span class="o">.</span><span class="n">get_std</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;original ensemble&#39;</span><span class="p">)</span>
@@ -1002,12 +1011,12 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x17cc4bb10&gt;
+&lt;matplotlib.legend.Legend at 0x33b010260&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1018,7 +1027,7 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ar_ts</span> <span class="o">=</span> <span class="n">paths_ar</span><span class="o">.</span><span class="n">to_pyleo</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1031,11 +1040,11 @@ Text(0.5, 0.98, &#39;AR(2) fit to detrended LMR online GMST&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:21&lt;00:00, 94.20it/s]
+Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:18&lt;00:00, 110.25it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PSD_ar_aa</span> <span class="o">=</span> <span class="n">PSD_ar</span><span class="o">.</span><span class="n">anti_alias</span><span class="p">()</span>
@@ -1047,7 +1056,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:36&lt;00:00, 54.10it/s]
+Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:17&lt;00:00, 112.48it/s]
 </pre></div></div>
 </div>
 <p>With 5000 ensemble members, we see that the AR(2) resampled ensemble achieves a sample standard deviation very close to the original, as must be the case by construction.</p>
@@ -1056,7 +1065,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 <h3>Power law scaling<a class="headerlink" href="#Power-law-scaling" title="Link to this heading">#</a></h3>
 <p>The last option is power-law scaling, enabled by the <a class="reference external" href="https://stochastic.readthedocs.io/">stochastic package</a>. Note that under certain conditions (<span class="math notranslate nohighlight">\(\beta = 2H-1, H&lt;1\)</span>), results are equivalent with fGn and the power law option.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">paths_pl</span> <span class="o">=</span> <span class="n">ens_LMR</span><span class="o">.</span><span class="n">random_paths</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;power-law&#39;</span><span class="p">,</span><span class="n">param</span><span class="o">=</span><span class="n">beta_o</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
@@ -1073,16 +1082,16 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:02&lt;00:00, 696.88it/s]
+100%|██████████| 2000/2000 [00:01&lt;00:00, 1502.22it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x1c41f2510&gt;
+&lt;matplotlib.legend.Legend at 0x33591c260&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1094,7 +1103,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <p>This indeed looks very similar to the fGn case. In addition, this option enables to simulate longer-memory behavior with exponents steeper than unity. For instance:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">beta</span> <span class="o">=</span> <span class="mf">1.2</span>
@@ -1110,11 +1119,11 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:02&lt;00:00, 784.53it/s]
+100%|██████████| 2000/2000 [00:01&lt;00:00, 1505.40it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1132,7 +1141,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 <p>However, for <span class="math notranslate nohighlight">\(\beta &gt; 1\)</span> the process is no longer stationary, which causes issues with modeling its covariance, for instance.</p>
 <p>And as before, ensemble spread is preserved:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ens_LMR</span><span class="o">.</span><span class="n">get_std</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;original ensemble&#39;</span><span class="p">)</span>
@@ -1142,12 +1151,12 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x1c2d6e810&gt;
+&lt;matplotlib.legend.Legend at 0x339ffef00&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1158,7 +1167,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl_ts</span> <span class="o">=</span> <span class="n">paths_pl</span><span class="o">.</span><span class="n">to_pyleo</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1172,8 +1181,8 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:23&lt;00:00, 86.19it/s]
-Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:42&lt;00:00, 47.48it/s]
+Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:17&lt;00:00, 112.30it/s]
+Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:19&lt;00:00, 104.27it/s]
 </pre></div></div>
 </div>
 </section>
@@ -1181,7 +1190,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 <h3>fGn resampling<a class="headerlink" href="#fGn-resampling" title="Link to this heading">#</a></h3>
 <p>fractional Gaussian noise was popularized by Mandelbrot &amp; Van Ness (1963) and is useful for modeling self-similar, long-memory processes. It has been abundantly used in hydrology, and is increasingly used for modeling GMST as well (see Frederiksen &amp; Rypdal, 2017). (more background from Frederi would be helpful here)</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hurst</span> <span class="o">=</span> <span class="p">(</span><span class="n">beta_o</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
@@ -1199,16 +1208,16 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:00&lt;00:00, 2240.50it/s]
+100%|██████████| 2000/2000 [00:00&lt;00:00, 7529.22it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x179a66250&gt;
+&lt;matplotlib.legend.Legend at 0x33593d250&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1219,7 +1228,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ens_LMR</span><span class="o">.</span><span class="n">get_std</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;original ensemble&#39;</span><span class="p">)</span>
@@ -1229,12 +1238,12 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x17c9be8d0&gt;
+&lt;matplotlib.legend.Legend at 0x342461f10&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1245,7 +1254,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fGn_ts</span> <span class="o">=</span> <span class="n">paths_fGn</span><span class="o">.</span><span class="n">to_pyleo</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1259,13 +1268,13 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:23&lt;00:00, 85.49it/s]
-Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:39&lt;00:00, 50.36it/s]
+Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:17&lt;00:00, 112.20it/s]
+Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:17&lt;00:00, 112.87it/s]
 </pre></div></div>
 </div>
 <p>Finally, we summarize on a single figure:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -1333,7 +1342,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;../figures/Fig5_resampling.pdf&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>

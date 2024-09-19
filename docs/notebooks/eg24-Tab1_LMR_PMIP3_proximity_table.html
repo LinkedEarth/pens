@@ -754,7 +754,7 @@ document.write(`
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common_time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
@@ -790,7 +790,7 @@ document.write(`
 <h3>AR model parameters<a class="headerlink" href="#AR-model-parameters" title="Link to this heading">#</a></h3>
 <p>The AR(p) model for the mean writes <span class="math notranslate nohighlight">\(X_t = \sum_{\ell=1}^p \phi_\ell X_{t-\ell} + \epsilon_t\)</span>, where <span class="math notranslate nohighlight">\(\epsilon\)</span> is Gaussian, i.i.d. with variance <span class="math notranslate nohighlight">\(\sigma^2\)</span> and mean zero, and <span class="math notranslate nohighlight">\(\phi_\ell\)</span> is the autocorrelation at lag <span class="math notranslate nohighlight">\(\ell= 1, \dots, p\)</span>. We load the parameters fitted to LMRonline (Perkins &amp; Hakim, 2021) with <a class="reference external" href="https://www.statsmodels.org/dev/generated/statsmodels.tsa.ar_model.AutoReg.fit.html#statsmodels.tsa.ar_model.AutoReg.fit">statsmodel</a>:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ar_params</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/LMRonline_ARfit.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -799,7 +799,7 @@ document.write(`
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -889,7 +889,7 @@ document.write(`
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi_m</span> <span class="o">=</span> <span class="n">ar_params</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># take the mean model (dumb, but a start)</span>
@@ -906,14 +906,14 @@ document.write(`
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 2000/2000 [00:00&lt;00:00, 5731.35it/s]
-100%|██████████| 2000/2000 [00:01&lt;00:00, 1336.02it/s]
-100%|██████████| 2000/2000 [00:00&lt;00:00, 3583.99it/s]
+100%|██████████| 2000/2000 [00:00&lt;00:00, 15046.88it/s]
+100%|██████████| 2000/2000 [00:00&lt;00:00, 2840.15it/s]
+100%|██████████| 2000/2000 [00:00&lt;00:00, 10722.20it/s]
 </pre></div></div>
 </div>
 <p>Let’s apply proximity probability to these resampled ensembles</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dist_pl</span> <span class="o">=</span> <span class="n">paths_pl</span><span class="o">.</span><span class="n">distance</span><span class="p">()</span>
@@ -925,11 +925,11 @@ document.write(`
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:30&lt;00:00, 66410.73it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:07&lt;00:00, 252116.41it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
@@ -938,7 +938,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -960,7 +960,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 <section id="Benchmarks:">
 <h3>Benchmarks:<a class="headerlink" href="#Benchmarks:" title="Link to this heading">#</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="n">ens_off</span><span class="o">.</span><span class="n">nEns</span>
@@ -978,14 +978,14 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:13&lt;00:00, 143551.79it/s]
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:31&lt;00:00, 63090.54it/s]
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:35&lt;00:00, 57025.20it/s]
-Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:32&lt;00:00, 60786.25it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:05&lt;00:00, 371520.73it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:08&lt;00:00, 241574.97it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:08&lt;00:00, 245245.44it/s]
+Computing intra-ensemble distance among possible pairs: 100%|██████████| 1999000/1999000 [00:08&lt;00:00, 243173.15it/s]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#qs = [0.9, 0.95, 0.99]</span>
@@ -997,7 +997,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">q95</span><span class="p">)</span>
@@ -1009,10 +1009,10 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[[0.26292262]
- [0.18431454]
- [0.19605099]
- [0.19392196]]
+[[0.25746134]
+ [0.18425562]
+ [0.19637196]
+ [0.19365803]]
 </pre></div></div>
 </div>
 </section>
@@ -1020,7 +1020,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 <h3>Plume Distances<a class="headerlink" href="#Plume-Distances" title="Link to this heading">#</a></h3>
 <p>PUT INTO ND array!</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1998</span><span class="p">]</span> <span class="c1"># FGOALS is ruining it for everyone else.</span>
@@ -1042,49 +1042,49 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 HDI for ens_on,bcc_csm1_1 is [0.3169023  0.48872373]
-HDI for paths_ar,bcc_csm1_1 is [0.41480513 0.42883582]
-HDI for paths_fGn,bcc_csm1_1 is [0.40249786 0.44414437]
-HDI for paths_pl,bcc_csm1_1 is [0.4059804  0.43793929]
+HDI for paths_ar,bcc_csm1_1 is [0.41504097 0.42824128]
+HDI for paths_fGn,bcc_csm1_1 is [0.40244935 0.44500142]
+HDI for paths_pl,bcc_csm1_1 is [0.40561431 0.43801948]
 HDI for ens_on,CCSM4 is [0.3916529  0.56654911]
-HDI for paths_ar,CCSM4 is [0.49759336 0.51026624]
-HDI for paths_fGn,CCSM4 is [0.4845751  0.52319658]
-HDI for paths_pl,CCSM4 is [0.49011418 0.5192907 ]
+HDI for paths_ar,CCSM4 is [0.49767313 0.51008715]
+HDI for paths_fGn,CCSM4 is [0.48579573 0.5254638 ]
+HDI for paths_pl,CCSM4 is [0.48817625 0.51794544]
 HDI for ens_on,FGOALS_gl is [0.17160513 0.29553263]
-HDI for paths_ar,FGOALS_gl is [0.24133747 0.25456595]
-HDI for paths_fGn,FGOALS_gl is [0.23282064 0.26247598]
-HDI for paths_pl,FGOALS_gl is [0.23497256 0.26123791]
+HDI for paths_ar,FGOALS_gl is [0.24135012 0.25423495]
+HDI for paths_fGn,FGOALS_gl is [0.23434179 0.26404927]
+HDI for paths_pl,FGOALS_gl is [0.23443021 0.2604615 ]
 HDI for ens_on,FGOALS_s2 is [0.87291123 1.06121614]
-HDI for paths_ar,FGOALS_s2 is [0.98411333 0.99780561]
-HDI for paths_fGn,FGOALS_s2 is [0.96952561 1.0109579 ]
-HDI for paths_pl,FGOALS_s2 is [0.9756344  1.00533031]
+HDI for paths_ar,FGOALS_s2 is [0.98373063 0.99706907]
+HDI for paths_fGn,FGOALS_s2 is [0.97022154 1.0121546 ]
+HDI for paths_pl,FGOALS_s2 is [0.97599772 1.00668997]
 HDI for ens_on,IPSL_CM5A_LR is [0.53575133 0.71567922]
-HDI for paths_ar,IPSL_CM5A_LR is [0.64074663 0.65445528]
-HDI for paths_fGn,IPSL_CM5A_LR is [0.62511766 0.66845127]
-HDI for paths_pl,IPSL_CM5A_LR is [0.63011768 0.66256259]
+HDI for paths_ar,IPSL_CM5A_LR is [0.64020395 0.65360194]
+HDI for paths_fGn,IPSL_CM5A_LR is [0.62554657 0.67010464]
+HDI for paths_pl,IPSL_CM5A_LR is [0.62944168 0.6622128 ]
 HDI for ens_on,MPI_ESM_P is [0.26036808 0.42085223]
-HDI for paths_ar,MPI_ESM_P is [0.35549407 0.36835304]
-HDI for paths_fGn,MPI_ESM_P is [0.34461618 0.37895361]
-HDI for paths_pl,MPI_ESM_P is [0.34773182 0.37509486]
+HDI for paths_ar,MPI_ESM_P is [0.35523594 0.3677807 ]
+HDI for paths_fGn,MPI_ESM_P is [0.34560199 0.38069716]
+HDI for paths_pl,MPI_ESM_P is [0.34754917 0.37588254]
 HDI for ens_on,CSIRO is [0.20843753 0.36095076]
-HDI for paths_ar,CSIRO is [0.29764948 0.3108993 ]
-HDI for paths_fGn,CSIRO is [0.28743312 0.32081747]
-HDI for paths_pl,CSIRO is [0.28970119 0.31813082]
+HDI for paths_ar,CSIRO is [0.29821175 0.31114956]
+HDI for paths_fGn,CSIRO is [0.2886882  0.32264604]
+HDI for paths_pl,CSIRO is [0.28954273 0.31785737]
 HDI for ens_on,HadCM3 is [0.16782503 0.27798754]
-HDI for paths_ar,HadCM3 is [0.22570364 0.24114924]
-HDI for paths_fGn,HadCM3 is [0.21798235 0.24870447]
-HDI for paths_pl,HadCM3 is [0.21824814 0.24910189]
+HDI for paths_ar,HadCM3 is [0.22615674 0.24131117]
+HDI for paths_fGn,HadCM3 is [0.21807057 0.24960349]
+HDI for paths_pl,HadCM3 is [0.21830547 0.24968002]
 HDI for ens_on,CESM is [0.10192542 0.2290239 ]
-HDI for paths_ar,CESM is [0.1525163  0.16892893]
-HDI for paths_fGn,CESM is [0.14046102 0.17956819]
-HDI for paths_pl,CESM is [0.14310053 0.17609647]
+HDI for paths_ar,CESM is [0.15195883 0.16841925]
+HDI for paths_fGn,CESM is [0.13851015 0.17773333]
+HDI for paths_pl,CESM is [0.1437939 0.1771722]
 HDI for ens_on,GISS is [0.20433883 0.36590171]
-HDI for paths_ar,GISS is [0.3000772  0.31225308]
-HDI for paths_fGn,GISS is [0.28971287 0.32149485]
-HDI for paths_pl,GISS is [0.29210827 0.31915036]
+HDI for paths_ar,GISS is [0.3001031 0.3123527]
+HDI for paths_fGn,GISS is [0.29006052 0.32279645]
+HDI for paths_pl,GISS is [0.29242003 0.31987262]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pmip3_plume_dist</span>
@@ -1092,7 +1092,7 @@ HDI for paths_pl,GISS is [0.29210827 0.31915036]
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1100,27 +1100,27 @@ HDI for paths_pl,GISS is [0.29210827 0.31915036]
 array([[[0.41122165, 0.49245583, 0.23326212, 0.97809225, 0.63587909,
          0.34895453, 0.29070405, 0.21652265, 0.14846731, 0.29227668],
         [0.        , 0.        , 1.        , 0.        , 0.        ,
-         1.        , 1.        , 1.        , 0.        , 1.        ]],
+         0.        , 1.        , 1.        , 1.        , 1.        ]],
 
-       [[0.42170347, 0.50382226, 0.24804756, 0.990487  , 0.64708329,
-         0.36157904, 0.30427926, 0.2335009 , 0.15995313, 0.30608503],
+       [[0.42169219, 0.50386857, 0.24783376, 0.99042062, 0.64709307,
+         0.36145699, 0.30416287, 0.23330397, 0.15965498, 0.30616651],
         [0.        , 0.        , 0.        , 0.        , 0.        ,
-         0.        , 0.        , 0.        , 0.        , 0.        ]],
+         0.        , 0.        , 0.        , 1.        , 0.        ]],
 
-       [[0.42124485, 0.50355891, 0.24818122, 0.99022058, 0.64650469,
-         0.36143343, 0.30416549, 0.23362851, 0.16030613, 0.30619318],
+       [[0.42106854, 0.50327215, 0.2481492 , 0.98983175, 0.64638777,
+         0.36123697, 0.30418705, 0.23342851, 0.15971432, 0.30591557],
         [0.        , 0.        , 0.        , 0.        , 0.        ,
-         0.        , 0.        , 0.        , 0.        , 0.        ]],
+         0.        , 0.        , 0.        , 1.        , 0.        ]],
 
-       [[0.42122759, 0.50360585, 0.24785779, 0.99026646, 0.64654855,
-         0.36139278, 0.30387247, 0.23311599, 0.15991344, 0.30602902],
+       [[0.42126125, 0.50330476, 0.24823178, 0.99004559, 0.64653163,
+         0.36133402, 0.30419209, 0.233086  , 0.15993087, 0.3058728 ],
         [0.        , 0.        , 0.        , 0.        , 0.        ,
-         0.        , 0.        , 0.        , 0.        , 0.        ]]])
+         0.        , 0.        , 0.        , 1.        , 0.        ]]])
 </pre></div></div>
 </div>
 <p>Export to LaTeX. First, define multilevel index:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arrays</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;LMRon&#39;</span><span class="p">,</span> <span class="s1">&#39;LMRon&#39;</span><span class="p">,</span> <span class="s1">&#39;LMRoff, AR(2)&#39;</span><span class="p">,</span><span class="s1">&#39;LMRoff, AR(2)&#39;</span><span class="p">,</span> <span class="s1">&#39;LMRoff, fGn&#39;</span><span class="p">,</span> <span class="s1">&#39;LMRoff, fGn&#39;</span><span class="p">,</span> <span class="s1">&#39;LMRoff, $f^{-</span><span class="se">\b</span><span class="s1">eta}$&#39;</span><span class="p">,</span><span class="s1">&#39;LMRoff, $f^{-</span><span class="se">\b</span><span class="s1">eta}$&#39;</span><span class="p">],</span>
@@ -1132,7 +1132,7 @@ array([[[0.41122165, 0.49245583, 0.23326212, 0.97809225, 0.63587909,
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1149,7 +1149,7 @@ MultiIndex([(              &#39;LMRon&#39;,  &#39;med&#39;),
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pmip3_plume2d</span> <span class="o">=</span> <span class="n">pmip3_plume_dist</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ts_list</span><span class="p">)])</span>
@@ -1161,7 +1161,7 @@ MultiIndex([(              &#39;LMRon&#39;,  &#39;med&#39;),
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1232,7 +1232,7 @@ MultiIndex([(              &#39;LMRon&#39;,  &#39;med&#39;),
       <td>1.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>1.000000</td>
+      <td>0.000000</td>
       <td>1.000000</td>
       <td>1.000000</td>
       <td>1.000000</td>
@@ -1241,16 +1241,16 @@ MultiIndex([(              &#39;LMRon&#39;,  &#39;med&#39;),
     <tr>
       <th rowspan="2" valign="top">LMRoff, AR(2)</th>
       <th>med</th>
-      <td>0.421703</td>
-      <td>0.503822</td>
-      <td>0.248048</td>
-      <td>0.990487</td>
-      <td>0.647083</td>
-      <td>0.361579</td>
-      <td>0.304279</td>
-      <td>0.233501</td>
-      <td>0.159953</td>
-      <td>0.306085</td>
+      <td>0.421692</td>
+      <td>0.503869</td>
+      <td>0.247834</td>
+      <td>0.990421</td>
+      <td>0.647093</td>
+      <td>0.361457</td>
+      <td>0.304163</td>
+      <td>0.233304</td>
+      <td>0.159655</td>
+      <td>0.306167</td>
     </tr>
     <tr>
       <th>bool</th>
@@ -1268,23 +1268,23 @@ MultiIndex([(              &#39;LMRon&#39;,  &#39;med&#39;),
     <tr>
       <th>LMRoff, fGn</th>
       <th>med</th>
-      <td>0.421245</td>
-      <td>0.503559</td>
-      <td>0.248181</td>
-      <td>0.990221</td>
-      <td>0.646505</td>
-      <td>0.361433</td>
-      <td>0.304165</td>
-      <td>0.233629</td>
-      <td>0.160306</td>
-      <td>0.306193</td>
+      <td>0.421069</td>
+      <td>0.503272</td>
+      <td>0.248149</td>
+      <td>0.989832</td>
+      <td>0.646388</td>
+      <td>0.361237</td>
+      <td>0.304187</td>
+      <td>0.233429</td>
+      <td>0.159714</td>
+      <td>0.305916</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1"># add benchmarks</span>
@@ -1307,7 +1307,7 @@ MultiIndex([(              &#39;LMRon&#39;,  &#39;med&#39;),
 ensemble &amp; statistic &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  \\
 \midrule
 \multirow[t]{2}{*}{LMRon} &amp; med &amp; 0.26 &amp; 0.41 &amp; 0.49 &amp; 0.23 &amp; 0.98 &amp; 0.64 &amp; 0.35 &amp; 0.29 &amp; 0.22 &amp; 0.15 &amp; 0.29 \\
- &amp; bool &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 1.00 &amp; 0.00 &amp; 0.00 &amp; 1.00 &amp; 1.00 &amp; 1.00 &amp; 1.00 &amp; 1.00 \\
+ &amp; bool &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 1.00 &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 1.00 &amp; 1.00 &amp; 1.00 &amp; 1.00 \\
 \cline{1-13}
 \multirow[t]{2}{*}{LMRoff, AR(2)} &amp; med &amp; 0.18 &amp; 0.42 &amp; 0.50 &amp; 0.25 &amp; 0.99 &amp; 0.65 &amp; 0.36 &amp; 0.30 &amp; 0.23 &amp; 0.16 &amp; 0.31 \\
  &amp; bool &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 0.00 &amp; 1.00 &amp; 0.00 \\
@@ -1322,31 +1322,6 @@ ensemble &amp; statistic &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  &amp;  &amp; 
 \end{tabular}
 
 </pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&#39;/Users/julieneg/Documents/GitHub/paper-paleoReconEns/notebooks&#39;
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
 </div>
 </section>
 </section>
