@@ -6,7 +6,7 @@
 
 # -- Path setup --------------------------------------------------------------
 
-# If extensions (or modules to document with autodoc) are in another directory,
+# If extensions (or module{author}s to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
@@ -16,7 +16,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'pens'
-copyright = f'2024, Julien Emile-Geay, Feng Zhu'
+author = 'Julien Emile-Geay & Feng Zhu'
+copyright = '2024, Julien Emile-Geay, Feng Zhu'
 
 
 # -- General configuration ---------------------------------------------------

@@ -1,7 +1,7 @@
 
 Emile-Geay et al. (2024)
 ========================
-This section shows the usage of `pens` as in the paper entitled *Using offline data assimilation to diagnose temporal variability in paleoclimate metrics* submitted to *Journal of Climate* (Emile-Geay et al., 2024).
+This section shows the usage of `pens` as in the paper entitled *Temporal Comparisons Involving Paleoclimate Data Assimilation: Challenges & Remedies* submitted to *Journal of Climate* (Emile-Geay et al., 2024).
 
 .. toctree::
     :maxdepth: 1

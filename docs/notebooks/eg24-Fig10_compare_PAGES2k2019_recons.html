@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Consistency of the PAGES 2k ensemble &#8212; pens  documentation</title>
+    <title>[Fig. 10] Consistency of the PAGES 2k ensemble &#8212; pens  documentation</title>
   
   
   
@@ -54,8 +54,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/eg24-Fig10_compare_PAGES2k2019_recons';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="LMR v2.1 vs Büntgen et al ensemble" href="eg24-Fig11_12_compare_LMRvsB21.html" />
-    <link rel="prev" title="Schematic for the Plume Distance" href="eg24-Fig9_plume_distance-schematic.html" />
+    <link rel="next" title="[Figs. 11-12] LMR v2.1 vs Büntgen et al ensemble" href="eg24-Fig11_12_compare_LMRvsB21.html" />
+    <link rel="prev" title="[Fig. 9] Schematic for the Plume Distance" href="eg24-Fig9_plume_distance-schematic.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -163,15 +163,15 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../ug-installation.html">Installation</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../ug-eg24.html">Emile-Geay et al. (2024)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="eg24-Fig1_motivation.html">Motivation for the study</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eg24-Fig2_naive_resampling.html">Reproducing Fig 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eg24-Fig3_4_LMRonline.html">Making Figures 3 &amp; 4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eg24-Fig5_resampling.html">Ensemble resampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eg24-Fig6_8_plume_distance.html">Proximity Probability and Plume Distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eg24-Fig9_plume_distance-schematic.html">Schematic for the Plume Distance</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Consistency of the PAGES 2k ensemble</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eg24-Fig11_12_compare_LMRvsB21.html">LMR v2.1 vs Büntgen et al ensemble</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eg24-Tab1_LMR_PMIP3_proximity_table.html">Proximity of PMIP3 traces to LMR ensembles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Fig1_motivation.html">[Fig. 1] Motivation for the study</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Fig2_naive_resampling.html">[Fig. 2] Naïve sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Fig3_4_LMRonline.html">[Figs. 3-4] LMRonline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Fig5_resampling.html">[Fig. 5] Ensemble resampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Fig6_8_plume_distance.html">[Figs. 6-8] Proximity Probability and Plume Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Fig9_plume_distance-schematic.html">[Fig. 9] Schematic for the Plume Distance</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">[Fig. 10] Consistency of the PAGES 2k ensemble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Fig11_12_compare_LMRvsB21.html">[Figs. 11-12] LMR v2.1 vs Büntgen et al ensemble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eg24-Tab1_LMR_PMIP3_proximity_table.html">[Table 1] Proximity of PMIP3 traces to LMR ensembles</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../ug-api.html">API Reference</a></li>
@@ -361,7 +361,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Consistency of the PAGES 2k ensemble</h1>
+    <h1>[Fig. 10] Consistency of the PAGES 2k ensemble</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -389,8 +389,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="Consistency-of-the-PAGES-2k-ensemble">
-<h1>Consistency of the PAGES 2k ensemble<a class="headerlink" href="#Consistency-of-the-PAGES-2k-ensemble" title="Link to this heading">#</a></h1>
+  <section id="[Fig.-10]-Consistency-of-the-PAGES-2k-ensemble">
+<h1>[Fig. 10] Consistency of the PAGES 2k ensemble<a class="headerlink" href="#[Fig.-10]-Consistency-of-the-PAGES-2k-ensemble" title="Link to this heading">#</a></h1>
 <p>Here we apply notions of inter and intra-ensemble distance to measure the consistency of the <a class="reference external" href="https://www.nature.com/articles/s41561-019-0400-0">PAGES 2k (2019)</a> ensemble of GMST reconstructions. The notebook reproduces Fig 10 of the paper.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -1254,7 +1254,7 @@ Computing inter-ensemble distance: 100%|██████████| 1000/100
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Schematic for the Plume Distance</p>
+        <p class="prev-next-title">[Fig. 9] Schematic for the Plume Distance</p>
       </div>
     </a>
     <a class="right-next"
@@ -1262,7 +1262,7 @@ Computing inter-ensemble distance: 100%|██████████| 1000/100
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">LMR v2.1 vs Büntgen et al ensemble</p>
+        <p class="prev-next-title">[Figs. 11-12] LMR v2.1 vs Büntgen et al ensemble</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1303,7 +1303,7 @@ Computing inter-ensemble distance: 100%|██████████| 1000/100
   <div class="footer-item">
     
 <p class="component-author">
-By Author name not set
+By Julien Emile-Geay & Feng Zhu
 </p>
 
   </div>
