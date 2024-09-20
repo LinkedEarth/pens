@@ -1218,108 +1218,67 @@ class EnsembleTS:
 
         Parameters
         ----------
-        
         num_traces : int
             Number of traces to plot, chosen at random. Default is 5. 
-
         figsize : list, optional
-
             The figure size. The default is [10, 4].
-
         xlabel : str, optional
-
             x-axis label. The default is None.
-
         ylabel : str, optional
-
             y-axis label. The default is None.
-
         title : str, optional
-
             Plot title. The default is None.
-            
         label : str, optional
-        
             Label to use on the plot legend. 
             Automatically generated if not provided. 
-            
         seed : int, optional
             seed for the random number generator. Useful for reproducibility.
             The default is None. Disregarded if indices is not None
-            
         indices : int, optional
             (0-based) indices of the traces. 
             The default is None. If provided, supersedes "seed" and "num_traces".
-
         xlim : list, optional
-
             x-axis limits. The default is None.
-
         ylim : list, optional
-
             y-axis limits. The default is None.
-
         color : str, optional
-
             Color of the traces. The default uses the property cycler: https://matplotlib.org/stable/gallery/color/color_cycle_default.html
-
         alpha : float, optional
-
             Transparency of the lines representing the multiple members. The default is 0.3.
-
         linestyle : {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
-
             Set the linestyle of the line
-
         lw : float, optional
-
             Width of the lines representing the multiple members. The default is 0.5.
-
         num_traces : int, optional
-
             Number of traces to plot. The default is None, which will plot all traces. 
-
         savefig_settings : dict, optional
-
             the dictionary of arguments for plt.savefig(); some notes below:
-            - "path" must be specified; it can be any existed or non-existed path,
-                with or without a suffix; if the suffix is not given in "path", it will follow "format"
+
+            - "path" must be specified; it can be any existed or non-existed path, with or without a suffix;
+            if the suffix is not given in "path", it will follow "format"
+
             - "format" can be one of {"pdf", "eps", "png", "ps"} The default is None.
-
+            
         ax : matplotlib.ax, optional
-
             Matplotlib axis on which to return the plot. The default is None.
-
         plot_legend : bool; {True,False}, optional
-
             Whether to plot the legend. The default is True.
-
         lgd_kwargs : dict, optional
-
             Parameters for the legend. The default is None.
-
         seed : int, optional
-
             Set the seed for the random number generator. Useful for reproducibility. The default is None.
 
         Returns
         -------
-
         fig : matplotlib.figure
-        
             the figure object from matplotlib
             See [matplotlib.pyplot.figure](https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.figure.html) for details.
-
         ax : matplotlib.axis
-        
             the axis object from matplotlib
             See [matplotlib.axes](https://matplotlib.org/api/axes_api.html) for details.
-
             '''
         lgd_kwargs = {} if lgd_kwargs is None else lgd_kwargs.copy()
-        
         time_label, value_label = self.make_labels()
-        
         nts_max = 20
         
         if ax is None:
@@ -1345,7 +1304,6 @@ class EnsembleTS:
                 trace_idx = range(nts_max)
             trace_lbl = label if label is not None else f'sample paths (n={num_traces})'
             
-            
         # define colors
         if color is None:
             colors = plt.rcParams['axes.prop_cycle'].by_key()['color'][:num_traces]
@@ -1362,8 +1320,7 @@ class EnsembleTS:
         line = [[(0, 0)]]
         # set up the proxy artist
         nlines = np.min([num_traces, 5])
-        lc = mcol.LineCollection(nlines * line, colors=colors[:nlines],
-                                 alpha=alpha, linewidth=1.5*lw) # make slightly thicker to increase visibility
+        lc = mcol.LineCollection(nlines * line, colors=colors[:nlines], alpha=alpha, linewidth=1.5*lw) # make slightly thicker to increase visibility
           
         if xlabel is not None:
             ax.set_xlabel(xlabel)

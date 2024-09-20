@@ -12,4 +12,4 @@ Utilities
 ---------
 
 .. automodule:: pens.utils
-   :members: model_acf, hdi1d
+   :members: hdi1d

@@ -19,58 +19,6 @@ def kl_div(p, q):
     res = np.sum(vec)
     return res
 
-# def model_acf(model, param, max_lag):        
-#      '''
-#      Generates the autocorrelation function (ACF) of a timeseries model given its parameters. 
-     
-#      Parameters
-#      ----------
-     
-#      model : str
-#          Name of the stochastic model describing the temporal behavior. Accepted choices are:
-
-#          - `ar`: autoregressive model, see  https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar
-#          - `fGn`: fractional Gaussian noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise 
-#          - `power-law`: aka Colored Noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise
-         
-#      param : variable type 
-#          parameter of the model. 
-
-#          - `ar`: param is the result from fitting with Statsmodels Autoreg.fit()
-#          - `fGn`: param is the Hurst exponent, H (float)
-#          - `power-law`: param is the spectral exponent beta (float)
-         
-#          Under allowable values, `fGn` and `power-law` should return equivalent results as long as H = (beta+1)/2 and H in [0, 1)
-      
-#      max_lag : int
-#          maximum lag    
-
-#      Returns
-#      -------
-#      ACF : numpy array, length max_lag (zero is included)                                                                                                            
-      
-#      '''
-#      k = np.arange(max_lag)  # vector of lags
-#      if model == 'power-law':  # https://www.dsprelated.com/showarticle/40.php
-#          if param>1:
-#              raise ValueError('β>1 will result in nonstationary autocovariance. Use a different model/parameter')
-#          else:
-#              acf = k**(param-1)  # what normalization ?
-#          acf = k**(param-1)
-#      elif model == 'fGn':
-#          H = param
-#          acf = 0.5*(np.abs(k+1)**(2*H) + np.abs(k-1)**(2*H) - 2 * np.abs(k)**(2*H))  
-#      elif model == 'ar':
-#          arparams = np.r_[1, -param[1:]]
-#          maparams = np.r_[1, np.zeros_like(param)]
-#          acf = arma_acf(ar = arparams, ma = maparams,lags=max_lag)
-        
-#      return acf   
-             
-     
-     
-
-
 def hdi1d(ary, hdi_prob, skipna=True):
     '''Compute highest density interval over a 1d array.
     h/t: Arviz code: https://arviz-devs.github.io/arviz/_modules/arviz/stats/stats.html#hdi
