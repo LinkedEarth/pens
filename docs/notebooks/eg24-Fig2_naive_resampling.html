@@ -764,7 +764,7 @@ document.write(`
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:11&lt;00:00, 180.41it/s]
+Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:34&lt;00:00, 57.61it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -780,7 +780,7 @@ Performing spectral analysis on individual series: 100%|████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:13&lt;00:00, 148.28it/s]
+Applying the anti-alias filter: 100%|██████████| 2000/2000 [00:13&lt;00:00, 148.34it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -798,7 +798,7 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Performing spectral analysis on individual series: 100%|██████████| 2000/2000 [00:10&lt;00:00, 182.18it/s]
+Performing spectral analysis on individual series:  93%|█████████▎| 1860/2000 [00:33&lt;00:02, 52.91it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -857,8 +857,6 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">())</span>
 <span class="c1"># split the legend in 2 parts</span>
 <span class="n">h</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
-<span class="c1">#l2=</span>
-<span class="c1">#l2 = [f&#39;{hdi_score[k]:3.3f}&#39; for k in range(ns)]</span>
 <span class="n">legend1</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">h</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">legend1</span><span class="p">)</span>
 <span class="n">l2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
@@ -874,7 +872,6 @@ Applying the anti-alias filter: 100%|██████████| 2000/2000 [
 <span class="n">esm_spec</span> <span class="o">=</span> <span class="n">esm</span><span class="o">.</span><span class="n">spectral</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span><span class="s1">&#39;mtm&#39;</span><span class="p">,</span><span class="n">settings</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;standardize&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">})</span>
 <span class="n">esm_beta</span> <span class="o">=</span> <span class="n">esm_spec</span><span class="o">.</span><span class="n">anti_alias</span><span class="p">()</span><span class="o">.</span><span class="n">beta_est</span><span class="p">()</span> <span class="c1"># estimate spectral exponent</span>
 <span class="n">esm_beta</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylims</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-             <span class="c1">#lgd_kwargs={&#39;loc&#39;:&#39;upper right&#39;,&#39;fontsize&#39;:8})</span>
 <span class="n">h</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
 <span class="n">legend1</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">h</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">9</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">legend1</span><span class="p">)</span>

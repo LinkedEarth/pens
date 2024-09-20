@@ -12,4 +12,4 @@ Utilities
 ---------
 
 .. automodule:: pens.utils
-   :members: hdi1d
+   :members:

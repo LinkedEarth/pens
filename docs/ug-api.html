@@ -392,6 +392,8 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pens.utils">Utilities</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.hdi1d"><code class="docutils literal notranslate"><span class="pre">hdi1d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.means_and_trends_ensemble"><code class="docutils literal notranslate"><span class="pre">means_and_trends_ensemble()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.standardize"><code class="docutils literal notranslate"><span class="pre">standardize()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -627,7 +629,7 @@ If None (default) is specified, will attempt to use the object’s label.</p></l
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pens.ens.EnsembleTS.plot_traces">
-<span class="sig-name descname"><span class="pre">plot_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_traces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lgd_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot_traces" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_traces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lgd_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot_traces" title="Link to this definition">#</a></dt>
 <dd><p>Plot EnsembleTS as a subset of traces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -652,10 +654,8 @@ The default is None. If provided, supersedes “seed” and “num_traces”.</p
 <li><p><strong>num_traces</strong> – Number of traces to plot. The default is None, which will plot all traces.</p></li>
 <li><p><strong>savefig_settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>the dictionary of arguments for plt.savefig(); some notes below:</p>
 <ul>
-<li><p>”path” must be specified; it can be any existed or non-existed path, with or without a suffix;</p></li>
-</ul>
-<p>if the suffix is not given in “path”, it will follow “format”</p>
-<ul>
+<li><p>”path” must be specified; it can be any existed or non-existed path, with or without a suffix;
+if the suffix is not given in “path”, it will follow “format”</p></li>
 <li><p>”format” can be one of {“pdf”, “eps”, “png”, “ps”} The default is None.</p></li>
 </ul>
 </p></li>
@@ -900,6 +900,66 @@ h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.i
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="pens.utils.means_and_trends_ensemble">
+<span class="sig-prename descclassname"><span class="pre">pens.utils.</span></span><span class="sig-name descname"><span class="pre">means_and_trends_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">years</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.utils.means_and_trends_ensemble" title="Link to this definition">#</a></dt>
+<dd><dl>
+<dt>Calculates the means and trends on an ensemble array</dt><dd><blockquote>
+<div><p>Uses statsmodels’ OLS method</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>var:                2d numpy array [time, ens member]
+segment_length:     # elements in block (integer)
+step:               step size (integer)
+years:              1d numpy array</p>
+</dd>
+<dt>Outputs:</dt><dd><p>means:      Means of every segment.
+trends:     trends over every segment.
+idxs:       The first and last index of every segment, for record-keeping.
+tm:         median time point of each block</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Author: Julien Emile-Geay, based on code by Michael P. Erb.
+Date: March 8, 2018</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pens.utils.standardize">
+<span class="sig-prename descclassname"><span class="pre">pens.utils.</span></span><span class="sig-name descname"><span class="pre">standardize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.utils.standardize" title="Link to this definition">#</a></dt>
+<dd><p>Centers and normalizes a time series. Constant or nearly constant time series not rescaled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array</em>) – vector of (real) numbers as a time series, NaNs allowed</p></li>
+<li><p><strong>scale</strong> (<em>real</em>) – A scale factor used to scale a record to a match a given variance</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em> or </em><em>None</em>) – axis along which to operate, if None, compute over the whole array</p></li>
+<li><p><strong>ddof</strong> (<em>int</em>) – degress of freedom correction in the calculation of the standard deviation</p></li>
+<li><p><strong>eps</strong> (<em>real</em>) – a threshold to determine if the standard deviation is too close to zero</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>z</strong> (<em>array</em>) – The standardized time series (z-score), Z = (X - E[X])/std(X)*scale, NaNs allowed</p></li>
+<li><p><strong>mu</strong> (<em>real</em>) – The mean of the original time series, E[X]</p></li>
+<li><p><strong>sig</strong> (<em>real</em>) – The standard deviation of the original time series, std[X]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Tapio Schneider’s MATLAB code: <a class="github reference external" href="https://github.com/tapios/RegEM/blob/master/standardize.m">tapios/RegEM</a></p>
+<p>The zscore function in SciPy: <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.zscore.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.zscore.html</a></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyleoclim.utils.tsutils.preprocess</span></code></dt><dd><p>pre-processes a times series using standardization and detrending.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
 </section>
 </section>
 
@@ -967,6 +1027,8 @@ h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.i
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pens.utils">Utilities</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.hdi1d"><code class="docutils literal notranslate"><span class="pre">hdi1d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.means_and_trends_ensemble"><code class="docutils literal notranslate"><span class="pre">means_and_trends_ensemble()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.standardize"><code class="docutils literal notranslate"><span class="pre">standardize()</span></code></a></li>
 </ul>
 </li>
 </ul>

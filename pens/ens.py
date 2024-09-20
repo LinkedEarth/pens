@@ -15,7 +15,6 @@ import scipy.linalg as linalg
 from scipy.stats import gaussian_kde 
 from scipy.stats import mode, iqr
 from scipy.stats import percentileofscore 
-from pyleoclim.utils.tsutils import standardize
 from statsmodels.tsa.arima_process import arma_generate_sample
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import properscoring as ps
@@ -549,14 +548,14 @@ class EnsembleTS:
             from stochastic.processes.noise import ColoredNoise
             for j in tqdm(range(p)):
                 CN = ColoredNoise(beta=param,t=N)
-                z, _, _ = standardize(CN.sample(N-1))
+                z, _, _ = utils.standardize(CN.sample(N-1))
                 paths[:,j] = z
                  
         elif model == 'fGn':
             from stochastic.processes.noise import FractionalGaussianNoise
             for j in tqdm(range(p)):
                 fgn = FractionalGaussianNoise(hurst=param, t=N)
-                z, _, _ = standardize(fgn.sample(N, algorithm='daviesharte')) 
+                z, _, _ = utils.standardize(fgn.sample(N, algorithm='daviesharte')) 
                 paths[:,j] = z
             
         elif model == 'ar':
@@ -567,7 +566,7 @@ class EnsembleTS:
            
             for j in tqdm(range(p)):
                 y = arma_generate_sample(arparams, maparams, N)
-                z, _, _ = standardize(y)
+                z, _, _ = utils.standardize(y)
                 paths[:,j] = z
           
         new = self.copy()                 
@@ -953,8 +952,8 @@ class EnsembleTS:
             d = self.nt
             print('No truncation provided. Using all ' +str(d)+ ' modes')
              
-        ys1, mu1, std1 = standardize(y1)
-        ys2, mu2, std2 = standardize(y2)
+        ys1, mu1, std1 = utils.standardize(y1)
+        ys2, mu2, std2 = utils.standardize(y2)
         
         # form covariance matrix
         Sigma = linalg.toeplitz(acf)
@@ -974,87 +973,8 @@ class EnsembleTS:
         loglik = np.sum(Psi_2[:d]) - np.sum(Psi_1[:d])
         lik = np.exp(loglik)
         
-        # gather diagnostics
-        #diag = {}
-        #diag['var '] = np.cumsum(eigvals)/eigvals.sum()*100
-                     
         return lik
         
-    # def likelihood(self, target, acf, inv_method = 'pseudoinverse'):
-    #     '''
-    #     Computes the likelihood of observing a target trajectory conditional on 
-    #     the ensemble's distribution (self).
-    #     Removes deterministic trends and time-dependent scaling ; make sure the
-    #     specified autocorrelation function (acf) corresponds to a model fit 
-    #     under such assumptions.
-        
-    #     Parameters
-    #     ----------
-        
-    #     target : Pyleoclim Series object
-    #         Timeseries to be evaluated against ensemble EnsTS
-            
-    #     acf : array (same length as EnsTS and target)
-    #         autocorrelation function associated with the model
-        
-    #     inv_method : str
-    #         Method to use in inverting the covariance matrix
-    #         Acceptable choices include:
-    #         - Moore-Penrose inverse ('pseudoinverse') [default]
-    #         - Chen, Wiesel, and Hero (2009) ('CWH09') see https://arxiv.org/pdf/1009.5331.pdf
-    #     (the last one courtesy of the covar package: https://pythonhosted.org/covar/)
-
-    #     Returns
-    #     -------
-    #     L : likelihood ratio between the target and the ensemble mean
-    #     D : Mahalanobis distance to the ensemble mean
-    #     '''
-        
-        
-    #     y = target.value
-    #     mu = self.get_mean().value[:,0]
-    #     sig = self.get_std().value[:,0]
-        
-    #     #self = (self - mu)/sig
-    #     ys = (y - mu)/sig
-
-    #     if len(y) != self.nt:
-    #         raise ValueError("The series and ensemble must have the same time dimension")
-             
-    #     # form covariance matrix
-    #     Sigma = linalg.toeplitz(acf)
-        
-    #     # compute its inverse
-    #     if inv_method == 'pseudoinverse':
-    #         Sigma_i = linalg.pinv(Sigma)
-    #     elif inv_method == 'CWH09':
-    #         # first estimate the ACF e-folding scale to get DOFs
-    #         monoExp = lambda x, A, tau: A*np.exp(-x/tau)
-    #         lags = np.arange(self.nt)
-    #         p0 = (1, 10) # start with values near those we expect
-    #         params, cv = curve_fit(monoExp, lags, acf, p0)
-    #         tau = params[1] # e-folding time
-    #         dof =  0.5*self.nt/tau  # https://www.earthinversion.com/geophysics/estimation-degrees-of-freedom/
-    #         Sigma_i, g  = covar.cov_shrink_rblw(Sigma,n=dof)  
-    #         print('Optimal Covariance Shrinkage: {:3.2f}'.format(g))
-     
-    #     # Mahalanobis distance
-    #     d2 = ys.T.dot(Sigma_i).dot(ys)
-    #     D = np.sqrt(d2)
-    #     # likelihood
-    #     L = np.exp(-d2/2) 
-
-    #     #dy = scipy.spatial.distance.mahalanobis(y,mu,Sigma_i)
-        
-    #     # compute the log PDFs (vectors are so large that the numbers are impossibly close to 0 otherwise)
-    #     #log_y = multivariate_normal.logpdf(y, mean=0, cov=Sigma, allow_singular=True)
-    #     #log_mu = multivariate_normal.logpdf(0, mean=0, cov=Sigma, allow_singular=True)
-    #     #loglik = log_y-log_mu
-        
-        
-    #     return L, D
-            
-
    
     def line_density(self, figsize=[10, 4], cmap='Greys', color_scale='linear', bins=None, num_fine=None,
         xlabel= None, ylabel=None, title=None, ylim=None, xlim=None, 
@@ -1212,7 +1132,7 @@ class EnsembleTS:
         
     def plot_traces(self, num_traces = 5, figsize=[10, 4], title=None, label = None,
                     seed = None, indices = None, xlim=None, ylim=None, color = None,
-                    linestyle='-', ax=None, plot_legend=True,  lgd_kwargs=None,
+                    ax=None, plot_legend=True,  lgd_kwargs=None,
                     xlabel=None, ylabel=None, lw=0.5, alpha=0.1):
         '''Plot EnsembleTS as a subset of traces.
 
@@ -1220,51 +1140,69 @@ class EnsembleTS:
         ----------
         num_traces : int
             Number of traces to plot, chosen at random. Default is 5. 
+
         figsize : list, optional
             The figure size. The default is [10, 4].
+
         xlabel : str, optional
             x-axis label. The default is None.
+
         ylabel : str, optional
             y-axis label. The default is None.
+
         title : str, optional
             Plot title. The default is None.
+
         label : str, optional
             Label to use on the plot legend. 
             Automatically generated if not provided. 
+
         seed : int, optional
             seed for the random number generator. Useful for reproducibility.
             The default is None. Disregarded if indices is not None
+
         indices : int, optional
             (0-based) indices of the traces. 
             The default is None. If provided, supersedes "seed" and "num_traces".
+
         xlim : list, optional
             x-axis limits. The default is None.
+
         ylim : list, optional
             y-axis limits. The default is None.
+
         color : str, optional
             Color of the traces. The default uses the property cycler: https://matplotlib.org/stable/gallery/color/color_cycle_default.html
+
         alpha : float, optional
             Transparency of the lines representing the multiple members. The default is 0.3.
+
         linestyle : {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
             Set the linestyle of the line
+
         lw : float, optional
             Width of the lines representing the multiple members. The default is 0.5.
+
         num_traces : int, optional
             Number of traces to plot. The default is None, which will plot all traces. 
+
         savefig_settings : dict, optional
             the dictionary of arguments for plt.savefig(); some notes below:
 
             - "path" must be specified; it can be any existed or non-existed path, with or without a suffix;
-            if the suffix is not given in "path", it will follow "format"
+              if the suffix is not given in "path", it will follow "format"
 
             - "format" can be one of {"pdf", "eps", "png", "ps"} The default is None.
             
         ax : matplotlib.ax, optional
             Matplotlib axis on which to return the plot. The default is None.
+
         plot_legend : bool; {True,False}, optional
             Whether to plot the legend. The default is True.
+
         lgd_kwargs : dict, optional
             Parameters for the legend. The default is None.
+
         seed : int, optional
             Set the seed for the random number generator. Useful for reproducibility. The default is None.
 
