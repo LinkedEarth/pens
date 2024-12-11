@@ -1596,7 +1596,7 @@ class EnsembleTS:
                             title_kwargs=None, lgd_kwargs=None, tag='mean', label=None, color=None):
         title_kwargs = {} if title_kwargs is None else title_kwargs
         lgd_kwargs = {} if lgd_kwargs is None else lgd_kwargs
-        ax.margins(0)
+        
 
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
@@ -1637,6 +1637,7 @@ class EnsembleTS:
         _lgd_kwargs.update(lgd_kwargs)
         ax.legend(**_lgd_kwargs)
         ax.set_xlabel(xlabel)
+        ax.margins(0)
 
         if not hide_ylabel:
             ax.set_ylabel('Probability Density')
