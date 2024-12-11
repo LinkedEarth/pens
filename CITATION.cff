@@ -7,9 +7,7 @@ authors:
   - family-names: "Emile-Geay"
     given-names: "Julien"
     orcid: "https://orcid.org/0000-0001-5920-4751"
-
 title: "pens: Utilities for comparing paleoclimate reconstruction ensembles"
-version 2024.9.19,
-doi: TBD
+version: 2024.9.19
 date-released: 2024-09-19
 url: "https://github.com/LinkedEarth/pens"
