@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Zhu"
+    given-names: "Feng"
+    orcid: "https://orcid.org/0000-0002-9969-2953"
+  - family-names: "Emile-Geay"
+    given-names: "Julien"
+    orcid: "https://orcid.org/0000-0001-5920-4751"
+
+title: "pens: Utilities for comparing paleoclimate reconstruction ensembles"
+version 2024.9.19,
+doi: TBD
+date-released: 2024-09-19
+url: "https://github.com/LinkedEarth/pens"
