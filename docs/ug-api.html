@@ -51,7 +51,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'ug-api';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="LMR v2.1 vs Büntgen et al ensemble" href="notebooks/eg24-compare_LMRvsB21.html" />
+    <link rel="prev" title="[Table 1] Proximity of PMIP3 traces to LMR ensembles" href="notebooks/eg24-Tab1_LMR_PMIP3_proximity_table.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -156,14 +156,15 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="ug-installation.html">Installation</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="ug-eg24.html">Emile-Geay et al. (2024)</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig1_motivation.html">Motivation for the study</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig2_naive_resampling.html">Reproducing Fig 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig3_4_LMRonline.html">Making Figures 3 &amp; 4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig5_resampling.html">Ensemble resampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-plume_distance.html">Proximity Probability and Plume Distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-LMR_PMIP3_proximity_table.html">Proximity of PMIP3 traces to LMR ensembles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-compare_PAGES2k2019_recons.html">Consistency of the PAGES 2k ensemble</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-compare_LMRvsB21.html">LMR v2.1 vs Büntgen et al ensemble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig1_motivation.html">[Fig. 1] Motivation for the study</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig2_naive_resampling.html">[Fig. 2] Naïve sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig3_4_LMRonline.html">[Figs. 3-4] LMRonline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig5_resampling.html">[Fig. 5] Ensemble resampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig6_8_plume_distance.html">[Figs. 6-8] Proximity Probability and Plume Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig9_plume_distance-schematic.html">[Fig. 9] Schematic for the Plume Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig10_compare_PAGES2k2019_recons.html">[Fig. 10] Consistency of the PAGES 2k ensemble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Fig11_12_compare_LMRvsB21.html">[Figs. 11-12] LMR v2.1 vs Büntgen et al ensemble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/eg24-Tab1_LMR_PMIP3_proximity_table.html">[Table 1] Proximity of PMIP3 traces to LMR ensembles</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">API Reference</a></li>
@@ -391,7 +392,8 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pens.utils">Utilities</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.hdi1d"><code class="docutils literal notranslate"><span class="pre">hdi1d()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.model_acf"><code class="docutils literal notranslate"><span class="pre">model_acf()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.means_and_trends_ensemble"><code class="docutils literal notranslate"><span class="pre">means_and_trends_ensemble()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.standardize"><code class="docutils literal notranslate"><span class="pre">standardize()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -627,7 +629,7 @@ If None (default) is specified, will attempt to use the object’s label.</p></l
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pens.ens.EnsembleTS.plot_traces">
-<span class="sig-name descname"><span class="pre">plot_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_traces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lgd_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'grey'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot_traces" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_traces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_traces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">4]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lgd_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plot_traces" title="Link to this definition">#</a></dt>
 <dd><p>Plot EnsembleTS as a subset of traces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -645,17 +647,15 @@ The default is None. Disregarded if indices is not None</p></li>
 The default is None. If provided, supersedes “seed” and “num_traces”.</p></li>
 <li><p><strong>xlim</strong> (<em>list</em><em>, </em><em>optional</em>) – x-axis limits. The default is None.</p></li>
 <li><p><strong>ylim</strong> (<em>list</em><em>, </em><em>optional</em>) – y-axis limits. The default is None.</p></li>
-<li><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color of the traces. The default is sns.xkcd_rgb[‘pale red’].</p></li>
+<li><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color of the traces. The default uses the property cycler: <a class="reference external" href="https://matplotlib.org/stable/gallery/color/color_cycle_default.html">https://matplotlib.org/stable/gallery/color/color_cycle_default.html</a></p></li>
 <li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – Transparency of the lines representing the multiple members. The default is 0.3.</p></li>
 <li><p><strong>linestyle</strong> (<em>{'-'</em><em>, </em><em>'--'</em><em>, </em><em>'-.'</em><em>, </em><em>':'</em><em>, </em><em>''</em><em>, </em><em>(</em><em>offset</em><em>, </em><em>on-off-seq</em><em>)</em><em>, </em><em>...</em><em>}</em>) – Set the linestyle of the line</p></li>
 <li><p><strong>lw</strong> (<em>float</em><em>, </em><em>optional</em>) – Width of the lines representing the multiple members. The default is 0.5.</p></li>
 <li><p><strong>num_traces</strong> – Number of traces to plot. The default is None, which will plot all traces.</p></li>
-<li><p><strong>savefig_settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>the dictionary of arguments for plt.savefig(); some notes below:
-- “path” must be specified; it can be any existed or non-existed path,</p>
-<blockquote>
-<div><p>with or without a suffix; if the suffix is not given in “path”, it will follow “format”</p>
-</div></blockquote>
+<li><p><strong>savefig_settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>the dictionary of arguments for plt.savefig(); some notes below:</p>
 <ul>
+<li><p>”path” must be specified; it can be any existed or non-existed path, with or without a suffix;
+if the suffix is not given in “path”, it will follow “format”</p></li>
 <li><p>”format” can be one of {“pdf”, “eps”, “png”, “ps”} The default is None.</p></li>
 </ul>
 </p></li>
@@ -679,7 +679,7 @@ See [matplotlib.axes](<a class="reference external" href="https://matplotlib.org
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pens.ens.EnsembleTS.plume_distance">
-<span class="sig-name descname"><span class="pre">plume_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plume_distance" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plume_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spread_stat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'IQR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.plume_distance" title="Link to this definition">#</a></dt>
 <dd><p>Compute the (quantile-based) characteristic distance between
 a plume (ensemble) and another object (whether a single trace or another plume).
 Searches for quantile q of the “proximity probability” distribution</p>
@@ -687,11 +687,14 @@ Searches for quantile q of the “proximity probability” distribution</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>length self.nt</em>) – trace/plume whose probability is to be assessed</p></li>
-<li><p><strong>max_dist</strong> (<em>maximum distance to consider in the calculation</em><em> of </em><em>proximity probabilities</em>) – default is 1, which may or may not make sense for your application!</p></li>
-<li><p><strong>num</strong> (<em>int</em>) – number of discrete points for the estimation of the distance distribution</p></li>
-<li><p><strong>order</strong> (<em>int</em><em>, or </em><em>inf</em>) – Order of the norm. inf means numpy’s inf object. The default is 1.</p></li>
 <li><p><strong>q</strong> (<em>float</em>) – Quantile from which the characteristic distance is derived. Default = 0.5 (median)</p></li>
+<li><p><strong>order</strong> (<em>int</em><em>, or </em><em>inf</em>) – Order of the norm. inf means numpy’s inf object. The default is 1.</p></li>
+<li><p><strong>spread_stat</strong> (<em>str</em>) – Statistic to be used for distributional spread. Choices: ‘SD’, ‘IQR’ or ‘HDI’
+SD is the standard deviation, appropriate for Gaussian situations
+IQR (default) is the interquartile-range (a non-parametric measure, robust and resistant)
+HDI returns the 95% highest-density interval as a NumPy 2-array</p></li>
 <li><p><strong>dist</strong> (<em>array-like</em><em>, </em><em>length self.nEns</em>) – if provided, uses this as vector of distances. Otherwise it is computed internally</p></li>
+<li><p><strong>nsamples</strong> (<em>int</em>) – number of samples to use from the ensemble. Default is None, which uses all samples.</p></li>
 </ul>
 </dd>
 </dl>
@@ -704,10 +707,11 @@ Searches for quantile q of the “proximity probability” distribution</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>charac_eps</strong> – Representative distance (in same units as self or y)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>eps_q</strong> (<em>float</em>) – Representative distance at quantile q (in same units as self or y)</p></li>
+<li><p><strong>eps_spread</strong> (<em>float</em>) – Measure of distributional spread</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -813,12 +817,15 @@ if timespan = [a, b, c, d], then the sliced output includes segment [a, b] and s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pens.ens.EnsembleTS.subsample">
-<span class="sig-name descname"><span class="pre">subsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nsamples</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.subsample" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">subsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nsamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.ens.EnsembleTS.subsample" title="Link to this definition">#</a></dt>
 <dd><p>Thin out original ensemble by drawing nsamples at random</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nsamples</strong> (<em>int</em>) – number of samples to draw at random from the original ensemble.
-If nsamples &gt;= self.nEns, no change is made.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nsamples</strong> (<em>int</em>) – number of samples to draw at random from the original ensemble.
+If nsamples &gt;= self.nEns, the object is returned unchanged.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – seed for the random generator (provided for reproducibility)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>res</strong> – Downsized object.</p>
@@ -894,37 +901,63 @@ h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.i
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pens.utils.model_acf">
-<span class="sig-prename descclassname"><span class="pre">pens.utils.</span></span><span class="sig-name descname"><span class="pre">model_acf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.utils.model_acf" title="Link to this definition">#</a></dt>
-<dd><p>Generates the autocorrelation function (ACF) of a timeseries model given its parameters.</p>
+<dt class="sig sig-object py" id="pens.utils.means_and_trends_ensemble">
+<span class="sig-prename descclassname"><span class="pre">pens.utils.</span></span><span class="sig-name descname"><span class="pre">means_and_trends_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">years</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.utils.means_and_trends_ensemble" title="Link to this definition">#</a></dt>
+<dd><dl>
+<dt>Calculates the means and trends on an ensemble array</dt><dd><blockquote>
+<div><p>Uses statsmodels’ OLS method</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>var:                2d numpy array [time, ens member]
+segment_length:     # elements in block (integer)
+step:               step size (integer)
+years:              1d numpy array</p>
+</dd>
+<dt>Outputs:</dt><dd><p>means:      Means of every segment.
+trends:     trends over every segment.
+idxs:       The first and last index of every segment, for record-keeping.
+tm:         median time point of each block</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Author: Julien Emile-Geay, based on code by Michael P. Erb.
+Date: March 8, 2018</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pens.utils.standardize">
+<span class="sig-prename descclassname"><span class="pre">pens.utils.</span></span><span class="sig-name descname"><span class="pre">standardize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pens.utils.standardize" title="Link to this definition">#</a></dt>
+<dd><p>Centers and normalizes a time series. Constant or nearly constant time series not rescaled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>str</em>) – <p>Name of the stochastic model describing the temporal behavior. Accepted choices are:</p>
-<ul>
-<li><p><cite>ar</cite>: autoregressive model, see  <a class="reference external" href="https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar">https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar</a></p></li>
-<li><p><cite>fGn</cite>: fractional Gaussian noise, see <a class="reference external" href="https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise">https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise</a></p></li>
-<li><p><cite>power-law</cite>: aka Colored Noise, see <a class="reference external" href="https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise">https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise</a></p></li>
-</ul>
-</p></li>
-<li><p><strong>param</strong> (<em>variable type</em>) – <p>parameter of the model.</p>
-<ul>
-<li><p><cite>ar</cite>: param is the result from fitting with Statsmodels Autoreg.fit()</p></li>
-<li><p><cite>fGn</cite>: param is the Hurst exponent, H (float)</p></li>
-<li><p><cite>power-law</cite>: param is the spectral exponent beta (float)</p></li>
-</ul>
-<p>Under allowable values, <cite>fGn</cite> and <cite>power-law</cite> should return equivalent results as long as H = (beta+1)/2 and H in [0, 1)</p>
-</p></li>
-<li><p><strong>max_lag</strong> (<em>int</em>) – maximum lag</p></li>
+<li><p><strong>x</strong> (<em>array</em>) – vector of (real) numbers as a time series, NaNs allowed</p></li>
+<li><p><strong>scale</strong> (<em>real</em>) – A scale factor used to scale a record to a match a given variance</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em> or </em><em>None</em>) – axis along which to operate, if None, compute over the whole array</p></li>
+<li><p><strong>ddof</strong> (<em>int</em>) – degress of freedom correction in the calculation of the standard deviation</p></li>
+<li><p><strong>eps</strong> (<em>real</em>) – a threshold to determine if the standard deviation is too close to zero</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ACF</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy array, length max_lag (zero is included)</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>z</strong> (<em>array</em>) – The standardized time series (z-score), Z = (X - E[X])/std(X)*scale, NaNs allowed</p></li>
+<li><p><strong>mu</strong> (<em>real</em>) – The mean of the original time series, E[X]</p></li>
+<li><p><strong>sig</strong> (<em>real</em>) – The standard deviation of the original time series, std[X]</p></li>
+</ul>
+</p>
 </dd>
 </dl>
+<p class="rubric">References</p>
+<p>Tapio Schneider’s MATLAB code: <a class="github reference external" href="https://github.com/tapios/RegEM/blob/master/standardize.m">tapios/RegEM</a></p>
+<p>The zscore function in SciPy: <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.zscore.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.zscore.html</a></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyleoclim.utils.tsutils.preprocess</span></code></dt><dd><p>pre-processes a times series using standardization and detrending.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 </section>
@@ -942,12 +975,12 @@ h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.i
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="notebooks/eg24-compare_LMRvsB21.html"
+       href="notebooks/eg24-Tab1_LMR_PMIP3_proximity_table.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">LMR v2.1 vs Büntgen et al ensemble</p>
+        <p class="prev-next-title">[Table 1] Proximity of PMIP3 traces to LMR ensembles</p>
       </div>
     </a>
 </div>
@@ -994,7 +1027,8 @@ h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.i
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pens.utils">Utilities</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.hdi1d"><code class="docutils literal notranslate"><span class="pre">hdi1d()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.model_acf"><code class="docutils literal notranslate"><span class="pre">model_acf()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.means_and_trends_ensemble"><code class="docutils literal notranslate"><span class="pre">means_and_trends_ensemble()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pens.utils.standardize"><code class="docutils literal notranslate"><span class="pre">standardize()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1010,6 +1044,10 @@ h/t: Arviz code: <a class="reference external" href="https://arviz-devs.github.i
   
   <div class="footer-item">
     
+<p class="component-author">
+By Julien Emile-Geay & Feng Zhu
+</p>
+
   </div>
   
   <div class="footer-item">

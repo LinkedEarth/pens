@@ -5,7 +5,7 @@ with open('README.rst', 'r') as fh:
 
 setup(
     name='pens',  # required
-    version='2024.8.23',
+    version='2024.9.19',
     description='pens: utilities for comparing paleoclimate reconstruction ensembles',
     long_description=long_description,
     long_description_content_type='text/x-rst',
@@ -33,7 +33,6 @@ setup(
         'cftime',
         'statsmodels',
         'properscoring',
-        'pyleoclim',
         'more_itertools',
         'num2tex'
     ],

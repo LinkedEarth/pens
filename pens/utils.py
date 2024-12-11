@@ -2,7 +2,6 @@ import numpy as np
 from scipy.special import rel_entr
 import statsmodels.api as sm
 from statsmodels.tsa.arima_process import arma_acf
-#import pyleoclim as pyleo
 from tqdm import tqdm
 
 def kl_div(p, q):
@@ -18,58 +17,6 @@ def kl_div(p, q):
     vec = rel_entr(p, q)
     res = np.sum(vec)
     return res
-
-# def model_acf(model, param, max_lag):        
-#      '''
-#      Generates the autocorrelation function (ACF) of a timeseries model given its parameters. 
-     
-#      Parameters
-#      ----------
-     
-#      model : str
-#          Name of the stochastic model describing the temporal behavior. Accepted choices are:
-
-#          - `ar`: autoregressive model, see  https://www.statsmodels.org/dev/tsa.html#univariate-autoregressive-processes-ar
-#          - `fGn`: fractional Gaussian noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.FractionalGaussianNoise 
-#          - `power-law`: aka Colored Noise, see https://stochastic.readthedocs.io/en/stable/noise.html#stochastic.processes.noise.ColoredNoise
-         
-#      param : variable type 
-#          parameter of the model. 
-
-#          - `ar`: param is the result from fitting with Statsmodels Autoreg.fit()
-#          - `fGn`: param is the Hurst exponent, H (float)
-#          - `power-law`: param is the spectral exponent beta (float)
-         
-#          Under allowable values, `fGn` and `power-law` should return equivalent results as long as H = (beta+1)/2 and H in [0, 1)
-      
-#      max_lag : int
-#          maximum lag    
-
-#      Returns
-#      -------
-#      ACF : numpy array, length max_lag (zero is included)                                                                                                            
-      
-#      '''
-#      k = np.arange(max_lag)  # vector of lags
-#      if model == 'power-law':  # https://www.dsprelated.com/showarticle/40.php
-#          if param>1:
-#              raise ValueError('β>1 will result in nonstationary autocovariance. Use a different model/parameter')
-#          else:
-#              acf = k**(param-1)  # what normalization ?
-#          acf = k**(param-1)
-#      elif model == 'fGn':
-#          H = param
-#          acf = 0.5*(np.abs(k+1)**(2*H) + np.abs(k-1)**(2*H) - 2 * np.abs(k)**(2*H))  
-#      elif model == 'ar':
-#          arparams = np.r_[1, -param[1:]]
-#          maparams = np.r_[1, np.zeros_like(param)]
-#          acf = arma_acf(ar = arparams, ma = maparams,lags=max_lag)
-        
-#      return acf   
-             
-     
-     
-
 
 def hdi1d(ary, hdi_prob, skipna=True):
     '''Compute highest density interval over a 1d array.
@@ -174,3 +121,65 @@ def means_and_trends_ensemble(var,segment_length,step,years):
                 tm[k]     = np.median(years[start_idx:end_idx])
 
     return means, trends, tm, idxs
+
+def standardize(x, scale=1, axis=0, ddof=0, eps=1e-3):
+    """Centers and normalizes a time series. Constant or nearly constant time series not rescaled.
+
+    Parameters
+    ----------
+    x : array
+        vector of (real) numbers as a time series, NaNs allowed
+    scale : real
+        A scale factor used to scale a record to a match a given variance
+    axis : int or None
+        axis along which to operate, if None, compute over the whole array
+    ddof : int
+        degress of freedom correction in the calculation of the standard deviation
+    eps : real
+        a threshold to determine if the standard deviation is too close to zero
+
+    Returns
+    -------
+    z : array
+       The standardized time series (z-score), Z = (X - E[X])/std(X)*scale, NaNs allowed
+    mu : real
+        The mean of the original time series, E[X]
+    sig : real
+         The standard deviation of the original time series, std[X]
+
+    References
+    ----------
+
+    Tapio Schneider's MATLAB code: https://github.com/tapios/RegEM/blob/master/standardize.m
+
+    The zscore function in SciPy: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.zscore.html
+
+    See also
+    --------
+
+    pyleoclim.utils.tsutils.preprocess : pre-processes a times series using standardization and detrending.
+
+    """
+    x = np.asanyarray(x)
+    assert x.ndim <= 2, 'The time series x should be a vector or 2-D array!'
+
+    mu = np.nanmean(x, axis=axis)  # the mean of the original time series
+    sig = np.nanstd(x, axis=axis, ddof=ddof)  # the standard deviation of the original time series
+
+    mu2 = np.asarray(np.copy(mu))  # the mean used in the calculation of zscore
+    sig2 = np.asarray(np.copy(sig) / scale)  # the standard deviation used in the calculation of zscore
+
+    if np.any(np.abs(sig) < eps):  # check if x contains (nearly) constant time series
+        warnings.warn('Constant or nearly constant time series not rescaled.',stacklevel=2)
+        where_const = np.abs(sig) < eps  # find out where we have (nearly) constant time series
+
+        # if a vector is (nearly) constant, keep it the same as original, i.e., substract by 0 and divide by 1.
+        mu2[where_const] = 0
+        sig2[where_const] = 1
+
+    if axis and mu.ndim < x.ndim:
+        z = (x - np.expand_dims(mu2, axis=axis)) / np.expand_dims(sig2, axis=axis)
+    else:
+        z = (x - mu2) / sig2
+
+    return z, mu, sig
