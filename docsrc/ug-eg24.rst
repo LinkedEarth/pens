@@ -1,7 +1,7 @@
 
 Emile-Geay et al. (2024)
 ========================
-This section shows the usage of `pens` as in the paper entitled *Temporal Comparisons Involving Paleoclimate Data Assimilation: Challenges & Remedies* submitted to *Journal of Climate* (Emile-Geay et al., 2024).
+This section shows the usage of `pens` as in the paper entitled *Temporal Comparisons Involving Paleoclimate Data Assimilation: Challenges & Remedies* (Emile-Geay et al., 2024, doi:10.1175/JCLI-D-24-0101.1).
 
 .. toctree::
     :maxdepth: 1
