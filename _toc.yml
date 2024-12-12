@@ -1,0 +1,23 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: paleobook_intro.md
+parts:
+  - caption: Motivation
+    chapters:
+    - file: notebooks/eg24-Fig1_motivation
+  - caption: Temporal interpretation of offline vs online data assimilation
+    chapters:
+    - file: notebooks/eg24-Fig2_naive_resampling
+    - file: notebooks/eg24-Fig3_4_LMRonline
+    - file: notebooks/eg24-Fig5_resampling
+  - caption: Introducing the Plume Distance
+    chapters:
+    - file: notebooks/eg24-Fig6_8_plume_distance
+    - file: notebooks/eg24-Fig9_plume_distance-schematic
+  - caption: Applications to Paleoclimate Questions
+    chapters:
+    - file: notebooks/eg24-Fig10_compare_PAGES2k2019_recons
+    - file: notebooks/eg24-Fig11_12_compare_LMRvsB21
+    - file: notebooks/eg24-Tab1_LMR_PMIP3_proximity_table

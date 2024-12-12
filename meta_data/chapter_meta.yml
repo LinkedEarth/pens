@@ -1,0 +1,116 @@
+shortname: PaleoEnsembles
+type: Paleobook
+thumbnail: pens_logo.png
+parts:
+  - caption: Motivation
+    chapters:
+      - shortname: motivation
+        filename: notebooks/eg24-Fig1_motivation
+        thumbnail: motivation_thumbnail.png
+        tags:
+          domains:
+            - paleoclimatology
+            - data assimilation
+            - data viz
+          packages:
+            - matplotlib
+            - pens
+            - pyleoclim
+  - caption: Temporal Interpretation
+    chapters:
+      - shortname: Naïve resampling
+        filename: notebooks/eg24-Fig2_naive_resampling
+        thumbnail: naive_thumbnail.png
+        tags:
+          domains:
+            - data assimilation
+            - PaMoDaCo
+          packages:
+            - matplotlib
+            - pens
+      - shortname: LMRonline
+        filename: notebooks/eg24-Fig3_4_LMRonline
+        thumbnail: LMRo_thumbnail.png
+        tags:
+          domains:
+            - data assimilation
+            - timeseries modeling
+          packages:
+            - matplotlib
+            - pens
+            - statsmodels
+            - seaborn
+      - shortname: resampling
+        filename: notebooks/eg24-Fig5_resampling
+        thumbnail: resampling_thumbnail.png
+        tags:
+          domains:
+            - data assimilation
+            - timeseries modeling
+          packages:
+            - matplotlib
+            - pens
+            - pyleoclim
+  - caption: Plume Distance
+    chapters:
+      - shortname: Definition & Properties
+        filename: notebooks/eg24-Fig6_8_plume_distance
+        thumbnail: plume_dist.png
+        tags:
+          domains:
+            - statistics
+            - PaMoDaCo
+          packages:
+            - matplotlib
+            - pens
+            - seaborn
+      - shortname: Schematic
+        filename: notebooks/eg24-Fig9_plume_distance-schematic
+        thumbnail: plume_schem.png
+        tags:
+          domains:
+            - statistics
+            - PaMoDaCo
+          packages:
+            - matplotlib
+            - pens
+            - seaborn
+- caption: Paleoclimate Applications
+  chapters:
+    - shortname: PAGES 2k (2019) ensemble
+      filename: notebooks/eg24-Fig10_compare_PAGES2k2019_recons
+      thumbnail: PAGES2k_ensemble.png
+      tags:
+        domains:
+          - reconstruction
+          - statistics
+          - Common Era
+        packages:
+          - matplotlib
+          - seaborn
+          - pens
+          - scipy
+    - shortname: Büngen et al (2021)
+      filename: notebooks/eg24-Fig11_12_compare_LMRvsB21
+      thumbnail: B21_LMR.png
+      tags:
+        domains:
+          - reconstruction
+          - statistics
+          - Common Era
+        packages:
+          - matplotlib
+          - pens
+    - shortname: PMIP3
+      filename: notebooks/eg24-Tab1_LMR_PMIP3_proximity_table
+      thumbnail: PMIP3_LMR.png
+      tags:
+        domains:
+          - data assimilation
+          - PaMoDaCo
+          - PMIP
+        packages:
+          - matplotlib
+          - pens
+          - pyleoclim
+          - pandas
