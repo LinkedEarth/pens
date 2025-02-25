@@ -6,7 +6,7 @@
 
 # pens: utilities for comparing paleoclimate reconstruction ensembles
 
-`pens` provides a tools for comparing paleoclimate reconstruction ensembles to each other and to other traces, as used in `Emile-Geay et al. (2025) <https://doi.org/10.1175/JCLI-D-24-0101.1>`_10.1175/JCLI-D-24-0101.1
+`pens` provides a tools for comparing paleoclimate reconstruction ensembles to each other and to other traces, as used in [Emile-Geay et al. (2025)](https://doi.org/10.1175/JCLI-D-24-0101.1).
 
 > [!NOTE]
 > If you use `pens` in any way for your publications, please cite:
