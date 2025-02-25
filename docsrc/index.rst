@@ -18,14 +18,14 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
 
         Installation instructions.
 
-    .. grid-item-card::  Examples in Emile-Geay et al. (2024)
+    .. grid-item-card::  Usage (Emile-Geay et al., 2025)
         :class-title: custom-title
         :class-body: custom-body
         :img-top: _static/examples.png
-        :link: ug-eg24
+        :link: ug-eg25
         :link-type: doc
 
-        Examples of the scientific use of the package, as introduced in Emile-Geay et al. (2024).
+        Examples of the scientific use of the package, as introduced in Emile-Geay et al. (2025).
 
     .. grid-item-card:: package API
         :class-title: custom-title
@@ -34,7 +34,7 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
         :link: ug-api
         :link-type: doc
 
-        Application programming interface of the package, name the EnsembleTS class.
+        API of the package (the EnsembleTS class and beyond).
 
 .. toctree::
    :maxdepth: 2
@@ -42,5 +42,5 @@ pens: utilities for comparing paleoclimate reconstruction ensembles
    :caption: User Guide
 
    ug-installation
-   ug-eg24
+   ug-eg25
    ug-api
