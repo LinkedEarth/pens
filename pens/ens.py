@@ -992,7 +992,7 @@ class EnsembleTS:
         bins : list/tuple of 2 floats
             The number of bins for each axis: nx, ny = bins.
 
-        Referneces
+        References
         ----------
         - https://matplotlib.org/3.6.0/gallery/statistics/time_series_histogram.html
 
