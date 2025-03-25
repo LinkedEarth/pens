@@ -17,7 +17,7 @@
 
 project = 'pens'
 author = 'Julien Emile-Geay & Feng Zhu'
-copyright = '2024, Julien Emile-Geay, Feng Zhu'
+copyright = '2025, Julien Emile-Geay, Feng Zhu'
 
 
 # -- General configuration ---------------------------------------------------
