@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>[Figs. 6-8] Proximity Probability and Plume Distance &#8212; pens  documentation</title>
   
@@ -29,29 +28,26 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=db61ab07" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=fca5bd30" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js"></script>
-    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -402,7 +398,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="[Figs.-6-8]-Proximity-Probability-and-Plume-Distance">
-<h1>[Figs. 6-8] Proximity Probability and Plume Distance<a class="headerlink" href="#[Figs.-6-8]-Proximity-Probability-and-Plume-Distance" title="Permalink to this heading">#</a></h1>
+<h1>[Figs. 6-8] Proximity Probability and Plume Distance<a class="headerlink" href="#[Figs.-6-8]-Proximity-Probability-and-Plume-Distance" title="Link to this heading">#</a></h1>
 <p>This notebook explores a framework to assess the probability of observing a climate trace within an ensemble of trajectories, or observing one ensemble given another. The intended applications are to assess :</p>
 <ul class="simple">
 <li><p>how distant/conflicting several reconstructions are from one another</p></li>
@@ -424,18 +420,18 @@ document.write(`
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
 <span class="o">%</span><span class="k">autoreload</span> 2
-<span class="kn">import</span><span class="w"> </span><span class="nn">pens</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">pens</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
 <span class="n">pens</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;journal_nogrid&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <section id="PMIP3-past1000-runs-vs-LMRonline">
-<h2>PMIP3 past1000 runs vs LMRonline<a class="headerlink" href="#PMIP3-past1000-runs-vs-LMRonline" title="Permalink to this heading">#</a></h2>
+<h2>PMIP3 past1000 runs vs LMRonline<a class="headerlink" href="#PMIP3-past1000-runs-vs-LMRonline" title="Link to this heading">#</a></h2>
 <p>First, we focus on assessing these probabilities for the HadCM3 and CCSM4 past1000 GMST traces and their proximity to the LMRonline ensemble:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -464,7 +460,7 @@ with General Circulation Models (GCMs), like that from HadCM3.</p>
 <p>We first show that such an ensemble is in fact compatible with that simulation, in the sense that one can find an arbitrarily close trajectory within the ensemble that approximates the target.</p>
 </section>
 <section id="PMIP3-simulations">
-<h2>PMIP3 simulations<a class="headerlink" href="#PMIP3-simulations" title="Permalink to this heading">#</a></h2>
+<h2>PMIP3 simulations<a class="headerlink" href="#PMIP3-simulations" title="Link to this heading">#</a></h2>
 <p>Let us load and plot the data first:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -708,7 +704,7 @@ with General Circulation Models (GCMs), like that from HadCM3.</p>
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># store each pyleoclim.Series() object into a dictionary and plot</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyleoclim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pyleo</span>
+<span class="kn">import</span> <span class="nn">pyleoclim</span> <span class="k">as</span> <span class="nn">pyleo</span>
 <span class="n">ts_dict</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dfn</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
     <span class="n">ts_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pyleo</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
@@ -821,7 +817,7 @@ Evaluating association on surrogate pairs: 100%|██████████| 
 <p>We were indeed able to find a trajectory that highly correlates with the target (<span class="math notranslate nohighlight">\(\hat{\rho} &gt; 0.99\)</span>). The question is: how <em>likely</em> is that trajectory under the ensemble’s distribution? How can we define a probability measure over this space, given the number of potential resamplings? For <span class="math notranslate nohighlight">\(n=2001\)</span> temporal samples and <span class="math notranslate nohighlight">\(m=2000\)</span> ensemble members, this number is <span class="math notranslate nohighlight">\(n^m\)</span>, which is astronomical. Can a probability still be defined without resorting to brute force?</p>
 </section>
 <section id="Pathwise-Approach-:-proximity-probability">
-<h2>Pathwise Approach : proximity probability<a class="headerlink" href="#Pathwise-Approach-:-proximity-probability" title="Permalink to this heading">#</a></h2>
+<h2>Pathwise Approach : proximity probability<a class="headerlink" href="#Pathwise-Approach-:-proximity-probability" title="Link to this heading">#</a></h2>
 <p>Let’s plot the HadCM3 and CCSM4 past1000 GMST traces and vs the density of the LMRonline ensemble:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -919,16 +915,16 @@ Text(0.5, 1.0, &#39;Proximity probability with respect to LMRonline GMST&#39;)
 <p>(results are nearly indistinguishable with the 2-norm).</p>
 </section>
 <section id="Plume-distance">
-<h2>Plume distance<a class="headerlink" href="#Plume-distance" title="Permalink to this heading">#</a></h2>
+<h2>Plume distance<a class="headerlink" href="#Plume-distance" title="Link to this heading">#</a></h2>
 <section id="Definition">
-<h3>Definition<a class="headerlink" href="#Definition" title="Permalink to this heading">#</a></h3>
+<h3>Definition<a class="headerlink" href="#Definition" title="Link to this heading">#</a></h3>
 <p>From the CDFs obtained above, we would like to extract one metric that best summarizes the differences. In our tests, the shapes are very similar (abrupt climb for intermediate values of the proximity threshold), so a simple approach is to pick the difference between the values of epsilon for which these CDFs intersect <span class="math notranslate nohighlight">\(P = 0.5\)</span>:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use this strategy for root finding: https://stackoverflow.com/a/46911822</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">find_roots</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">find_roots</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="n">s</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:][</span><span class="n">s</span><span class="p">]</span><span class="o">/</span><span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">s</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
@@ -977,7 +973,7 @@ $\Delta_\epsilon = 0.2755582258356961$
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">patches</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">yr</span> <span class="o">=</span> <span class="mf">0.55</span><span class="p">;</span> <span class="n">xr</span> <span class="o">=</span> <span class="mf">0.35</span>
@@ -1027,7 +1023,7 @@ Max distance = 0.3606060606060606, prob = 0.004
 <p>This maximum distance falls at an extremely low probability, which seems arbitrary. The median seems a more justifiable choice, and a very easy one to implement. What are the properties of this newly defined metric?</p>
 </section>
 <section id="Mathematical-Properties-of-the-Plume-Distance">
-<h3>Mathematical Properties of the Plume Distance<a class="headerlink" href="#Mathematical-Properties-of-the-Plume-Distance" title="Permalink to this heading">#</a></h3>
+<h3>Mathematical Properties of the Plume Distance<a class="headerlink" href="#Mathematical-Properties-of-the-Plume-Distance" title="Link to this heading">#</a></h3>
 <p>Let us show that this verifies the conditions of a usual distance:</p>
 <ul class="simple">
 <li><p><em>The distance from an object to itself is zero</em>: it is trivially the case that if all the individual distances are 0, the distribution is a delta function centered at 0.</p></li>
@@ -1154,7 +1150,7 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 </section>
 </section>
 <section id="Updated-Fig-7">
-<h2>Updated Fig 7<a class="headerlink" href="#Updated-Fig-7" title="Permalink to this heading">#</a></h2>
+<h2>Updated Fig 7<a class="headerlink" href="#Updated-Fig-7" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
@@ -1199,9 +1195,9 @@ Computing inter-ensemble distance: 100%|██████████| 400/400 
 </div>
 </section>
 <section id="Plume-to-plume-distance">
-<h2>Plume-to-plume distance<a class="headerlink" href="#Plume-to-plume-distance" title="Permalink to this heading">#</a></h2>
+<h2>Plume-to-plume distance<a class="headerlink" href="#Plume-to-plume-distance" title="Link to this heading">#</a></h2>
 <section id="LMRoffline-vs-LMRonline">
-<h3>LMRoffline vs LMRonline<a class="headerlink" href="#LMRoffline-vs-LMRonline" title="Permalink to this heading">#</a></h3>
+<h3>LMRoffline vs LMRonline<a class="headerlink" href="#LMRoffline-vs-LMRonline" title="Link to this heading">#</a></h3>
 <p>Let’s see how compatible LMRonline and LMRv2.1 (offline) are by this metric:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
@@ -1296,7 +1292,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
 <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">LMRon_intra_dist</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">hist_dist</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">rv_histogram</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
 <span class="n">hist_dist</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">0.2752</span><span class="p">)</span>
@@ -1493,7 +1489,7 @@ that these two ensembles are mutually compatible.</p>
 </div>
 </section>
 <section id="PMIP3-distances-to-LMRonline">
-<h3>PMIP3 distances to LMRonline<a class="headerlink" href="#PMIP3-distances-to-LMRonline" title="Permalink to this heading">#</a></h3>
+<h3>PMIP3 distances to LMRonline<a class="headerlink" href="#PMIP3-distances-to-LMRonline" title="Link to this heading">#</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
@@ -1640,7 +1636,7 @@ LMRoff &amp; 0.43 &amp; 0.51 &amp; 0.23 &amp; 1.00 &amp; 0.66 &amp; 0.37 &amp; 0
 </div>
 </section>
 <section id="Illustrate-tube-around-HadCM3">
-<h3>Illustrate tube around HadCM3<a class="headerlink" href="#Illustrate-tube-around-HadCM3" title="Permalink to this heading">#</a></h3>
+<h3>Illustrate tube around HadCM3<a class="headerlink" href="#Illustrate-tube-around-HadCM3" title="Link to this heading">#</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>

@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>[Table 1] Proximity of PMIP3 traces to LMR ensembles &#8212; pens  documentation</title>
   
@@ -29,29 +28,26 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=db61ab07" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=fca5bd30" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js"></script>
-    <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -399,25 +395,25 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="[Table-1]-Proximity-of-PMIP3-traces-to-LMR-ensembles">
-<h1>[Table 1] Proximity of PMIP3 traces to LMR ensembles<a class="headerlink" href="#[Table-1]-Proximity-of-PMIP3-traces-to-LMR-ensembles" title="Permalink to this heading">#</a></h1>
+<h1>[Table 1] Proximity of PMIP3 traces to LMR ensembles<a class="headerlink" href="#[Table-1]-Proximity-of-PMIP3-traces-to-LMR-ensembles" title="Link to this heading">#</a></h1>
 <p>Let’s apply the notion of plume distance to PMIP3 runs and the offline LMR. This reproduces Table 1 from the paper (minus the bolding of compatible values, which was done by hand).</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pens</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyleoclim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pyleo</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pens</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">pyleoclim</span> <span class="k">as</span> <span class="nn">pyleo</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
 <span class="n">pens</span><span class="o">.</span><span class="n">set_style</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <section id="LMR-offline">
-<h2>LMR offline<a class="headerlink" href="#LMR-offline" title="Permalink to this heading">#</a></h2>
+<h2>LMR offline<a class="headerlink" href="#LMR-offline" title="Link to this heading">#</a></h2>
 <p>Any probablistic estimate of a time-varying series results in not just one “best” estimate, but a distribution whose characteristics (e.g. location, scale, symmetry) are time-dependent. One example of this is the output of an Ensemble Kalman Filter like the <a class="reference external" href="https://doi.org/10.5194/cp-15-1251-2019">Last Millennium Reanalysis, v2.1</a>. Let us load the data and plot their distribution over time:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -451,7 +447,7 @@ document.write(`
 </div>
 </section>
 <section id="LMRonline">
-<h2>LMRonline<a class="headerlink" href="#LMRonline" title="Permalink to this heading">#</a></h2>
+<h2>LMRonline<a class="headerlink" href="#LMRonline" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -485,7 +481,7 @@ document.write(`
 </div>
 </section>
 <section id="PMIP3-simulations">
-<h2>PMIP3 simulations<a class="headerlink" href="#PMIP3-simulations" title="Permalink to this heading">#</a></h2>
+<h2>PMIP3 simulations<a class="headerlink" href="#PMIP3-simulations" title="Link to this heading">#</a></h2>
 <p>Let us load and plot the data first:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -787,7 +783,7 @@ document.write(`
 </div>
 </section>
 <section id="Resampled-trajectories">
-<h2>Resampled trajectories<a class="headerlink" href="#Resampled-trajectories" title="Permalink to this heading">#</a></h2>
+<h2>Resampled trajectories<a class="headerlink" href="#Resampled-trajectories" title="Link to this heading">#</a></h2>
 <p>For this, we need proper ensemble trajectories, so we resample the LMR offline ensemble in 3 ways:</p>
 <ul class="simple">
 <li><p>an autoregressive model (AR(2)) fit to the online LMR ensemble</p></li>
@@ -795,7 +791,7 @@ document.write(`
 <li><p>power-law behavior</p></li>
 </ul>
 <section id="AR-model-parameters">
-<h3>AR model parameters<a class="headerlink" href="#AR-model-parameters" title="Permalink to this heading">#</a></h3>
+<h3>AR model parameters<a class="headerlink" href="#AR-model-parameters" title="Link to this heading">#</a></h3>
 <p>The AR(p) model for the mean writes <span class="math notranslate nohighlight">\(X_t = \sum_{\ell=1}^p \phi_\ell X_{t-\ell} + \epsilon_t\)</span>, where <span class="math notranslate nohighlight">\(\epsilon\)</span> is Gaussian, i.i.d. with variance <span class="math notranslate nohighlight">\(\sigma^2\)</span> and mean zero, and <span class="math notranslate nohighlight">\(\phi_\ell\)</span> is the autocorrelation at lag <span class="math notranslate nohighlight">\(\ell= 1, \dots, p\)</span>. We load the parameters fitted to LMRonline (Perkins &amp; Hakim, 2021) with <a class="reference external" href="https://www.statsmodels.org/dev/generated/statsmodels.tsa.ar_model.AutoReg.fit.html#statsmodels.tsa.ar_model.AutoReg.fit">statsmodel</a>:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
@@ -940,7 +936,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">dist_pl</span><span class="p">,</span><span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -964,9 +960,9 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </section>
 </section>
 <section id="Effects-of-resampling:-the-Grand-Table">
-<h2>Effects of resampling: the Grand Table<a class="headerlink" href="#Effects-of-resampling:-the-Grand-Table" title="Permalink to this heading">#</a></h2>
+<h2>Effects of resampling: the Grand Table<a class="headerlink" href="#Effects-of-resampling:-the-Grand-Table" title="Link to this heading">#</a></h2>
 <section id="Benchmarks:">
-<h3>Benchmarks:<a class="headerlink" href="#Benchmarks:" title="Permalink to this heading">#</a></h3>
+<h3>Benchmarks:<a class="headerlink" href="#Benchmarks:" title="Link to this heading">#</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
@@ -1025,7 +1021,7 @@ Computing intra-ensemble distance among possible pairs: 100%|██████�
 </div>
 </section>
 <section id="Plume-Distances">
-<h3>Plume Distances<a class="headerlink" href="#Plume-Distances" title="Permalink to this heading">#</a></h3>
+<h3>Plume Distances<a class="headerlink" href="#Plume-Distances" title="Link to this heading">#</a></h3>
 <p>PUT INTO ND array!</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
