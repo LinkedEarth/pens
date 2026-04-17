@@ -16,8 +16,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'pens'
-author = 'Julien Emile-Geay & Feng Zhu'
-copyright = '2025, Julien Emile-Geay, Feng Zhu'
+author = 'Julien Emile-Geay, Feng Zhu & Deborah Khider'
+copyright = '2025, Julien Emile-Geay, Feng Zhu, Deborah Khider'
 
 
 # -- General configuration ---------------------------------------------------
@@ -63,7 +63,7 @@ html_theme = 'sphinx_book_theme'
 # html_theme = 'bootstrap'
 # html_theme = "sphinxawesome_theme"
 html_theme_options = {
-    'repository_url': 'https://github.com/fzhu2e/pens',
+    'repository_url': 'https://github.com/LinkedEarth/pens',
     'use_edit_page_button': True,
     'use_repository_button': True,
     'use_issues_button': True,

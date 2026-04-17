@@ -545,17 +545,17 @@ class EnsembleTS:
                     paths[it, ie] = self.value[it, idx[it, ie]]
                     
         elif model == 'power-law':
-            from stochastic.processes.noise import ColoredNoise
+            from pens.noise import ColoredNoise
             for j in tqdm(range(p)):
                 CN = ColoredNoise(beta=param,t=N)
                 z, _, _ = utils.standardize(CN.sample(N-1))
                 paths[:,j] = z
-                 
+
         elif model == 'fGn':
-            from stochastic.processes.noise import FractionalGaussianNoise
+            from pens.noise import FractionalGaussianNoise
             for j in tqdm(range(p)):
                 fgn = FractionalGaussianNoise(hurst=param, t=N)
-                z, _, _ = utils.standardize(fgn.sample(N, algorithm='daviesharte')) 
+                z, _, _ = utils.standardize(fgn.sample(N, algorithm='daviesharte'))
                 paths[:,j] = z
             
         elif model == 'ar':

@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pens"
+version = "2026.4.17"
+description = "pens: utilities for comparing paleoclimate reconstruction ensembles"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "GPL-3.0-or-later"}
+authors = [
+    {name = "Julien Emile-Geay", email = "julieneg@usc.edu"},
+    {name = "Feng Zhu", email = "fengzhu@ucar.edu"},
+    {name = "Deborah Khider", email = "khider@usc.edu"},
+]
+keywords = ["paleoclimate", "reconstruction", "ensembles"]
+classifiers = [
+    "Natural Language :: English",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "termcolor",
+    "pandas",
+    "tqdm",
+    "xarray",
+    "dask",
+    "scikit-learn",
+    "cftime",
+    "statsmodels",
+    "properscoring",
+    "more_itertools",
+    "num2tex",
+]
+
+[project.urls]
+Homepage = "https://linked.earth/pens"
+Repository = "https://github.com/LinkedEarth/pens"
+
+[tool.setuptools.packages.find]
+include = ["pens*"]
