@@ -889,6 +889,9 @@ class EnsembleTS:
                     else:
                         dist = self.distance(y.value, order=order, nsamples=nsamples)
                         eps_q = np.quantile(dist,q=q)
+                else:
+                    dist = self.distance(y=y, order=order, nsamples=nsamples)
+                    eps_q = np.quantile(dist, q=q)
             else :
                 # assess proximity probability between the ensemble and the object (trace or ensemble)
                 dist = self.distance(y=y,order=order,nsamples=nsamples)
