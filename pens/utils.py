@@ -44,7 +44,7 @@ def hdi1d(ary, hdi_prob, skipna=True):
     ary = np.sort(ary)
     interval_idx_inc = int(np.floor(hdi_prob * n))
     n_intervals = n - interval_idx_inc
-    interval_width = np.subtract(ary[interval_idx_inc:], ary[:n_intervals], dtype=np.float_)
+    interval_width = np.subtract(ary[interval_idx_inc:], ary[:n_intervals], dtype=np.float64)
 
     if len(interval_width) == 0:
         raise ValueError("Too few elements for interval calculation. ")
