@@ -183,7 +183,7 @@ class EnsembleTS:
         res.refresh()
         return res
     
-    def get_means_and_trends(self, segment_length=10, step=10, xm=np.linspace(-0.5,1.5,200), bw = 'silverman'):
+    def get_means_and_trends(self, segment_length=10, step=10, xm=np.linspace(-2,8,300), bw = 'silverman'):
         '''
         Extract trend distributions from EnsembleTS object via Gaussian Kernel Density Estimation
 
@@ -211,12 +211,12 @@ class EnsembleTS:
         new = self.copy()
         means, trends, tm, idxs = utils.means_and_trends_ensemble(self.value, segment_length, step, self.time)
         dmeans  = means[-1:] - means[:-1] # difference of means
-        dtrends = segment_length*(trends[-1:] - trends[:-1]) # difference of trends
+        dtrends = 100*(trends[-1:] - trends[:-1]) # difference of trends (°C/century)
 
         dm_kde = gaussian_kde(dmeans.flatten(),bw_method=bw)
-        dm_prob = dm_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
+        dm_prob = dm_kde.integrate_box_1d(0, np.inf) # estimate probability of positive change
         dt_kde = gaussian_kde(dtrends.flatten(),bw_method=bw)
-        dt_prob = dt_kde.integrate_box_1d(0, xm.max()) # estimate probability of positive change
+        dt_prob = dt_kde.integrate_box_1d(0, np.inf) # estimate probability of positive change
         res_dict = {
             'means': means,
             'trends': trends,
@@ -1491,7 +1491,8 @@ class EnsembleTS:
 
 
     def plot_trend_mean_kde(self, figsize=[5, 5], ax=None, title=None, hide_ylabel=False,
-                            title_kwargs=None, lgd_kwargs=None, tag='mean', label=None, color=None):
+                            title_kwargs=None, lgd_kwargs=None, tag='mean', label=None,
+                            color=None, alpha=0.3, linestyle='-', linewidth=2, xm=None):
         title_kwargs = {} if title_kwargs is None else title_kwargs
         lgd_kwargs = {} if lgd_kwargs is None else lgd_kwargs
         
@@ -1499,7 +1500,8 @@ class EnsembleTS:
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
 
-        xm = self.trend_dict['xm']
+        if xm is None:
+            xm = self.trend_dict['xm']
         xp = xm[xm>0]
         dm_kde = self.trend_dict['dm_kde']
         dm_prob = self.trend_dict['dm_prob']
@@ -1516,22 +1518,23 @@ class EnsembleTS:
         nblocks, _ = np.shape(self.trend_dict['means'])
         Lb = self.nt // nblocks
         if tag == 'mean':
-            if label is None:
-                label = f'{Lb}y, ' + r'$P(\Delta \langle \bar{T} \rangle > 0)=$' + f'{prob:3.2f}'
-            xlabel = r'$\Delta \langle \bar{T} \rangle ~({}^{\circ} C)$'
+            prob_str = r'$P(\Delta\mu>0)=$' + f'{prob:.2f}'
+            xlabel = r'$\Delta\mu ~({}^{\circ}\mathrm{C})$'
         elif tag == 'trend':
-            if label is None:
-                label = f'{Lb}y, ' + r'$P(\Delta \langle \dot{T} \rangle > 0)=$' + f'{prob:3.2f}'
-            xlabel = r'$\Delta \langle \dot{T} \rangle ~({}^{\circ} C/\mathrm{interval})$'
+            prob_str = r'$P(\Delta s>0)=$' + f'{prob:.2f}'
+            xlabel = r'$\Delta s ~({}^{\circ}\mathrm{C/century})$'
+
+        if label is None:
+            label = f'{Lb}y,  {prob_str}'
 
         if color is not None:
-            ax.fill_between(xp, kde(xp),alpha=0.3, color=color)
-            ax.plot(xm, kde(xm), linewidth=2, label=label, color=color)
+            ax.fill_between(xp, kde(xp), alpha=alpha, color=color)
+            ax.plot(xm, kde(xm), linewidth=linewidth, label=label, color=color, linestyle=linestyle)
         else:
-            ax.fill_between(xp, kde(xp),alpha=0.3)
-            ax.plot(xm, kde(xm), linewidth=2, label=label)
+            ax.fill_between(xp, kde(xp), alpha=alpha)
+            ax.plot(xm, kde(xm), linewidth=linewidth, label=label, linestyle=linestyle)
 
-        _lgd_kwargs = {'loc': 'upper right', 'fontsize': 12, 'bbox_to_anchor': (1.2, 1)}
+        _lgd_kwargs = {'loc': 'upper right', 'fontsize': 11}
         _lgd_kwargs.update(lgd_kwargs)
         ax.legend(**_lgd_kwargs)
         ax.set_xlabel(xlabel)
@@ -1549,10 +1552,93 @@ class EnsembleTS:
             return fig, ax
         else:
             return ax
-        
-  
 
-            
-            
-            
-        
+    def plot_block_kde(self, figsize=[5, 5], ax=None, title=None, hide_ylabel=False,
+                       title_kwargs=None, lgd_kwargs=None, tag='mean', color=None,
+                       labelsize=9):
+        '''
+        Plot KDE comparison: most-recent block vs. all previous blocks.
+
+        Unlike plot_trend_mean_kde (which shows the KDE of the difference Δ),
+        this plots the two raw distributions so the shift is directly visible.
+        P(Δ>0) is annotated in the legend for the recent block.
+
+        Parameters
+        ----------
+        tag : str
+            'mean' to compare block means, 'trend' to compare block trends.
+        color : str or None
+            Color for the recent-block KDE. Previous blocks are always gray.
+        labelsize : int or float
+            Font size for axis labels and tick labels.  Title and legend sizes
+            are controlled independently via title_kwargs and lgd_kwargs.
+        '''
+        title_kwargs = {} if title_kwargs is None else title_kwargs
+        lgd_kwargs   = {} if lgd_kwargs   is None else lgd_kwargs
+
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+
+        idxs = self.trend_dict['idxs']
+        start_year = int(self.time[idxs[-1, 0]])
+        end_year   = int(self.time[idxs[-1, 1]])
+
+        if tag == 'mean':
+            vals    = self.trend_dict['means']          # (nblocks, nEns)
+            prob    = self.trend_dict['dm_prob']
+            xlabel  = r'$\langle \bar{T} \rangle ~({}^{\circ}\mathrm{C})$'
+        elif tag == 'trend':
+            nblocks, _ = np.shape(self.trend_dict['trends'])
+            Lb      = self.nt // nblocks
+            vals    = self.trend_dict['trends'] * 100   # scale to °C / century
+            prob    = self.trend_dict['dt_prob']
+            xlabel  = r'$\langle \dot{T} \rangle ~({}^{\circ}\mathrm{C/century})$'
+
+        recent   = vals[-1, :]              # (nEns,)
+        previous = vals[:-1, :].flatten()   # (n_prev * nEns,)
+
+        # build x-axis from the data range
+        all_vals = np.concatenate([previous, recent])
+        lo, hi   = np.percentile(all_vals, [0.5, 99.5])
+        pad      = (hi - lo) * 0.25
+        xm       = np.linspace(lo - pad, hi + pad, 300)
+
+        kde_prev   = gaussian_kde(previous, bw_method='silverman')
+        kde_recent = gaussian_kde(recent,   bw_method='silverman')
+
+        lbl_prev   = f'pre-{start_year}'
+        delta_sym  = r'\mu' if tag == 'mean' else r's'
+        prob_str   = r'$P(\Delta ' + delta_sym + r'>0)=$' + f'{prob:.2f}'
+        lbl_recent = f'{start_year}–{end_year}'
+
+        color_rec = color if color is not None else 'tab:red'
+
+        ax.fill_between(xm, kde_prev(xm),   alpha=0.2, color='dimgray')
+        ax.plot(xm, kde_prev(xm),   lw=1.5, color='dimgray',  label=lbl_prev)
+        ax.fill_between(xm, kde_recent(xm), alpha=0.3, color=color_rec)
+        ax.plot(xm, kde_recent(xm), lw=2,   color=color_rec,  label=lbl_recent)
+
+        from matplotlib.lines import Line2D
+        ghost = Line2D([], [], color='none', label=prob_str)
+        handles, labels = ax.get_legend_handles_labels()
+        handles.append(ghost)
+        labels.append(prob_str)
+        _lgd_kwargs = {'loc': 'upper left', 'fontsize': 9}
+        _lgd_kwargs.update(lgd_kwargs)
+        ax.legend(handles=handles, labels=labels, **_lgd_kwargs)
+        ax.set_xlabel(xlabel, fontsize=labelsize)
+        ax.tick_params(which='both', labelsize=labelsize, top=False, right=False)
+        ax.margins(0)
+
+        if not hide_ylabel:
+            ax.set_ylabel('Probability Density', fontsize=labelsize)
+
+        if title is not None:
+            _title_kwargs = {'fontweight': 'bold'}
+            _title_kwargs.update(title_kwargs)
+            ax.set_title(title, **_title_kwargs)
+
+        if 'fig' in locals():
+            return fig, ax
+        else:
+            return ax
