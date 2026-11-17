@@ -59,7 +59,17 @@ Install `pens`
 ---------------
 
 
-Taking a clean installation as example, first let's create a new environment named :code:`pens-env` via :code:`conda`
+To run the notebooks, the recommended route is the environment file shipped with the repository
+(the same one used by Binder), followed by an install of :code:`pens` from the repository root:
+
+.. code-block:: bash
+
+    conda env create -f binder/environment.yml
+    conda activate pens
+    pip install .
+
+Alternatively, to install :code:`pens` into a clean environment by hand,
+first create a new environment named :code:`pens-env` via :code:`conda`
 
 .. code-block:: bash
 
@@ -76,8 +86,7 @@ Once the above dependencies have been installed, simply
 
 .. code-block:: bash
 
-    pip install netcdf4 xarray pens
-    pip install scipy==1.11.4  # to handle a dependency issue (date: 02-02-2024)
+    pip install netcdf4 pens
 
 and you are ready to
 

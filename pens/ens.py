@@ -478,11 +478,10 @@ class EnsembleTS:
         else:
             es = pyleo.EnsembleSeries(series_list)   
         
-        # transfer metadata
-        es.value_name = self.value_name 
-        es.value_unit = self.value_unit
-        es.time_name = self.time_name
-        es.time_unit = self.time_unit
+        # transfer metadata (skip unset fields so pyleoclim's defaults are kept)
+        for attr in ['value_name', 'value_unit', 'time_name', 'time_unit']:
+            if getattr(self, attr) is not None:
+                setattr(es, attr, getattr(self, attr))
         
         return es
 

@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+# Install pens from this repository (not PyPI) so the notebooks run against the current code.
+pip install --no-deps .

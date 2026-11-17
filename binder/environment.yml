@@ -1,0 +1,29 @@
+name: pens
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  # pens core dependencies (see pyproject.toml)
+  - numpy>=2.0
+  - scipy
+  - matplotlib
+  - pandas
+  - xarray
+  - netcdf4
+  - cftime
+  - tqdm
+  - scikit-learn
+  - statsmodels
+  - more-itertools
+  - properscoring
+  # extra packages used by the notebooks in docsrc/notebooks
+  - seaborn
+  - ipykernel
+  # compiled pyleoclim dependencies (faster and more reliable from conda-forge than pip)
+  - cartopy
+  - numba
+  - pip
+  - pip:
+      - pyleoclim
+      - num2tex
+# pens itself is installed from this repository by binder/postBuild
