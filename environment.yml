@@ -1,0 +1,52 @@
+# Environment specification for pens and its notebooks (docsrc/notebooks).
+#
+# This is the hand-edited file: change versions or add packages HERE, then
+# regenerate the pinned container lock with
+#     python container/lock.py
+# and commit both files. The container image (quay.io) and myBinder use the
+# pinned container/environment.yml, never this file directly.
+#
+# Local use:
+#     conda env create -f environment.yml
+#     conda activate pens
+#     pip install --no-deps .
+#
+# Python is capped at the newest version repo2docker supports (3.14 as of
+# repo2docker 2026.04.0).
+name: pens
+channels:
+  - conda-forge
+dependencies:
+  - python=3.14
+  # pens core dependencies (keep in sync with pyproject.toml)
+  - numpy>=2.5
+  - scipy>=1.18
+  - matplotlib
+  - pandas>=3
+  - xarray
+  - netcdf4
+  - cftime
+  - tqdm
+  - scikit-learn
+  - statsmodels
+  - more-itertools
+  - properscoring
+  # used by the notebooks
+  - seaborn
+  - jupyterlab
+  - ipykernel
+  # pyleoclim dependencies, taken from conda-forge rather than pip
+  - cartopy
+  - numba
+  - nitime
+  - kneed
+  - pathos
+  - python-wget
+  - tabulate
+  - pyyaml
+  - beautifulsoup4
+  - requests
+  - pip
+  - pip:
+      - pyleoclim
+      - num2tex

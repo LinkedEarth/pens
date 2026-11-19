@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euo pipefail
+# Install pens from this repository (not PyPI) so the notebooks run against the
+# code of the release being built. All dependencies come from environment.yml.
+pip install --no-deps .

@@ -59,14 +59,20 @@ Install `pens`
 ---------------
 
 
-To run the notebooks, the recommended route is the environment file shipped with the repository
-(the same one used by Binder), followed by an install of :code:`pens` from the repository root:
+To run the notebooks without installing anything, use the "Launch Binder" button at the top
+of each notebook page: it opens them in the same container image the release was tested with.
+
+To run them locally, the recommended route is the environment file shipped with the repository,
+followed by an install of :code:`pens` from the repository root:
 
 .. code-block:: bash
 
-    conda env create -f binder/environment.yml
+    conda env create -f environment.yml
     conda activate pens
-    pip install .
+    pip install --no-deps .
+
+For the exact (pinned, Linux) environment of the container image, use
+:code:`container/environment.yml` instead.
 
 Alternatively, to install :code:`pens` into a clean environment by hand,
 first create a new environment named :code:`pens-env` via :code:`conda`

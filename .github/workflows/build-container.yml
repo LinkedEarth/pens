@@ -1,0 +1,58 @@
+name: Build container image
+
+# Builds the pens container from the pinned container/environment.yml with
+# repo2docker, runs every notebook inside it (image-tests/), and on a published
+# release pushes it to quay.io tagged with the release name. myBinder then
+# launches from binder/Dockerfile, which starts FROM that image.
+#
+# Pull requests that touch the environment, package or notebooks build and test
+# the image without pushing it.
+#
+# Required repository secrets: QUAY_USERNAME and QUAY_PASSWORD (a quay.io robot
+# account with write access to the image repository).
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - environment.yml
+      - container/**
+      - image-tests/**
+      - pens/**
+      - pyproject.toml
+      - docsrc/notebooks/**
+      - docsrc/data/**
+      - .github/workflows/build-container.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # repo2docker reads binder/ in preference to anything else. binder/ in the
+      # repo only points myBinder at the published image, so swap in the pinned
+      # build configuration from container/ for the image build.
+      - name: Use pinned container configuration
+        run: |
+          rm -rf binder
+          mv container binder
+
+      - name: Build, test and push image with repo2docker
+        uses: jupyterhub/repo2docker-action@92fefcbd2b46dd9716f5263a9e740cbc972f6dd9
+        with:
+          DOCKER_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+          DOCKER_REGISTRY: "quay.io"
+          IMAGE_NAME: "linkedearth/pens"
+          # keep in sync with REPO2DOCKER_VERSION in container/lock.py
+          FORCE_REPO2DOCKER_VERSION: "repo2docker==2026.04.0"
+          # only push for releases and manual runs, not for pull requests
+          NO_PUSH: ${{ github.event_name == 'pull_request' && 'true' || '' }}
+          # tag the image with the release name (e.g. 2026.11.19), used by binder/Dockerfile
+          ADDITIONAL_TAG: ${{ github.event.release.tag_name }}
+          # ask mybinder.org to prebuild the release so the first launch is fast
+          MYBINDERORG_TAG: ${{ github.event.release.tag_name }}
