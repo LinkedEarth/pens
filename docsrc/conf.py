@@ -64,6 +64,14 @@ html_theme = 'sphinx_book_theme'
 # html_theme = "sphinxawesome_theme"
 html_theme_options = {
     'repository_url': 'https://github.com/LinkedEarth/pens',
+    'repository_branch': 'main',
+    'path_to_docs': 'docsrc',
+    # "Launch Binder" button on notebook pages. myBinder builds from
+    # binder/Dockerfile, which reuses the pinned release image on quay.io.
+    'launch_buttons': {
+        'binderhub_url': 'https://mybinder.org',
+        'notebook_interface': 'jupyterlab',
+    },
     'use_edit_page_button': True,
     'use_repository_button': True,
     'use_issues_button': True,

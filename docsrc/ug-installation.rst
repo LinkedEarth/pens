@@ -59,7 +59,23 @@ Install `pens`
 ---------------
 
 
-Taking a clean installation as example, first let's create a new environment named :code:`pens-env` via :code:`conda`
+To run the notebooks without installing anything, use the "Launch Binder" button at the top
+of each notebook page: it opens them in the same container image the release was tested with.
+
+To run them locally, the recommended route is the environment file shipped with the repository,
+followed by an install of :code:`pens` from the repository root:
+
+.. code-block:: bash
+
+    conda env create -f environment.yml
+    conda activate pens
+    pip install --no-deps .
+
+For the exact (pinned, Linux) environment of the container image, use
+:code:`container/environment.yml` instead.
+
+Alternatively, to install :code:`pens` into a clean environment by hand,
+first create a new environment named :code:`pens-env` via :code:`conda`
 
 .. code-block:: bash
 
@@ -76,8 +92,7 @@ Once the above dependencies have been installed, simply
 
 .. code-block:: bash
 
-    pip install netcdf4 xarray pens
-    pip install scipy==1.11.4  # to handle a dependency issue (date: 02-02-2024)
+    pip install netcdf4 pens
 
 and you are ready to
 

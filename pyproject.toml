@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pens"
-version = "2026.4.17"
+version = "2026.11.19"
 description = "pens: utilities for comparing paleoclimate reconstruction ensembles"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "GPL-3.0-or-later"}
@@ -20,21 +20,28 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "termcolor",
+    "numpy>=2.0",
+    "scipy",
+    "matplotlib",
     "pandas",
-    "tqdm",
     "xarray",
-    "dask",
-    "scikit-learn",
     "cftime",
+    "tqdm",
+    "scikit-learn",
     "statsmodels",
     "properscoring",
     "more_itertools",
-    "num2tex",
 ]
+
+[project.optional-dependencies]
+pyleo = ["pyleoclim"]
+dask = ["dask"]
+test = ["pytest"]
 
 [project.urls]
 Homepage = "https://linked.earth/pens"
