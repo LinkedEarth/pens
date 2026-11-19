@@ -49,7 +49,7 @@ jobs:
           DOCKER_REGISTRY: "quay.io"
           IMAGE_NAME: "linkedearth/pens"
           # keep in sync with REPO2DOCKER_VERSION in container/lock.py
-          FORCE_REPO2DOCKER_VERSION: "repo2docker==2026.04.0"
+          FORCE_REPO2DOCKER_VERSION: "jupyter-repo2docker==2026.4.0"
           # only push for releases and manual runs, not for pull requests
           NO_PUSH: ${{ github.event_name == 'pull_request' && 'true' || '' }}
           # tag the image with the release name (e.g. 2026.11.19), used by binder/Dockerfile
