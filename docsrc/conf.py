@@ -37,6 +37,8 @@ exclude_patterns = [
     'Thumbs.db',
     '.DS_Store',
     'notebooks/test*.ipynb',  # notebooks starting with test won't be rendered
+    '**/.ipynb_checkpoints',  # Jupyter autosaves
+    '**/.virtual_documents',  # JupyterLab editor cache
 ]
 
 extensions = [
