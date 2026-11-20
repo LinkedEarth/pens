@@ -134,4 +134,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.jupyterlab-workspace
-docsrc/notebooks/.virtual_documents/eg25-Fig2_naive_resampling.ipynb
+.virtual_documents/
+.jupyter/
+.jupyter_ystore.db

@@ -60,6 +60,6 @@ jobs:
           # tag the image with the release name (e.g. 2026.11.19), used by binder/Dockerfile;
           # for a manual run, the tag given in the "Run workflow" form
           ADDITIONAL_TAG: ${{ github.event.release.tag_name || inputs.image_tag }}
-          # ask mybinder.org to prebuild the release (or, for a manual run, the branch
-          # it was started from) so the first launch is fast
-          MYBINDERORG_TAG: ${{ github.event.release.tag_name || (inputs.image_tag && github.ref_name) }}
+          # No MYBINDERORG_TAG: the action's mybinder.org prebuild request fails TLS
+          # verification inside its container, and binder/Dockerfile only adds a thin
+          # COPY layer on top of this image, so the first launch is quick anyway.
