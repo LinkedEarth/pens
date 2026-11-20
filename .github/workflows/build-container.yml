@@ -15,6 +15,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Extra image tag, e.g. a release name such as 2026.11.19 (optional)"
+        required: false
+        default: ""
   pull_request:
     paths:
       - environment.yml
@@ -47,12 +52,14 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.QUAY_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
           DOCKER_REGISTRY: "quay.io"
-          IMAGE_NAME: "linkedearth/pens"
+          IMAGE_NAME: "julieneg/pens"
           # keep in sync with REPO2DOCKER_VERSION in container/lock.py
           FORCE_REPO2DOCKER_VERSION: "jupyter-repo2docker==2026.4.0"
           # only push for releases and manual runs, not for pull requests
           NO_PUSH: ${{ github.event_name == 'pull_request' && 'true' || '' }}
-          # tag the image with the release name (e.g. 2026.11.19), used by binder/Dockerfile
-          ADDITIONAL_TAG: ${{ github.event.release.tag_name }}
-          # ask mybinder.org to prebuild the release so the first launch is fast
-          MYBINDERORG_TAG: ${{ github.event.release.tag_name }}
+          # tag the image with the release name (e.g. 2026.11.19), used by binder/Dockerfile;
+          # for a manual run, the tag given in the "Run workflow" form
+          ADDITIONAL_TAG: ${{ github.event.release.tag_name || inputs.image_tag }}
+          # ask mybinder.org to prebuild the release (or, for a manual run, the branch
+          # it was started from) so the first launch is fast
+          MYBINDERORG_TAG: ${{ github.event.release.tag_name || (inputs.image_tag && github.ref_name) }}
