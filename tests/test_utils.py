@@ -42,3 +42,26 @@ def test_fewer_than_two_blocks_rejected():
     var, years = _ramp(19)
     with pytest.raises(ValueError):
         means_and_trends_ensemble(var, 10, 10, years)
+
+
+def test_trends_exact_on_raw_block_data():
+    rng = np.random.default_rng(0)
+    years = np.arange(1991, 2031)
+    var = rng.standard_normal((40, 3))
+    _, trends, _, idxs = means_and_trends_ensemble(var, 10, 10, years)
+    for k, (i0, i1) in enumerate(idxs):
+        for m in range(var.shape[1]):
+            expected = np.polyfit(years[i0:i1 + 1], var[i0:i1 + 1, m], 1)[0]
+            np.testing.assert_allclose(trends[k, m], expected)
+
+
+def test_trends_are_block_local():
+    # changing years outside a block must not change that block's trend
+    rng = np.random.default_rng(1)
+    years = np.arange(1991, 2031)
+    var = rng.standard_normal((40, 2))
+    _, trends, _, _ = means_and_trends_ensemble(var, 10, 10, years)
+    var2 = var.copy()
+    var2[:30] += 5 * rng.standard_normal((30, 2))  # perturb all but the last block
+    _, trends2, _, _ = means_and_trends_ensemble(var2, 10, 10, years)
+    np.testing.assert_allclose(trends2[-1], trends[-1])
