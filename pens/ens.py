@@ -1514,8 +1514,10 @@ class EnsembleTS:
             kde = dt_kde
             prob = dt_prob
 
-        nblocks, _ = np.shape(self.trend_dict['means'])
-        Lb = self.nt // nblocks
+        # block length from the stored (inclusive) block indices; nt // nblocks
+        # is wrong when leading years are skipped or blocks overlap (issue #14)
+        idxs = self.trend_dict['idxs']
+        Lb = int(idxs[0, 1] - idxs[0, 0] + 1)
         if tag == 'mean':
             prob_str = r'$P(\Delta\mu>0)=$' + f'{prob:.2f}'
             xlabel = r'$\Delta\mu ~({}^{\circ}\mathrm{C})$'
@@ -1587,8 +1589,6 @@ class EnsembleTS:
             prob    = self.trend_dict['dm_prob']
             xlabel  = r'$\langle \bar{T} \rangle ~({}^{\circ}\mathrm{C})$'
         elif tag == 'trend':
-            nblocks, _ = np.shape(self.trend_dict['trends'])
-            Lb      = self.nt // nblocks
             vals    = self.trend_dict['trends'] * 100   # scale to °C / century
             prob    = self.trend_dict['dt_prob']
             xlabel  = r'$\langle \dot{T} \rangle ~({}^{\circ}\mathrm{C/century})$'
