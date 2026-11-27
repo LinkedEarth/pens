@@ -59,7 +59,9 @@ def hdi1d(ary, hdi_prob, skipna=True):
 
 def means_and_trends_ensemble(var,segment_length,step,years):
     ''' Calculates the means and trends on an ensemble array
-        Uses statsmodels' OLS method
+        Trends are ordinary least-squares fits (statsmodels OLS) to the raw
+        values within each block, so each block's mean and trend depend only on
+        the years inside that block.
 
      Inputs:
         var:                2d numpy array [time, ens member]
@@ -76,11 +78,6 @@ def means_and_trends_ensemble(var,segment_length,step,years):
     Author: Julien Emile-Geay, based on code by Michael P. Erb.
     Date: March 8, 2018
     '''
-    try:
-        import pyleoclim as pyleo
-    except:
-        raise ImportError('Need to install Pyleoclim: `pip install pyleoclim`')
-
     if var.ndim < 2:
        print("Beef up your ensemble, yo. Ain't got nothing in it")
 
@@ -97,12 +94,9 @@ def means_and_trends_ensemble(var,segment_length,step,years):
     tm         = np.empty((n_segments))
     idxs       = np.empty((n_segments,2), dtype=int)
 
-    fc = 1/segment_length #smoothing length
-
     # Compute the means and trends for every location
     for m in tqdm(range(n_ens), desc='Processing member'):
         y = var[:,m]
-        yl = pyleo.utils.filter.butterworth(y,fc)
 
         for k in range(n_segments):
             start_idx = skip_idx+(k*step)
@@ -110,10 +104,10 @@ def means_and_trends_ensemble(var,segment_length,step,years):
             # compute block averages
             means[k,m] = np.mean(y[start_idx:end_idx])
 
-            # compute trends with robust fit
+            # compute trends with an OLS fit to the raw block values
             x = years[start_idx:end_idx]
             x = sm.add_constant(x)
-            _, trends[k,m] = sm.OLS(yl[start_idx:end_idx],x).fit().params
+            _, trends[k,m] = sm.OLS(y[start_idx:end_idx],x).fit().params
 
             # indices
             if m == 0:
