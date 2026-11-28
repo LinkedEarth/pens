@@ -34,3 +34,19 @@ def test_plot_block_kde_runs(tag):
     labels = [t.get_text() for t in ax.get_legend().get_texts()]
     plt.close(fig)
     assert labels[1] == '1976–2025'
+
+
+def test_prob_is_empirical_and_independent_of_bw():
+    rng = np.random.default_rng(1)
+    time = np.arange(1000, 2026)
+    ens = EnsembleTS(time=time, value=rng.standard_normal((time.size, 20)))
+    a = ens.get_means_and_trends(segment_length=50, step=50, bw=0.1)
+    b = ens.get_means_and_trends(segment_length=50, step=50, bw=2.0)
+    means = a.trend_dict['means']
+    expected = np.mean(means[-1:] - means[:-1] > 0)
+    assert a.trend_dict['dm_prob'] == b.trend_dict['dm_prob'] == expected
+    assert a.trend_dict['dt_prob'] == b.trend_dict['dt_prob']
+    k = ens.get_means_and_trends(segment_length=50, step=50, bw=2.0, prob_method='kde')
+    assert k.trend_dict['dm_prob'] != expected
+    with pytest.raises(ValueError):
+        ens.get_means_and_trends(segment_length=50, step=50, prob_method='foo')
