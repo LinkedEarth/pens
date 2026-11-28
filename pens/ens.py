@@ -183,7 +183,8 @@ class EnsembleTS:
         res.refresh()
         return res
     
-    def get_means_and_trends(self, segment_length=10, step=10, xm=np.linspace(-2,8,300), bw = 'silverman'):
+    def get_means_and_trends(self, segment_length=10, step=10, xm=np.linspace(-2,8,300), bw = 'silverman',
+                             prob_method='empirical'):
         '''
         Extract trend distributions from EnsembleTS object via Gaussian Kernel Density Estimation
 
@@ -200,7 +201,14 @@ class EnsembleTS:
             This can be "scott", "silverman", a scalar constant or a callable.
             If a scalar, this will be used directly as kde.factor.
             If a callable, it should take a gaussian_kde instance as only parameter and return a scalar.
-            If None (default), "scott" is used. 
+            The KDEs are for plotting (plot_trend_mean_kde); with the default
+            prob_method they do not affect dm_prob and dt_prob.
+        prob_method : {'empirical', 'kde'}, optional
+            How P(Delta > 0) is estimated. 'empirical' (default) is the fraction of
+            (prior block, member) differences that are positive: no smoothing, so the
+            probability does not depend on bw. 'kde' integrates the KDE over (0, inf),
+            as pens did before; a wider bandwidth inflates the KDE's variance and pulls
+            the probability toward 0.5.
 
         Returns
         -------
@@ -214,9 +222,15 @@ class EnsembleTS:
         dtrends = 100*(trends[-1:] - trends[:-1]) # difference of trends (°C/century)
 
         dm_kde = gaussian_kde(dmeans.flatten(),bw_method=bw)
-        dm_prob = dm_kde.integrate_box_1d(0, np.inf) # estimate probability of positive change
         dt_kde = gaussian_kde(dtrends.flatten(),bw_method=bw)
-        dt_prob = dt_kde.integrate_box_1d(0, np.inf) # estimate probability of positive change
+        if prob_method == 'empirical':   # fraction of positive changes; no smoothing
+            dm_prob = float(np.mean(dmeans > 0))
+            dt_prob = float(np.mean(dtrends > 0))
+        elif prob_method == 'kde':       # integral of the KDE over (0, inf); depends on bw
+            dm_prob = dm_kde.integrate_box_1d(0, np.inf)
+            dt_prob = dt_kde.integrate_box_1d(0, np.inf)
+        else:
+            raise ValueError(f"prob_method must be 'empirical' or 'kde', not {prob_method!r}")
         res_dict = {
             'means': means,
             'trends': trends,
@@ -224,6 +238,7 @@ class EnsembleTS:
             'idxs': idxs,
             'dm_prob': dm_prob,
             'dt_prob': dt_prob,
+            'prob_method': prob_method,
             'dm_kde': dm_kde,
             'dt_kde': dt_kde,
             'xm': xm,
@@ -1556,7 +1571,7 @@ class EnsembleTS:
 
     def plot_block_kde(self, figsize=[5, 5], ax=None, title=None, hide_ylabel=False,
                        title_kwargs=None, lgd_kwargs=None, tag='mean', color=None,
-                       labelsize=9):
+                       labelsize=9, bw='silverman'):
         '''
         Plot KDE comparison: most-recent block vs. all previous blocks.
 
@@ -1573,6 +1588,11 @@ class EnsembleTS:
         labelsize : int or float
             Font size for axis labels and tick labels.  Title and legend sizes
             are controlled independently via title_kwargs and lgd_kwargs.
+        bw : str, scalar or callable, optional
+            Bandwidth method for both KDEs, passed to scipy.stats.gaussian_kde
+            as bw_method (default 'silverman'). A scalar is used as kde.factor;
+            larger values give smoother curves. Display only: the P(Delta>0)
+            in the legend comes from get_means_and_trends.
         '''
         title_kwargs = {} if title_kwargs is None else title_kwargs
         lgd_kwargs   = {} if lgd_kwargs   is None else lgd_kwargs
@@ -1602,8 +1622,8 @@ class EnsembleTS:
         pad      = (hi - lo) * 0.25
         xm       = np.linspace(lo - pad, hi + pad, 300)
 
-        kde_prev   = gaussian_kde(previous, bw_method='silverman')
-        kde_recent = gaussian_kde(recent,   bw_method='silverman')
+        kde_prev   = gaussian_kde(previous, bw_method=bw)
+        kde_recent = gaussian_kde(recent,   bw_method=bw)
 
         lbl_prev   = f'pre-{start_year}'
         delta_sym  = r'\mu' if tag == 'mean' else r's'
